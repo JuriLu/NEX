@@ -1,0 +1,43 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <p-card styleClass="shadow-6 border-round-xl login-card">
+      <ng-template pTemplate="header">
+        <div class="text-center pt-5 pb-2">
+          <div class="logo-circle bg-primary-50 inline-flex align-items-center justify-content-center border-circle mb-3" style="width: 64px; height: 64px">
+            <i class="pi pi-car text-3xl text-primary"></i>
+          </div>
+          <h2 class="text-3xl font-bold m-0 text-900">Welcome Back</h2>
+          <p class="text-500 mt-2">Sign in to your premium rental experience</p>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 p-3">
+
+        <div class="field">
+          <label for="email" class="block font-medium mb-2 text-900">Email</label>
+          <input pInputText id="email" formControlName="email" class="w-full p-inputtext-lg" placeholder="user@carrental.com" />
+        </div>
+
+        <div class="field">
+          <label for="password" class="block font-medium mb-2 text-900">Password</label>
+          <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full p-inputtext-lg" placeholder="••••••••"></p-password>
+        </div>
+
+        <div class="flex justify-content-between align-items-center mb-4">
+            <div class="flex align-items-center">
+                <p-checkbox [binary]="true" inputId="remember"></p-checkbox>
+                <label for="remember" class="ml-2 text-900 cursor-pointer">Remember me</label>
+            </div>
+            <a class="text-primary font-medium no-underline hover:underline cursor-pointer">Forgot password?</a>
+        </div>
+
+        <p-button label="Sign In" type="submit" [loading]="(loading$ | async) || false" styleClass="w-full p-button-lg" [disabled]="loginForm.invalid"></p-button>
+
+        <div class="text-center mt-4">
+            <span class="text-600">Don't have an account? </span>
+            <a routerLink="/auth/register" class="text-primary font-bold no-underline hover:underline cursor-pointer">Create account</a>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

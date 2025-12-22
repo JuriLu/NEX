@@ -1,0 +1,46 @@
+<div class="register-wrapper">
+  <div class="register-container">
+    <p-card styleClass="shadow-6 border-round-xl login-card">
+      <ng-template pTemplate="header">
+        <div class="text-center pt-5 pb-2">
+          <div class="logo-circle bg-primary-50 inline-flex align-items-center justify-content-center border-circle mb-3" style="width: 64px; height: 64px">
+            <i class="pi pi-user-plus text-3xl text-primary"></i>
+          </div>
+          <h2 class="text-3xl font-bold m-0 text-900">Create Account</h2>
+          <p class="text-500 mt-2">Join us and start your journey</p>
+        </div>
+      </ng-template>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 p-3">
+
+        <div class="formgrid grid">
+            <div class="field col-12 md:col-6">
+                <label for="firstname" class="block font-medium mb-2 text-900">First Name</label>
+                <input pInputText id="firstname" formControlName="firstName" class="w-full" placeholder="John" />
+            </div>
+            <div class="field col-12 md:col-6">
+                <label for="lastname" class="block font-medium mb-2 text-900">Last Name</label>
+                <input pInputText id="lastname" formControlName="lastName" class="w-full" placeholder="Doe" />
+            </div>
+        </div>
+
+        <div class="field">
+          <label for="email" class="block font-medium mb-2 text-900">Email</label>
+          <input pInputText id="email" formControlName="email" class="w-full" placeholder="user@carrental.com" />
+        </div>
+
+        <div class="field">
+          <label for="password" class="block font-medium mb-2 text-900">Password</label>
+          <p-password id="password" formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" placeholder="Min 6 characters"></p-password>
+        </div>
+
+        <p-button label="Create Account" type="submit" [loading]="loading" styleClass="w-full p-button-lg" [disabled]="registerForm.invalid"></p-button>
+
+        <div class="text-center mt-4">
+            <span class="text-600">Already have an account? </span>
+            <a routerLink="/auth/login" class="text-primary font-bold no-underline hover:underline cursor-pointer">Sign In</a>
+        </div>
+      </form>
+    </p-card>
+  </div>
+</div>

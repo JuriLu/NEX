@@ -23,6 +23,7 @@
   "private": true,
   "packageManager": "npm@11.6.1",
   "dependencies": {
+    "@angular/animations": "^21.0.6",
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
@@ -32,6 +33,7 @@
     "@ngrx/effects": "^21.0.0",
     "@ngrx/store": "^21.0.0",
     "@ngrx/store-devtools": "^21.0.0",
+    "@primeng/themes": "^21.0.2",
     "angular-in-memory-web-api": "^0.21.0",
     "primeicons": "^7.0.0",
     "primeng": "^21.0.2",
