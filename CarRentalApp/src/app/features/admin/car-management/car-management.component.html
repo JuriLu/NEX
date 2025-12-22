@@ -16,7 +16,7 @@
           label="Add Asset"
           icon="pi pi-plus"
           (click)="openNew()"
-          styleClass="p-button-primary"
+          styleClass="p-button-primary mbux-add-asset-btn"
         ></p-button>
       </div>
     </div>
@@ -92,31 +92,49 @@
   >
     <ng-template pTemplate="content">
       <form [formGroup]="carForm" class="mbux-dialog-form">
-        <div class="field mb-5">
+        <div class="field mb-5 mbux-inline-field">
           <label class="mbux-field-label">Brand</label>
-          <input
-            type="text"
-            pInputText
-            formControlName="brand"
-            class="mbux-input"
-            placeholder="e.g., Mercedes-Benz"
-          />
+          <div class="input-wrapper">
+            <input
+              type="text"
+              pInputText
+              formControlName="brand"
+              class="mbux-input"
+              placeholder="e.g., Mercedes-Benz"
+            />
+            <div
+              class="validation-warning"
+              *ngIf="carForm.get('brand')?.invalid && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)"
+            >
+              <i class="pi pi-exclamation-circle"></i>
+              <span>Brand is required.</span>
+            </div>
+          </div>
         </div>
 
-        <div class="field mb-5">
+        <div class="field mb-5 mbux-inline-field">
           <label class="mbux-field-label">Model</label>
-          <input
-            type="text"
-            pInputText
-            formControlName="model"
-            class="mbux-input"
-            placeholder="e.g., S-Class"
-          />
+          <div class="input-wrapper">
+            <input
+              type="text"
+              pInputText
+              formControlName="model"
+              class="mbux-input"
+              placeholder="e.g., S-Class"
+            />
+            <div
+              class="validation-warning"
+              *ngIf="carForm.get('model')?.invalid && (carForm.get('model')?.dirty || carForm.get('model')?.touched)"
+            >
+              <i class="pi pi-exclamation-circle"></i>
+              <span>Model is required.</span>
+            </div>
+          </div>
         </div>
 
-        <div class="grid mb-5">
-          <div class="field col-6">
-            <label class="mbux-field-label">Class</label>
+        <div class="field mb-5 mbux-inline-field">
+          <label class="mbux-field-label">Class</label>
+          <div class="input-wrapper">
             <p-select
               [options]="categories"
               formControlName="category"
@@ -125,9 +143,19 @@
               styleClass="mbux-select w-full"
               placeholder="Select class"
             ></p-select>
+             <div
+              class="validation-warning"
+              *ngIf="carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)"
+            >
+              <i class="pi pi-exclamation-circle"></i>
+              <span>Category is required.</span>
+            </div>
           </div>
-          <div class="field col-6">
-            <label class="mbux-field-label">Availability</label>
+        </div>
+
+        <div class="field mb-5 mbux-inline-field">
+          <label class="mbux-field-label">Availability</label>
+          <div class="input-wrapper">
             <div class="mbux-availability-toggle">
               <span class="availability-status" [class.active]="carForm.get('available')?.value">
                 {{ carForm.get('available')?.value ? 'Available' : 'Unavailable' }}
@@ -137,47 +165,61 @@
           </div>
         </div>
 
-        <div class="formgrid grid mb-5">
-          <div class="field col-8">
-            <label class="mbux-field-label">Price Per Day</label>
-            <p-inputNumber
-              formControlName="pricePerDay"
-              mode="decimal"
-              [minFractionDigits]="2"
-              styleClass="mbux-input-number w-full"
-              placeholder="0.00"
-            ></p-inputNumber>
-          </div>
-          <div class="field col-4">
-            <label class="mbux-field-label">Currency</label>
-            <p-select
-              [options]="currencies"
-              formControlName="currency"
-              optionLabel="label"
-              optionValue="value"
-              styleClass="mbux-select w-full"
-            ></p-select>
-          </div>
+        <div class="field mb-5 mbux-inline-field align-items-start">
+             <label class="mbux-field-label mt-3">Pricing</label>
+             <div class="input-wrapper">
+                 <div class="flex gap-3 w-full">
+                    <div class="flex-grow-1">
+                        <p-inputNumber
+                        formControlName="pricePerDay"
+                        mode="decimal"
+                        [minFractionDigits]="2"
+                        styleClass="mbux-input-number w-full"
+                        placeholder="Price per Day"
+                        ></p-inputNumber>
+                    </div>
+                    <div class="w-auto" style="min-width: 120px;">
+                        <p-select
+                        [options]="currencies"
+                        formControlName="currency"
+                        optionLabel="label"
+                        optionValue="value"
+                        styleClass="mbux-select w-full"
+                        ></p-select>
+                    </div>
+                 </div>
+                 <div
+                    class="validation-warning"
+                    *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
+                >
+                    <i class="pi pi-exclamation-circle"></i>
+                    <span>Price is required.</span>
+                </div>
+             </div>
         </div>
 
-        <div class="field mb-5">
-          <label class="mbux-field-label">Vehicle Image</label>
-          <div [class]="styles.imageUploader" class="mbux-image-uploader">
-            @if (imagePreview) {
-            <img [src]="imagePreview" alt="Preview" class="asset-large-preview" />
-            } @else {
-            <div class="upload-placeholder">
-              <i class="pi pi-image text-5xl text-secondary opacity-30"></i>
-              <p class="text-secondary text-sm mt-2">No image selected</p>
+        <div class="field mb-5" style="position: relative;">           
+          <div class="mbux-image-uploader w-full">
+            <div *ngIf="!imagePreview" class="upload-placeholder">
+              <div class="mbux-upload-btn">
+                <p-fileupload
+                  mode="basic"
+                  chooseLabel="Select Vehicle Image"
+                  accept="image/*"
+                  (onSelect)="onImageSelect($event)"
+                  [auto]="true"
+                ></p-fileupload>
+              </div>
             </div>
-            }
-            <p-fileUpload
-              mode="basic"
-              chooseLabel="Choose Image"
-              (onSelect)="onImageSelect($event)"
-              auto="true"
-              styleClass="mbux-upload-btn mt-3"
-            ></p-fileUpload>
+            <div *ngIf="imagePreview" class="preview-container relative">
+              <img [src]="imagePreview" class="asset-large-preview" />
+              <button
+                pButton
+                icon="pi pi-times"
+                class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
+                (click)="imagePreview = null; carForm.patchValue({ image: null })"
+              ></button>
+            </div>
           </div>
         </div>
       </form>

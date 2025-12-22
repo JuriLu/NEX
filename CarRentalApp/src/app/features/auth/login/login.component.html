@@ -24,7 +24,7 @@
         }
 
         <div class="form-group">
-          <label [class]="styles.label">Identification</label>
+          <label [class]="styles.label">Email</label>
           <input
             pInputText
             formControlName="email"
@@ -41,10 +41,10 @@
 
         <div class="form-group">
           <div [class]="theme.layout.flexBetween" class="mb-2">
-            <label [class]="styles.label" class="mb-0">Security Key</label>
+            <label [class]="styles.label" class="mb-0">Password</label>
             <a
               class="text-primary font-bold text-xs no-underline hover:text-white cursor-pointer transition-all"
-              >Recover Access</a
+              >Forgot Password?</a
             >
           </div>
           <p-password
@@ -59,7 +59,7 @@
           loginForm.get('password')?.invalid) {
           <div [class]="styles.validationWarning" class="mt-2">
             <i class="pi pi-shield mr-2"></i>
-            Security key required.
+            Password required.
           </div>
           }
         </div>
@@ -67,12 +67,12 @@
         <div class="flex align-items-center">
           <p-checkbox [binary]="true" inputId="remember" styleClass="mbux-checkbox"></p-checkbox>
           <label for="remember" class="ml-2 text-secondary text-sm cursor-pointer"
-            >Maintain persistent session</label
+            >Remember me</label
           >
         </div>
 
         <p-button
-          label="Initialize Session"
+          label="Authenticate"
           type="submit"
           [loading]="(loading$ | async) || false"
           styleClass="p-button-primary p-button-lg w-full py-4"
@@ -85,7 +85,7 @@
             routerLink="/auth/register"
             [class]="theme.ui.gradientText"
             class="no-underline hover:brightness-150 transition-all cursor-pointer"
-            >Register Identity</a
+            >Sign Up</a
           >
         </div>
       </form>

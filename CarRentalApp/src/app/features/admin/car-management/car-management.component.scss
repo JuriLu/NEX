@@ -55,7 +55,7 @@
 .asset-large-preview {
   width: 100%;
   max-height: 220px;
-  object-fit: contain;
+  object-fit: cover;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
   border-radius: 12px;
 }
@@ -73,31 +73,59 @@
   }
 }
 
-:host ::ng-deep {
+::ng-deep {
   // Force MBUX Premium Dialog styles globally
   .p-dialog.mbux-premium-dialog {
     background: linear-gradient(165deg, rgba(20, 15, 30, 0.98) 0%, rgba(15, 10, 25, 0.98) 100%) !important;
     border: 1px solid rgba(139, 92, 246, 0.3) !important;
     border-radius: 24px !important;
     box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(139, 92, 246, 0.2) !important;
+    width: 650px !important; // UPDATED: Wider dialog
 
     .p-dialog-header {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%) !important;
       border-bottom: 1px solid rgba(139, 92, 246, 0.3) !important;
-      padding: 2rem 2.5rem !important;
+      padding: 1.5rem 2.5rem !important; // REDUCED padding options
+
+      .p-dialog-title {
+        color: white !important;
+        font-size: 1.5rem !important; // Slightly smaller title
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+        // Removed gradient text for visibility
+        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+      }
+
+      .p-dialog-header-icon {
+        color: rgba(255, 255, 255, 0.7) !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          color: white !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
     }
 
     .p-dialog-content {
       background: transparent !important;
       padding: 2rem 2.5rem !important;
+      color: white !important;
     }
 
     .p-dialog-footer {
       background: rgba(15, 15, 20, 0.6) !important;
       border-top: 1px solid rgba(139, 92, 246, 0.3) !important;
-      padding: 1.75rem 2.5rem !important;
+      padding: 1.5rem 2.5rem !important;
       gap: 1.25rem !important;
     }
+  }
+
+  // Double Size Icon for Add Asset
+  .mbux-add-asset-btn {
+     .p-button-icon {
+        font-size: 1.5rem !important; // Increased Size
+     }
   }
 
   // Force button spacing
@@ -113,6 +141,80 @@
 
   // Force dark inputs
   .mbux-dialog-form {
+    .mbux-inline-field {
+      display: flex;
+      align-items: center;
+      gap: 3rem; 
+      position: relative;
+
+      &.align-items-start {
+        align-items: flex-start !important;
+      }
+      
+      .input-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    // UPDATED: Innovative Validation Message
+    .validation-warning {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        border-radius: 12px;
+        background: rgba(255, 56, 56, 0.1);
+        border: 1px solid rgba(255, 56, 56, 0.3);
+        color: #ffb8b8;
+        font-size: 0.875rem;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        animation: slideDown 0.3s ease-out;
+
+        i {
+            font-size: 1rem;
+            color: #ff3838;
+            filter: drop-shadow(0 0 8px rgba(255, 56, 56, 0.6));
+        }
+
+        span {
+            text-shadow: 0 0 10px rgba(255, 56, 56, 0.2);
+        }
+    }
+    
+    // Absolute Label for Image
+    .absolute-label {
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 0.25rem 0.75rem;
+        border-radius: 8px;
+        backdrop-filter: blur(4px);
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mbux-field-label {
+      display: block;
+      color: #e2e8f0 !important; // UPDATED: Solid color for visibility
+      font-size: 0.875rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.1em !important;
+      margin-bottom: 0 !important; // Removed bottom margin for inline
+      // Removed gradient text for visibility
+      width: 140px; // Fixed width for alignment
+      flex-shrink: 0;
+      text-align: left; // Align label text
+    }
+
     .p-inputtext,
     .p-select,
     .p-inputnumber-input {
@@ -210,28 +312,29 @@
 
   // MBUX Premium Dialog - Complete Dark Theme
   .mbux-premium-dialog {
+    // Force the dialog wrapper itself to have the background
     .p-dialog {
       border-radius: 24px !important;
       overflow: hidden !important;
       box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(139, 92, 246, 0.2) !important;
-      background: linear-gradient(165deg, rgba(20, 15, 30, 0.98) 0%, rgba(15, 10, 25, 0.98) 100%) !important;
+      background: linear-gradient(135deg, #000000 0%, #2e0249 100%) !important; // UPDATED: Black to Violet
       border: 1px solid rgba(139, 92, 246, 0.3) !important;
+      color: white !important; // Ensure text inheritance
     }
 
+    // Ensure content and header don't have white backgrounds hiding the gradient
     .p-dialog-header {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%) !important;
-      border-bottom: 1px solid rgba(139, 92, 246, 0.3) !important;
+      background: rgba(255, 255, 255, 0.03) !important; // More subtle header
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
       padding: 2rem 2.5rem !important;
+      color: white !important;
 
       .p-dialog-title {
         color: white !important;
         font-size: 1.75rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.02em !important;
-        background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        // Removed gradient text for visibility
         filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
       }
 
@@ -247,38 +350,89 @@
     }
 
     .p-dialog-content {
-      background: transparent !important;
+      background: transparent !important; // CRITICAL: Transparent to show dialog gradient
       padding: 2rem 2.5rem !important;
       color: white !important;
     }
 
     .p-dialog-footer {
-      background: rgba(15, 15, 20, 0.6) !important;
-      border-top: 1px solid rgba(139, 92, 246, 0.3) !important;
+      background: rgba(0, 0, 0, 0.4) !important;
+      border-top: 1px solid rgba(139, 92, 246, 0.2) !important;
       padding: 1.75rem 2.5rem !important;
     }
   }
 
   // MBUX Dialog Form
   .mbux-dialog-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; // Vertical spacing between rows
+
+    .mbux-inline-field {
+      display: flex;
+      align-items: center;
+      gap: 3rem; // INCREASED: Space between label and input based on feedback
+      position: relative; // For absolute positioning error messages if needed, or just context
+
+      &.align-items-start {
+        align-items: flex-start !important;
+      }
+      
+      // Container for input + error message to stack vertically while label is on the left
+      .input-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
     .mbux-field-label {
       display: block;
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: #e2e8f0 !important; // UPDATED: Solid color for visibility
       font-size: 0.875rem !important;
       font-weight: 600 !important;
       text-transform: uppercase !important;
       letter-spacing: 0.1em !important;
-      margin-bottom: 0.75rem !important;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: 0 !important; // Removed bottom margin for inline
+      // Removed gradient text for visibility
+      width: 140px; // Fixed width for alignment
+      flex-shrink: 0;
+      text-align: left; // Align label text
+    }
+    
+    // Validation Message Style - Innovative/Neon
+    .mbux-error-message {
+      color: #ff3838;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+      margin-top: 0.25rem;
+      text-shadow: 0 0 10px rgba(255, 56, 56, 0.4);
+      animation: fadeIn 0.3s ease-out;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      
+      &::before {
+        content: '!';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        background: rgba(255, 56, 56, 0.2);
+        border: 1px solid rgba(255, 56, 56, 0.5);
+        border-radius: 50%;
+        font-size: 0.65rem;
+        font-weight: bold;
+      }
     }
   }
 
   // MBUX Input Fields
   .mbux-input {
     width: 100% !important;
+    // flex: 1; // Removed here, moved responsibility to parent wrapper
     background: rgba(255, 255, 255, 0.05) !important;
     border: 2px solid rgba(139, 92, 246, 0.3) !important;
     border-radius: 14px !important;
@@ -302,10 +456,21 @@
       background: rgba(255, 255, 255, 0.08) !important;
       box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.4) !important;
     }
+    
+    &.ng-invalid.ng-dirty {
+      border-color: rgba(255, 56, 56, 0.5) !important;
+      box-shadow: 0 0 0 2px rgba(255, 56, 56, 0.2) !important;
+      
+      &:focus {
+        box-shadow: 0 0 0 4px rgba(255, 56, 56, 0.2), 0 0 30px rgba(255, 56, 56, 0.3) !important;
+      }
+    }
   }
 
   // MBUX Select Dropdown
   .mbux-select {
+    width: 100%;
+    
     .p-select {
       width: 100% !important;
       background: rgba(255, 255, 255, 0.05) !important;
@@ -359,6 +524,7 @@
 
   // MBUX Input Number
   .mbux-input-number {
+    width: 100%;
     .p-inputnumber-input {
       width: 100% !important;
       background: rgba(255, 255, 255, 0.05) !important;
@@ -399,15 +565,15 @@
   .mbux-availability-toggle {
     display: flex !important;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    justify-content: flex-end; // Push to right
+    gap: 1.5rem;
     padding: 0.875rem 1.25rem;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 2px solid rgba(139, 92, 246, 0.3) !important;
-    border-radius: 14px !important;
-    transition: all 0.3s ease;
-    margin-top: 0.75rem;
-    min-height: 54px;
+    background: transparent !important; // Removed background to make it cleaner
+    // border: 2px solid rgba(139, 92, 246, 0.3) !important; // Removed border for "own column" feel
+    // border-radius: 14px !important;
+    margin-top: 0 !important;
+    min-height: 50px;
+    width: 100%;
 
     &:hover {
       background: rgba(255, 255, 255, 0.07) !important;
@@ -415,7 +581,7 @@
     }
 
     .availability-status {
-      flex: 1;
+      flex: none; // Don't grow
       color: rgba(255, 255, 255, 0.6) !important;
       font-size: 0.95rem;
       font-weight: 600;
@@ -429,15 +595,25 @@
     }
 
     .p-toggleswitch {
+      width: 3.5rem;
+      height: 2rem;
+      
       .p-toggleswitch-slider {
         background: rgba(255, 255, 255, 0.1) !important;
         border: 1px solid rgba(139, 92, 246, 0.3) !important;
-        border-radius: 24px !important;
+        border-radius: 2rem !important;
 
         &::before {
           background: rgba(255, 255, 255, 0.9) !important;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
+      }
+
+      // Override Green Hover/Active
+      &:hover {
+         .p-toggleswitch-slider {
+            background: rgba(255, 255, 255, 0.15) !important;
+         }
       }
 
       &.p-toggleswitch-checked {
@@ -446,12 +622,19 @@
           border-color: transparent !important;
           box-shadow: 0 0 20px rgba(139, 92, 246, 0.6) !important;
         }
+
+        &:hover {
+             .p-toggleswitch-slider {
+                background: linear-gradient(135deg, var(--primary-color) 10%, var(--pink-400) 90%) !important;
+             }
+        }
       }
     }
   }
 
   // MBUX Image Uploader
   .mbux-image-uploader {
+    width: 100%; // Ensure full width
     .upload-placeholder {
       display: flex;
       flex-direction: column;
@@ -486,7 +669,7 @@
   .mbux-dialog-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 1.25rem !important;
+    gap: 2rem !important; // Increased gap for better button spacing
 
     .mbux-btn-cancel,
     .mbux-btn-save {
