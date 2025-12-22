@@ -19,20 +19,58 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
+import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
+
 @Component({
   selector: 'app-car-management',
   standalone: true,
   imports: [
-    CommonModule, TableModule, ButtonModule, DialogModule,
-    InputTextModule, InputNumberModule, ReactiveFormsModule,
-    ConfirmDialogModule, ToastModule, ToggleSwitchModule, SelectModule,
-    FileUploadModule, TagModule
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    DialogModule,
+    InputTextModule,
+    InputNumberModule,
+    ReactiveFormsModule,
+    ConfirmDialogModule,
+    ToastModule,
+    ToggleSwitchModule,
+    SelectModule,
+    FileUploadModule,
+    TagModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './car-management.component.html',
-  styleUrl: './car-management.component.scss'
+  styleUrl: './car-management.component.scss',
 })
 export class CarManagementComponent implements OnInit {
+  readonly theme = DESIGN_SYSTEM;
+
+  readonly styles = {
+    opsCenter: ['ops-center', 'py-8', 'px-4', 'lg:px-8'],
+    tableContainer: ['overflow-hidden', 'fadeinup', 'animation-duration-1000'],
+    tableHeader: ['uppercase', 'tracking-widest', 'text-sm', 'font-bold'],
+    fieldLabel: [
+      'block',
+      'text-secondary',
+      'font-bold',
+      'uppercase',
+      'tracking-widest',
+      'text-xs',
+      'mb-2',
+    ],
+    assetPreview: ['asset-preview', 'glass-panel'],
+    imageUploader: [
+      'image-uploader',
+      'glass-panel',
+      'p-4',
+      'flex',
+      'flex-column',
+      'align-items-center',
+      'gap-4',
+    ],
+  };
+
   private carService = inject(CarService);
   private fb = inject(FormBuilder);
   private confirmationService = inject(ConfirmationService);
@@ -51,13 +89,13 @@ export class CarManagementComponent implements OnInit {
     { label: 'Sport', value: 'Sport' },
     { label: 'Luxury', value: 'Luxury' },
     { label: 'SUV', value: 'SUV' },
-    { label: 'Convertible', value: 'Convertible' }
+    { label: 'Convertible', value: 'Convertible' },
   ];
 
   currencies = [
     { label: 'USD ($)', value: 'USD' },
     { label: 'EUR (€)', value: 'EUR' },
-    { label: 'GBP (£)', value: 'GBP' }
+    { label: 'GBP (£)', value: 'GBP' },
   ];
 
   ngOnInit() {
@@ -66,7 +104,7 @@ export class CarManagementComponent implements OnInit {
   }
 
   loadCars() {
-    this.carService.getCars().subscribe(cars => this.cars = cars);
+    this.carService.getCars().subscribe((cars) => (this.cars = cars));
   }
 
   initForm() {
@@ -77,7 +115,7 @@ export class CarManagementComponent implements OnInit {
       pricePerDay: [null, [Validators.required, Validators.min(1)]],
       currency: ['USD', Validators.required],
       image: [''], // Optional
-      available: [true]
+      available: [true],
     });
   }
 
@@ -106,15 +144,25 @@ export class CarManagementComponent implements OnInit {
       accept: () => {
         this.carService.deleteCar(car.id).subscribe({
           next: () => {
-            this.cars = this.cars.filter(val => val.id !== car.id);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Car Deleted', life: 3000 });
+            this.cars = this.cars.filter((val) => val.id !== car.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Car Deleted',
+              life: 3000,
+            });
           },
           error: (err) => {
             console.error('Delete Car Error:', err);
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not delete car', life: 3000 });
-          }
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Could not delete car',
+              life: 3000,
+            });
+          },
         });
-      }
+      },
     });
   }
 
@@ -142,12 +190,22 @@ export class CarManagementComponent implements OnInit {
           next: () => {
             this.loadCars();
             this.hideDialog();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Car Updated', life: 3000 });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Car Updated',
+              life: 3000,
+            });
           },
           error: (err) => {
             console.error('Update Car Error:', err);
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not update car', life: 3000 });
-          }
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Could not update car',
+              life: 3000,
+            });
+          },
         });
       } else {
         // In real app, features would be a form array. For mock, just empty array.
@@ -155,12 +213,22 @@ export class CarManagementComponent implements OnInit {
           next: () => {
             this.loadCars();
             this.hideDialog();
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Car Created', life: 3000 });
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Car Created',
+              life: 3000,
+            });
           },
           error: (err) => {
             console.error('Add Car Error:', err);
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not add car', life: 3000 });
-          }
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Could not add car',
+              life: 3000,
+            });
+          },
         });
       }
     }

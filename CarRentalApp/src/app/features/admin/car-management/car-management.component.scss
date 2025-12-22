@@ -1,91 +1,576 @@
 .ops-center {
   min-height: 80vh;
+  background: linear-gradient(135deg, rgba(10, 10, 15, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%);
 }
 
 .asset-preview {
-  width: 80px;
-  height: 50px;
+  width: 240px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 12px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+  }
+}
+
+.car-brand {
+  color: white;
+  font-weight: 700;
+  font-size: 1.375rem; // 22px - larger but balanced
+  letter-spacing: 0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.car-model {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.125rem; // 18px - noticeably larger
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2));
 }
 
 .asset-large-preview {
   width: 100%;
-  max-height: 180px;
+  max-height: 220px;
   object-fit: contain;
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+  border-radius: 12px;
 }
 
 .image-uploader {
   width: 100%;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px dashed var(--glass-border);
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.03);
+  }
 }
 
 :host ::ng-deep {
-  .mbux-dialog {
-    .p-dialog-header {
-      background: rgba(15, 15, 20, 0.98) !important;
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border) !important;
-      color: white !important;
-      padding: 1.5rem !important;
+  // Enhanced table styling
+  .mbux-table {
+    .p-datatable-thead > tr > th {
+      background: rgba(255, 255, 255, 0.02) !important;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+      color: var(--text-secondary) !important;
+      padding: 1.25rem 1rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.1em !important;
     }
 
-    .p-dialog-content {
-      background: rgba(10, 10, 12, 0.98) !important;
-      color: var(--text-primary) !important;
-      padding: 1.5rem !important;
-    }
+    .p-datatable-tbody > tr {
+      background: rgba(255, 255, 255, 0.01) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+      transition: all 0.3s ease !important;
 
-    .p-dialog-footer {
-      background: rgba(15, 15, 20, 0.98) !important;
-      border-top: 1px solid var(--glass-border) !important;
-      padding: 1rem !important;
-    }
-  }
+      &:hover {
+        background: rgba(255, 255, 255, 0.03) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
 
-  /* Universal Input styling for MBUX Admin */
-  .mbux-input,
-  .p-inputtext,
-  .mbux-input-number .p-inputtext {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid var(--glass-border) !important;
-    color: white !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: 12px !important;
-    width: 100%;
+      td {
+        padding: 1.5rem 1rem !important;
+        border: none !important;
+        font-size: 1rem !important;
 
-    &:focus {
-      border-color: var(--primary-color) !important;
-      background: rgba(255, 255, 255, 0.05) !important;
-    }
-  }
-
-  .mbux-select {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 12px !important;
-
-    .p-select-label {
-      color: white !important;
-    }
-  }
-
-  .p-toggleswitch {
-    .p-toggleswitch-slider {
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-radius: 20px !important;
-
-      &:before {
-        background: white !important;
+        // Enhanced category label styling
+        span[class*='label'] {
+          font-size: 0.875rem !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.12em !important;
+        }
       }
     }
 
-    &.p-toggleswitch-checked .p-toggleswitch-slider {
-      background: var(--primary-color) !important;
+    .p-paginator {
+      background: rgba(255, 255, 255, 0.01) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      padding: 1rem !important;
+
+      .p-paginator-element {
+        color: var(--text-secondary) !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.05) !important;
+          color: white !important;
+        }
+      }
+
+      .p-highlight {
+        background: var(--primary-color) !important;
+        color: white !important;
+      }
+    }
+  }
+
+  // Status tag enhancements
+  .status-glow {
+    padding: 0.5rem 1rem !important;
+    border-radius: 20px !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    letter-spacing: 0.05em !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+
+    &.p-tag-success {
+      background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%) !important;
+      box-shadow: 0 4px 16px rgba(0, 255, 136, 0.3) !important;
+    }
+
+    &.p-tag-danger {
+      background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%) !important;
+      box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3) !important;
+    }
+  }
+
+  // Confirm dialog styling
+  .mbux-confirm-dialog {
+    .p-dialog-header,
+    .p-dialog-content,
+    .p-dialog-footer {
+      background: rgba(15, 15, 20, 0.98) !important;
+      color: white !important;
+    }
+
+    .p-confirm-dialog-message {
+      color: var(--text-secondary) !important;
+    }
+  }
+
+  // MBUX Premium Dialog - Dark Theme with Compact Vertical Layout
+  .mbux-premium-dialog {
+    .p-dialog {
+      border-radius: 20px !important;
+      overflow: hidden !important;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(139, 92, 246, 0.15) !important;
+      background: linear-gradient(165deg, rgba(20, 15, 30, 0.95) 0%, rgba(15, 10, 25, 0.98) 100%) !important;
+      border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    }
+
+    .p-dialog-header {
+      background: rgba(15, 15, 20, 0.8) !important;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 1.5rem 2rem !important;
+
+      .p-dialog-title {
+        color: white !important;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .p-dialog-header-icon {
+        color: rgba(255, 255, 255, 0.7) !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          color: white !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+    }
+
+    .p-dialog-content {
+      background: transparent !important;
+      padding: 1.5rem 2rem !important;
+      color: white !important;
+    }
+
+    .p-dialog-footer {
+      background: rgba(15, 15, 20, 0.6) !important;
+      border-top: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 1.25rem 2rem !important;
+    }
+  }
+
+  // Compact Vertical Form Styling
+  .mbux-form-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .form-field-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-row-compact {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .mbux-label {
+      color: rgba(255, 255, 255, 0.85) !important;
+      font-size: 0.8125rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.08em !important;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  // Compact Image Upload
+  .compact-uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1.5px dashed rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .asset-preview-compact {
+      max-width: 100%;
+      max-height: 150px;
+      object-fit: contain;
+      border-radius: 8px;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    }
+
+    .upload-placeholder-compact {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0;
+    }
+  }
+
+  // Compact Upload Button
+  .upload-button-compact {
+    .p-button {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border: 1.5px solid rgba(139, 92, 246, 0.4) !important;
+      color: var(--primary-color) !important;
+      padding: 0.625rem 1.25rem !important;
+      border-radius: 10px !important;
+      font-weight: 600 !important;
+      font-size: 0.875rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.25) !important;
+        border-color: rgba(139, 92, 246, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3) !important;
+      }
+    }
+  }
+
+  // Enhanced Input Fields
+  .mbux-input {
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 10px !important;
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9375rem !important;
+    transition: all 0.3s ease !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    &:hover {
+      border-color: rgba(139, 92, 246, 0.5) !important;
+      background: rgba(255, 255, 255, 0.07) !important;
+    }
+
+    &:focus {
+      outline: none !important;
+      border-color: var(--primary-color) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 0 20px rgba(139, 92, 246, 0.3) !important;
+    }
+  }
+
+  // Enhanced Select Dropdowns
+  .mbux-select {
+    .p-select {
+      width: 100% !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 10px !important;
+      color: white !important;
+      padding: 0.75rem 1rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        border-color: rgba(139, 92, 246, 0.5) !important;
+        background: rgba(255, 255, 255, 0.07) !important;
+      }
+
+      &:focus,
+      &.p-focus {
+        outline: none !important;
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 0 20px rgba(139, 92, 246, 0.3) !important;
+      }
+
+      .p-select-label {
+        color: white !important;
+      }
+
+      .p-placeholder {
+        color: rgba(255, 255, 255, 0.3) !important;
+      }
+    }
+
+    .p-select-overlay {
+      background: rgba(20, 15, 30, 0.98) !important;
+      border: 1px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 12px !important;
+
+      .p-select-option {
+        color: white !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.2) !important;
+        }
+
+        &.p-select-option-selected {
+          background: rgba(139, 92, 246, 0.3) !important;
+        }
+      }
+    }
+  }
+
+  // Enhanced Number Input
+  .mbux-input-number {
+    .p-inputnumber-input {
+      width: 100% !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 10px !important;
+      color: white !important;
+      padding: 0.75rem 1rem !important;
+      font-size: 0.9375rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        border-color: rgba(139, 92, 246, 0.5) !important;
+        background: rgba(255, 255, 255, 0.07) !important;
+      }
+
+      &:focus {
+        outline: none !important;
+        border-color: var(--primary-color) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2), 0 0 20px rgba(139, 92, 246, 0.3) !important;
+      }
+    }
+
+    .p-inputnumber-button-group {
+      .p-button {
+        background: rgba(139, 92, 246, 0.2) !important;
+        border-color: rgba(139, 92, 246, 0.3) !important;
+        color: white !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.3) !important;
+        }
+      }
+    }
+  }
+
+  // Availability Toggle Section
+  .availability-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(139, 92, 246, 0.3);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+
+    .availability-label {
+      flex: 1;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: all 0.3s ease;
+
+      &.active {
+        color: var(--primary-color);
+        text-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
+      }
+    }
+
+    .p-toggleswitch {
+      .p-toggleswitch-slider {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(139, 92, 246, 0.3) !important;
+
+        &::before {
+          background: rgba(255, 255, 255, 0.8) !important;
+        }
+      }
+
+      &.p-toggleswitch-checked {
+        .p-toggleswitch-slider {
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%) !important;
+          border-color: transparent !important;
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.5) !important;
+        }
+      }
+    }
+  }
+
+  // Dialog Footer with Premium Buttons
+  .dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+
+    .cancel-button {
+      .p-button {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+        padding: 0.75rem 1.5rem !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        font-size: 0.9375rem !important;
+        letter-spacing: 0.03em !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.08) !important;
+          border-color: rgba(255, 255, 255, 0.3) !important;
+          color: white !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        .p-button-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .save-button {
+      .p-button {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%) !important;
+        border: none !important;
+        color: white !important;
+        padding: 0.75rem 2rem !important;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        font-size: 0.9375rem !important;
+        letter-spacing: 0.03em !important;
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4) !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 28px rgba(139, 92, 246, 0.6) !important;
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        .p-button-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+
+  // Action buttons with purple-nuanced colors
+  .action-edit {
+    color: rgba(255, 255, 255, 0.4) !important;
+    transition: all 0.3s ease !important;
+    border-radius: 10px !important;
+
+    &:hover {
+      color: #7BE495 !important; // Soft green with purple undertone
+      background: rgba(123, 228, 149, 0.1) !important;
+      box-shadow: 0 0 20px rgba(123, 228, 149, 0.3) !important;
+      transform: scale(1.1);
+    }
+
+    .p-button-icon {
+      transition: all 0.3s ease !important;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .action-delete {
+    color: rgba(255, 255, 255, 0.4) !important;
+    transition: all 0.3s ease !important;
+    border-radius: 10px !important;
+
+    &:hover {
+      color: #FF6B9D !important; // Soft red with violet/pink undertone
+      background: rgba(255, 107, 157, 0.1) !important;
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.3) !important;
+      transform: scale(1.1);
+    }
+
+    .p-button-icon {
+      transition: all 0.3s ease !important;
+    }
+
+    &:active {
+      transform: scale(0.95);
     }
   }
 }
