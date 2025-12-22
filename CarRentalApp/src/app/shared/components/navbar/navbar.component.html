@@ -1,0 +1,37 @@
+<p-toolbar styleClass="border-none border-noround px-4 py-3 bg-white shadow-2 sticky top-0 z-5">
+  <div class="p-toolbar-group-start gap-4">
+    <a routerLink="/" class="flex align-items-center no-underline cursor-pointer">
+      <i class="pi pi-car text-4xl text-primary mr-2"></i>
+      <span class="text-2xl font-bold text-900">LuxDrive</span>
+    </a>
+
+    <div class="hidden md:flex gap-3 ml-4">
+      <a routerLink="/" routerLinkActive="text-primary font-bold" [routerLinkActiveOptions]="{exact: true}" class="text-700 hover:text-primary font-medium no-underline transition-colors p-2">Home</a>
+      <a routerLink="/catalog" routerLinkActive="text-primary font-bold" class="text-700 hover:text-primary font-medium no-underline transition-colors p-2">Fleet</a>
+      <a routerLink="/services" routerLinkActive="text-primary font-bold" class="text-700 hover:text-primary font-medium no-underline transition-colors p-2">Services</a>
+      <a routerLink="/contact" routerLinkActive="text-primary font-bold" class="text-700 hover:text-primary font-medium no-underline transition-colors p-2">Contact</a>
+      @if (isAdmin$ | async) {
+        <a routerLink="/admin" routerLinkActive="text-primary font-bold" class="text-700 hover:text-primary font-medium no-underline transition-colors p-2">Manage</a>
+      }
+    </div>
+  </div>
+
+  <div class="p-toolbar-group-end gap-2">
+    @if (isLoggedIn$ | async) {
+      <div class="flex align-items-center gap-3 bg-primary-50 px-3 py-2 border-round-3xl">
+        <span class="font-bold text-primary hidden sm:block">Welcome, {{ (user$ | async)?.name }}</span>
+        <p-avatar
+          icon="pi pi-user"
+          shape="circle"
+          styleClass="bg-primary text-white cursor-pointer"
+          (click)="menu.toggle($event)">
+        </p-avatar>
+        <p-menu #menu [model]="userMenu" [popup]="true"></p-menu>
+      </div>
+    } @else {
+
+      <p-button label="Sign In" icon="pi pi-user" styleClass="p-button-text" routerLink="/auth/login"></p-button>
+      <p-button label="Register" styleClass="p-button-primary" routerLink="/auth/register"></p-button>
+    }
+  </div>
+</p-toolbar>

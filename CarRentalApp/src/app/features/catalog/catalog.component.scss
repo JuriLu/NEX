@@ -1,0 +1,35 @@
+.car-card {
+  border: none !important;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+
+    .car-image {
+      transform: scale(1.08) rotate(-2deg);
+    }
+  }
+}
+
+.car-image-container {
+  perspective: 1000px;
+  background: radial-gradient(circle at center, #f8f9fa 0%, #e9ecef 100%) !important;
+  overflow: hidden;
+}
+
+.car-image {
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.25));
+}
+
+.price-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}

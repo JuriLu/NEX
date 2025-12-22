@@ -17,21 +17,45 @@
             <div class="field col-12 md:col-6">
                 <label for="firstname" class="block font-medium mb-2 text-900">First Name</label>
                 <input pInputText id="firstname" formControlName="firstName" class="w-full" placeholder="John" />
+                @if ((submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.invalid) {
+                  <div class="validation-warning mt-2 p-2 border-round">
+                    <i class="pi pi-exclamation-circle mr-2"></i>
+                    Letters only, please.
+                  </div>
+                }
             </div>
             <div class="field col-12 md:col-6">
                 <label for="lastname" class="block font-medium mb-2 text-900">Last Name</label>
                 <input pInputText id="lastname" formControlName="lastName" class="w-full" placeholder="Doe" />
+                @if ((submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.invalid) {
+                  <div class="validation-warning mt-2 p-2 border-round">
+                    <i class="pi pi-exclamation-circle mr-2"></i>
+                    Letters only, please.
+                  </div>
+                }
             </div>
         </div>
 
         <div class="field">
           <label for="email" class="block font-medium mb-2 text-900">Email</label>
           <input pInputText id="email" formControlName="email" class="w-full" placeholder="user@carrental.com" />
+          @if ((submitted || registerForm.get('email')?.touched) && registerForm.get('email')?.invalid) {
+            <div class="validation-warning mt-2 p-2 border-round">
+              <i class="pi pi-exclamation-circle mr-2"></i>
+              Valid email is required.
+            </div>
+          }
         </div>
 
         <div class="field">
           <label for="password" class="block font-medium mb-2 text-900">Password</label>
           <p-password id="password" formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" placeholder="Min 6 characters"></p-password>
+          @if ((submitted || registerForm.get('password')?.touched) && registerForm.get('password')?.invalid) {
+            <div class="validation-warning mt-2 p-2 border-round">
+              <i class="pi pi-exclamation-circle mr-2"></i>
+              Min 6 characters required.
+            </div>
+          }
         </div>
 
         <p-button label="Create Account" type="submit" [loading]="loading" styleClass="w-full p-button-lg" [disabled]="registerForm.invalid"></p-button>

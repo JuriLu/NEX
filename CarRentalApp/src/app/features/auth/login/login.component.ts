@@ -13,6 +13,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
+import { animate, style, transition, trigger } from '@angular/animations';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -28,10 +30,19 @@ import { PasswordModule } from 'primeng/password';
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  animations: [
+    trigger('loginAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class LoginComponent {
   fb = inject(FormBuilder);
   store = inject(Store);
+  submitted = false;
 
   loginForm: FormGroup = this.fb.group({
     email: ['user@carrental.com', [Validators.required, Validators.email]],
@@ -42,6 +53,7 @@ export class LoginComponent {
   error$ = this.store.select(selectAuthError);
 
   onSubmit() {
+    this.submitted = true;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.store.dispatch(login({ email, password }));

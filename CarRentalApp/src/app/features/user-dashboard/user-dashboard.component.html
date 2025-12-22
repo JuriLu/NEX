@@ -1,0 +1,58 @@
+<div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+    <div class="flex flex-column md:flex-row md:align-items-start md:justify-content-between mb-5">
+        <div>
+            <div class="text-900 font-bold text-3xl mb-2">My Bookings</div>
+            <p class="mt-0 mb-0 text-700 text-xl">Manage your current and past rentals.</p>
+        </div>
+    </div>
+
+    <p-card>
+        <p-table [value]="(userBookings$ | async) || []" [responsiveLayout]="'stack'" [breakpoint]="'960px'" styleClass="p-datatable-striped">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Car</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Price</th>
+                    <th>Status</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-booking>
+                <tr>
+                    <td>
+                        <span class="p-column-title">Car</span>
+                        <div class="flex align-items-center">
+                            <img [src]="booking.car?.image" [alt]="booking.car?.brand" width="60" class="mr-3 border-round shadow-2" />
+                            <span class="font-bold text-900">{{ booking.car?.brand }} {{ booking.car?.model }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Start Date</span>
+                        {{ booking.startDate | date:'mediumDate' }}
+                    </td>
+                    <td>
+                        <span class="p-column-title">End Date</span>
+                        {{ booking.endDate | date:'mediumDate' }}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Total Price</span>
+                        <span class="font-bold text-primary">{{ booking.totalPrice | currency }}</span>
+                    </td>
+                    <td>
+                        <span class="p-column-title">Status</span>
+                        <p-tag [value]="booking.status" [severity]="getSeverity(booking.status)"></p-tag>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center py-8">
+                        <i class="pi pi-calendar-times text-4xl text-500 mb-3"></i>
+                        <p class="text-700">You don't have any bookings yet.</p>
+                        <p-button label="Explore Cars" icon="pi pi-search" routerLink="/catalog" styleClass="p-button-text"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</div>

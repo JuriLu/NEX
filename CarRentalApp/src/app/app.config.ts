@@ -14,6 +14,9 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { InMemoryDataService } from './core/services/in-memory-data.service';
 import { reducers } from './core/store/app.state';
 
+import { AuthEffects } from './core/store/auth/auth.effects';
+import { BookingEffects } from './core/store/booking/booking.effects';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -22,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, { delay: 500 })),
     provideStore(reducers),
-    provideEffects(),
+    provideEffects([AuthEffects, BookingEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false }),
     providePrimeNG({
         theme: {

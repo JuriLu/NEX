@@ -17,3 +17,6 @@ export const loginFailure = createAction(
 );
 
 export const logout = createAction('[Auth] Logout');
+
+export const init = createAction('[Auth] Init');
+

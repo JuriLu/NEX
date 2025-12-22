@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { SecurityUtils } from '../../../core/utils/security.utils';
 
 // PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -22,10 +23,11 @@ import { PasswordModule } from 'primeng/password';
 export class RegisterComponent {
   fb = inject(FormBuilder);
   router = inject(Router);
+  submitted = false;
 
   registerForm: FormGroup = this.fb.group({
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
+    lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]]
@@ -34,11 +36,11 @@ export class RegisterComponent {
   loading = false;
 
   onSubmit() {
-    // Basic validation
+    this.submitted = true;
     if (this.registerForm.valid) {
       this.loading = true;
-      // TODO: Dispatch Register Action (Need to implement in Store)
-      console.log('Register Payload:', this.registerForm.value);
+      const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
+      console.log('Register Payload (Sanitized):', sanitizedData);
 
       // Mock success for now
       setTimeout(() => {

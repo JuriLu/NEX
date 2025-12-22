@@ -7,6 +7,7 @@
 - Avoid anti-patterns (spaghetti code, god object, lava flow) unless absolutely unavoidable.
 - Write comments only for the **why**, not the **what**.
 - Handle errors and exceptions with clear messages and safe logging.
+- Since we are using angular project, use the guideline from instructions/angular-instructions.md file
 
 ## API Development
 - Default → **RESTful APIs** (use GraphQL only if explicitly required).

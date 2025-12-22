@@ -19,7 +19,7 @@ export class InMemoryDataService implements InMemoryDbService {
          model: 'Model S Plaid',
          pricePerDay: 250,
          category: 'Electric',
-         image: 'assets/cars/tesla-model-s.jpg',
+         image: 'assets/images/tesla.png',
          available: true,
          features: ['Autopilot', '0-60 in 1.99s', 'Range 396mi']
        },
@@ -29,7 +29,7 @@ export class InMemoryDataService implements InMemoryDbService {
          model: 'M4 Competition',
          pricePerDay: 180,
          category: 'Sport',
-         image: 'assets/cars/bmw-m4.jpg',
+         image: 'assets/images/bmw.png',
          available: true,
          features: ['503 HP', 'Carbon Bucket Seats', 'Drift Mode']
        },
@@ -39,7 +39,7 @@ export class InMemoryDataService implements InMemoryDbService {
          model: 'S-Class',
          pricePerDay: 300,
          category: 'Luxury',
-         image: 'assets/cars/mercedes-s-class.jpg',
+         image: 'assets/images/mercedes.png',
          available: true,
          features: ['Massage Seats', 'Ambient Lighting', 'Chauffeur Package']
        }
@@ -49,5 +49,12 @@ export class InMemoryDataService implements InMemoryDbService {
     const reservations: any[] = [];
 
     return { users, cars, reservations };
+  }
+
+  // Overrides genId to ensure that a car/user always has an id.
+  // If the collection is empty, the method returns the initial number (101).
+  // if the collection has items, it returns the highest id + 1.
+  genId(collection: any[]): number {
+    return collection.length > 0 ? Math.max(...collection.map(item => item.id)) + 1 : 101;
   }
 }

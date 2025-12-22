@@ -1,0 +1,65 @@
+<div class="surface-ground px-4 py-8 md:px-6 lg:px-8 flex justify-content-center">
+    <div class="w-full md:w-8 lg:w-6" *ngIf="car$ | async as car">
+        <p-card [header]="'Booking Summary: ' + car.brand + ' ' + car.model">
+            <div class="flex flex-column md:flex-row gap-4 mb-5">
+                <div class="flex-1">
+                    <img [src]="car.image" [alt]="car.brand" class="w-full border-round-xl shadow-2" />
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-3">{{ car.brand }} {{ car.model }}</h3>
+                    <p class="text-600 mb-2">Category: <span class="text-900 font-medium">{{ car.category }}</span></p>
+                    <p class="text-600 mb-4">Daily Rate: <span class="text-primary font-bold">{{ car.pricePerDay | currency }}</span></p>
+
+                    <div class="surface-100 p-3 border-round">
+                        <h4 class="font-bold mb-2">Features</h4>
+                        <ul class="list-none p-0 m-0 flex flex-column gap-2">
+                            <li *ngFor="let feature of car.features" class="flex align-items-center">
+                                <i class="pi pi-check-circle text-green-500 mr-2"></i>
+                                <span>{{ feature }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+                <div class="flex flex-column gap-4">
+                    <div>
+                        <label for="dates" class="block font-bold mb-2">Select Rental Dates</label>
+                        <p-datepicker
+                            formControlName="dates"
+                            selectionMode="range"
+                            [minDate]="minDate"
+                            [readonlyInput]="true"
+                            [showIcon]="true"
+                            placeholder="Choose start and end dates"
+                            styleClass="w-full"
+                        ></p-datepicker>
+                        @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
+                            <div class="validation-warning mt-2 p-2 border-round">
+                                <i class="pi pi-exclamation-circle mr-2"></i>
+                                Rental dates are required to proceed.
+                            </div>
+                        }
+                        <small class="text-secondary" *ngIf="!totalPrice && bookingForm.get('dates')?.valid">Please select a range to see total price</small>
+                    </div>
+
+                    <div class="surface-0 p-4 border-round-xl border-1 surface-border" *ngIf="totalPrice > 0">
+                        <div class="flex justify-content-between align-items-center">
+                            <span class="text-xl">Total Price</span>
+                            <span class="text-3xl font-bold text-primary">{{ totalPrice | currency }}</span>
+                        </div>
+                    </div>
+
+                    <p-button
+                        label="Confirm Reservation"
+                        type="submit"
+                        icon="pi pi-check"
+                        [disabled]="bookingForm.invalid || !totalPrice"
+                        styleClass="p-button-lg w-full"
+                    ></p-button>
+                </div>
+            </form>
+        </p-card>
+    </div>
+</div>

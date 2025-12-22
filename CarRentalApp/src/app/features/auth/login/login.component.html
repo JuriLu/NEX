@@ -1,5 +1,5 @@
 <div class="login-wrapper">
-  <div class="login-container">
+  <div class="login-container" [@loginAnimation]>
     <p-card styleClass="shadow-6 border-round-xl login-card">
       <ng-template pTemplate="header">
         <div class="text-center pt-5 pb-2">
@@ -12,15 +12,33 @@
       </ng-template>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 p-3">
+        @if (error$ | async; as error) {
+          <div class="p-3 bg-red-50 border-round mb-3">
+            <p class="text-red-700 m-0">{{ error }}</p>
+          </div>
+        }
+
 
         <div class="field">
           <label for="email" class="block font-medium mb-2 text-900">Email</label>
           <input pInputText id="email" formControlName="email" class="w-full p-inputtext-lg" placeholder="user@carrental.com" />
+          @if ((submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid) {
+            <div class="validation-warning mt-2 p-2 border-round">
+              <i class="pi pi-exclamation-circle mr-2"></i>
+              Please enter a valid email address.
+            </div>
+          }
         </div>
 
         <div class="field">
           <label for="password" class="block font-medium mb-2 text-900">Password</label>
           <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full p-inputtext-lg" placeholder="••••••••"></p-password>
+          @if ((submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.invalid) {
+            <div class="validation-warning mt-2 p-2 border-round">
+              <i class="pi pi-exclamation-circle mr-2"></i>
+              Password is required to sign in.
+            </div>
+          }
         </div>
 
         <div class="flex justify-content-between align-items-center mb-4">
