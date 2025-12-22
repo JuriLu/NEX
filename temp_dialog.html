@@ -1,0 +1,118 @@
+<div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+    <div class="card">
+        <p-toast></p-toast>
+        <div class="flex flex-column md:flex-row md:align-items-start md:justify-content-between mb-5">
+            <div>
+                <div class="text-900 font-bold text-3xl mb-2">Fleet Management</div>
+                <p class="mt-0 mb-0 text-700 text-xl">Manage the vehicles available in the catalog.</p>
+            </div>
+            <p-button label="Add Vehicle" icon="pi pi-plus" (click)="openNew()" styleClass="p-button-primary mt-3 md:mt-0"></p-button>
+        </div>
+
+        <p-table [value]="cars" [rows]="10" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Image</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Category</th>
+                    <th>Price/Day</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-car>
+                <tr>
+                    <td><img [src]="car.image" [alt]="car.brand" width="60" class="shadow-2 border-round" /></td>
+                    <td>{{ car.brand }}</td>
+                    <td>{{ car.model }}</td>
+                    <td>{{ car.category }}</td>
+                    <td>{{ car.pricePerDay | currency }}</td>
+                    <td>
+                        <span [class]="'product-badge status-' + (car.available ? 'instock' : 'outofstock')">
+                            {{ car.available ? 'Available' : 'Unavailable' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex gap-2">
+                             <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="success" (click)="editCar(car)"></p-button>
+                             <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="deleteCar(car)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-dialog [(visible)]="carDialog" [header]="editingCar ? 'Edit Vehicle' : 'New Vehicle'" [modal]="true" styleClass="p-fluid" [style]="{ width: '450px' }">
+        <ng-template pTemplate="content">
+            <form [formGroup]="carForm">
+                <div class="field mb-4">
+                    <label for="brand" class="block font-bold mb-2">Brand</label>
+                    <input type="text" pInputText id="brand" formControlName="brand" placeholder="e.g. Tesla" />
+                    @if ((submitted || carForm.get('brand')?.touched) && carForm.get('brand')?.invalid) {
+                        <div class="validation-warning mt-2 p-2 border-round">
+                            <i class="pi pi-exclamation-circle mr-2"></i>
+                            @if (carForm.get('brand')?.hasError('pattern')) {
+                                Only letters, spaces, and hyphens allowed.
+                            } @else {
+                                Brand is essential for the fleet.
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="field mb-4">
+                    <label for="model" class="block font-bold mb-2">Model</label>
+                    <input type="text" pInputText id="model" formControlName="model" placeholder="e.g. Model S" />
+                    @if ((submitted || carForm.get('model')?.touched) && carForm.get('model')?.invalid) {
+                        <div class="validation-warning mt-2 p-2 border-round">
+                            <i class="pi pi-exclamation-circle mr-2"></i>
+                            @if (carForm.get('model')?.hasError('pattern')) {
+                                Only alphanumeric characters allowed.
+                            } @else {
+                                Please specify the model.
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="field mb-4">
+                    <label for="category" class="block font-bold mb-2">Category</label>
+                    <p-select id="category" [options]="categories" formControlName="category" optionLabel="label" optionValue="value" placeholder="Select a Category" styleClass="w-full"></p-select>
+                    @if ((submitted || carForm.get('category')?.touched) && carForm.get('category')?.invalid) {
+                        <div class="validation-warning mt-2 p-2 border-round">
+                            <i class="pi pi-exclamation-circle mr-2"></i>
+                            Category is required for classification.
+                        </div>
+                    }
+                </div>
+                <div class="formgrid grid mb-4">
+                    <div class="field col">
+                        <label for="pricePerDay" class="block font-bold mb-2">Price Per Day</label>
+                        <p-inputNumber id="pricePerDay" formControlName="pricePerDay" mode="currency" currency="USD" locale="en-US" placeholder="$0.00"></p-inputNumber>
+                        @if ((submitted || carForm.get('pricePerDay')?.touched) && carForm.get('pricePerDay')?.invalid) {
+                            <div class="validation-warning mt-2 p-2 border-round">
+                                <i class="pi pi-exclamation-circle mr-2"></i>
+                                Rental price must be at least $1.
+                            </div>
+                        }
+                    </div>
+                </div>
+                 <div class="field mb-4">
+                    <label for="image" class="block font-bold mb-2">Image URL (Optional)</label>
+                    <input type="text" pInputText id="image" formControlName="image" placeholder="https://..." />
+                </div>
+                <div class="field flex align-items-center gap-3">
+                    <label for="available" class="font-bold">Available</label>
+                    <p-toggleswitch formControlName="available"></p-toggleswitch>
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <p-button label="Cancel" icon="pi pi-times" [text]="true" (click)="hideDialog()"></p-button>
+            <p-button label="Save" icon="pi pi-check" [text]="true" (click)="saveCar()"></p-button>
+        </ng-template>
+    </p-dialog>
+
+    <p-confirmdialog [style]="{ width: '450px' }"></p-confirmdialog>
+</div>

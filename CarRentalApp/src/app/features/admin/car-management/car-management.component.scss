@@ -74,6 +74,63 @@
 }
 
 :host ::ng-deep {
+  // Force MBUX Premium Dialog styles globally
+  .p-dialog.mbux-premium-dialog {
+    background: linear-gradient(165deg, rgba(20, 15, 30, 0.98) 0%, rgba(15, 10, 25, 0.98) 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(139, 92, 246, 0.2) !important;
+
+    .p-dialog-header {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%) !important;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 2rem 2.5rem !important;
+    }
+
+    .p-dialog-content {
+      background: transparent !important;
+      padding: 2rem 2.5rem !important;
+    }
+
+    .p-dialog-footer {
+      background: rgba(15, 15, 20, 0.6) !important;
+      border-top: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 1.75rem 2.5rem !important;
+      gap: 1.25rem !important;
+    }
+  }
+
+  // Force button spacing
+  .mbux-dialog-footer {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 1.25rem !important;
+
+    .p-button {
+      margin: 0 !important;
+    }
+  }
+
+  // Force dark inputs
+  .mbux-dialog-form {
+    .p-inputtext,
+    .p-select,
+    .p-inputnumber-input {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 2px solid rgba(139, 92, 246, 0.3) !important;
+      color: white !important;
+
+      &:enabled:hover {
+        border-color: rgba(139, 92, 246, 0.5) !important;
+      }
+
+      &:enabled:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.4) !important;
+      }
+    }
+  }
+
   // Enhanced table styling
   .mbux-table {
     .p-datatable-thead > tr > th {
@@ -148,6 +205,352 @@
     &.p-tag-danger {
       background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%) !important;
       box-shadow: 0 4px 16px rgba(255, 71, 87, 0.3) !important;
+    }
+  }
+
+  // MBUX Premium Dialog - Complete Dark Theme
+  .mbux-premium-dialog {
+    .p-dialog {
+      border-radius: 24px !important;
+      overflow: hidden !important;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), 0 0 80px rgba(139, 92, 246, 0.2) !important;
+      background: linear-gradient(165deg, rgba(20, 15, 30, 0.98) 0%, rgba(15, 10, 25, 0.98) 100%) !important;
+      border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    }
+
+    .p-dialog-header {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%) !important;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 2rem 2.5rem !important;
+
+      .p-dialog-title {
+        color: white !important;
+        font-size: 1.75rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.02em !important;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+      }
+
+      .p-dialog-header-icon {
+        color: rgba(255, 255, 255, 0.7) !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          color: white !important;
+          background: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+    }
+
+    .p-dialog-content {
+      background: transparent !important;
+      padding: 2rem 2.5rem !important;
+      color: white !important;
+    }
+
+    .p-dialog-footer {
+      background: rgba(15, 15, 20, 0.6) !important;
+      border-top: 1px solid rgba(139, 92, 246, 0.3) !important;
+      padding: 1.75rem 2.5rem !important;
+    }
+  }
+
+  // MBUX Dialog Form
+  .mbux-dialog-form {
+    .mbux-field-label {
+      display: block;
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: 0.875rem !important;
+      font-weight: 600 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.1em !important;
+      margin-bottom: 0.75rem !important;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  // MBUX Input Fields
+  .mbux-input {
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 14px !important;
+    color: white !important;
+    padding: 0.875rem 1.25rem !important;
+    font-size: 1rem !important;
+    transition: all 0.3s ease !important;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    &:hover {
+      border-color: rgba(139, 92, 246, 0.5) !important;
+      background: rgba(255, 255, 255, 0.07) !important;
+    }
+
+    &:focus {
+      outline: none !important;
+      border-color: var(--primary-color) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.4) !important;
+    }
+  }
+
+  // MBUX Select Dropdown
+  .mbux-select {
+    .p-select {
+      width: 100% !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 2px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 14px !important;
+      color: white !important;
+      padding: 0.875rem 1.25rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        border-color: rgba(139, 92, 246, 0.5) !important;
+        background: rgba(255, 255, 255, 0.07) !important;
+      }
+
+      &:focus,
+      &.p-focus {
+        outline: none !important;
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.4) !important;
+      }
+
+      .p-select-label {
+        color: white !important;
+      }
+
+      .p-placeholder {
+        color: rgba(255, 255, 255, 0.3) !important;
+      }
+    }
+
+    .p-select-overlay {
+      background: rgba(20, 15, 30, 0.98) !important;
+      border: 1px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5) !important;
+
+      .p-select-option {
+        color: white !important;
+        padding: 0.875rem 1.25rem !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.2) !important;
+        }
+
+        &.p-select-option-selected {
+          background: rgba(139, 92, 246, 0.3) !important;
+        }
+      }
+    }
+  }
+
+  // MBUX Input Number
+  .mbux-input-number {
+    .p-inputnumber-input {
+      width: 100% !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 2px solid rgba(139, 92, 246, 0.3) !important;
+      border-radius: 14px !important;
+      color: white !important;
+      padding: 0.875rem 1.25rem !important;
+      font-size: 1rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        border-color: rgba(139, 92, 246, 0.5) !important;
+        background: rgba(255, 255, 255, 0.07) !important;
+      }
+
+      &:focus {
+        outline: none !important;
+        border-color: var(--primary-color) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2), 0 0 30px rgba(139, 92, 246, 0.4) !important;
+      }
+    }
+
+    .p-inputnumber-button-group {
+      .p-button {
+        background: rgba(139, 92, 246, 0.2) !important;
+        border-color: rgba(139, 92, 246, 0.3) !important;
+        color: white !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.3) !important;
+        }
+      }
+    }
+  }
+
+  // MBUX Availability Toggle
+  .mbux-availability-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 2px solid rgba(139, 92, 246, 0.3) !important;
+    border-radius: 14px !important;
+    transition: all 0.3s ease;
+    margin-top: 0.75rem;
+    min-height: 54px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.07) !important;
+      border-color: rgba(139, 92, 246, 0.5) !important;
+    }
+
+    .availability-status {
+      flex: 1;
+      color: rgba(255, 255, 255, 0.6) !important;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+
+      &.active {
+        color: var(--primary-color) !important;
+        text-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+      }
+    }
+
+    .p-toggleswitch {
+      .p-toggleswitch-slider {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(139, 92, 246, 0.3) !important;
+        border-radius: 24px !important;
+
+        &::before {
+          background: rgba(255, 255, 255, 0.9) !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      &.p-toggleswitch-checked {
+        .p-toggleswitch-slider {
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%) !important;
+          border-color: transparent !important;
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.6) !important;
+        }
+      }
+    }
+  }
+
+  // MBUX Image Uploader
+  .mbux-image-uploader {
+    .upload-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 0;
+    }
+  }
+
+  // MBUX Upload Button
+  .mbux-upload-btn {
+    .p-button {
+      background: rgba(139, 92, 246, 0.15) !important;
+      border: 2px solid rgba(139, 92, 246, 0.4) !important;
+      color: var(--primary-color) !important;
+      padding: 0.75rem 1.75rem !important;
+      border-radius: 14px !important;
+      font-weight: 600 !important;
+      font-size: 0.95rem !important;
+      transition: all 0.3s ease !important;
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.25) !important;
+        border-color: rgba(139, 92, 246, 0.6) !important;
+        color: #c4b5fd !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4) !important;
+      }
+    }
+  }
+
+  // MBUX Dialog Footer
+  .mbux-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.25rem !important;
+
+    .mbux-btn-cancel,
+    .mbux-btn-save {
+      .p-button {
+        margin: 0 !important;
+      }
+    }
+
+    .mbux-btn-cancel {
+      .p-button {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+        padding: 0.875rem 2rem !important;
+        border-radius: 14px !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        letter-spacing: 0.03em !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1) !important;
+          border-color: rgba(255, 255, 255, 0.3) !important;
+          color: white !important;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        .p-button-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .mbux-btn-save {
+      .p-button {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--pink-400) 100%) !important;
+        border: none !important;
+        color: white !important;
+        padding: 0.875rem 2.5rem !important;
+        border-radius: 14px !important;
+        font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        letter-spacing: 0.03em !important;
+        box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5) !important;
+        transition: all 0.3s ease !important;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 32px rgba(139, 92, 246, 0.7) !important;
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        .p-button-icon {
+          margin-right: 0.5rem;
+        }
+      }
     }
   }
 
@@ -573,4 +976,4 @@
       transform: scale(0.95);
     }
   }
-}
+}/* Force rebuild */

@@ -87,14 +87,13 @@
     [header]="editingCar ? 'Edit Vehicle' : 'Add New Vehicle'"
     [modal]="true"
     styleClass="mbux-premium-dialog"
-    [style]="{ width: '500px' }"
+    [style]="{ width: '550px' }"
     appendTo="body"
   >
     <ng-template pTemplate="content">
-      <form [formGroup]="carForm" class="mbux-form-vertical">
-        <!-- Brand -->
-        <div class="form-field-compact">
-          <label class="mbux-label">Brand</label>
+      <form [formGroup]="carForm" class="mbux-dialog-form">
+        <div class="field mb-5">
+          <label class="mbux-field-label">Brand</label>
           <input
             type="text"
             pInputText
@@ -104,9 +103,8 @@
           />
         </div>
 
-        <!-- Model -->
-        <div class="form-field-compact">
-          <label class="mbux-label">Model</label>
+        <div class="field mb-5">
+          <label class="mbux-field-label">Model</label>
           <input
             type="text"
             pInputText
@@ -116,34 +114,32 @@
           />
         </div>
 
-        <!-- Category -->
-        <div class="form-field-compact">
-          <label class="mbux-label">Category</label>
-          <p-select
-            [options]="categories"
-            formControlName="category"
-            optionLabel="label"
-            optionValue="value"
-            styleClass="mbux-select w-full"
-            placeholder="Select category"
-          ></p-select>
-        </div>
-
-        <!-- Availability -->
-        <div class="form-field-compact">
-          <label class="mbux-label">Availability</label>
-          <div class="availability-toggle">
-            <span class="availability-label" [class.active]="carForm.get('available')?.value">
-              {{ carForm.get('available')?.value ? 'Available' : 'Unavailable' }}
-            </span>
-            <p-toggleswitch formControlName="available"></p-toggleswitch>
+        <div class="grid mb-5">
+          <div class="field col-6">
+            <label class="mbux-field-label">Class</label>
+            <p-select
+              [options]="categories"
+              formControlName="category"
+              optionLabel="label"
+              optionValue="value"
+              styleClass="mbux-select w-full"
+              placeholder="Select class"
+            ></p-select>
+          </div>
+          <div class="field col-6">
+            <label class="mbux-field-label">Availability</label>
+            <div class="mbux-availability-toggle">
+              <span class="availability-status" [class.active]="carForm.get('available')?.value">
+                {{ carForm.get('available')?.value ? 'Available' : 'Unavailable' }}
+              </span>
+              <p-toggleswitch formControlName="available"></p-toggleswitch>
+            </div>
           </div>
         </div>
 
-        <!-- Price & Currency Row -->
-        <div class="form-row-compact">
-          <div class="form-field-compact" style="flex: 2">
-            <label class="mbux-label">Price Per Day</label>
+        <div class="formgrid grid mb-5">
+          <div class="field col-8">
+            <label class="mbux-field-label">Price Per Day</label>
             <p-inputNumber
               formControlName="pricePerDay"
               mode="decimal"
@@ -152,8 +148,8 @@
               placeholder="0.00"
             ></p-inputNumber>
           </div>
-          <div class="form-field-compact" style="flex: 1; min-width: 120px">
-            <label class="mbux-label">Currency</label>
+          <div class="field col-4">
+            <label class="mbux-field-label">Currency</label>
             <p-select
               [options]="currencies"
               formControlName="currency"
@@ -164,16 +160,15 @@
           </div>
         </div>
 
-        <!-- Image Upload -->
-        <div class="form-field-compact">
-          <label class="mbux-label">Vehicle Image</label>
-          <div class="compact-uploader">
+        <div class="field mb-5">
+          <label class="mbux-field-label">Vehicle Image</label>
+          <div [class]="styles.imageUploader" class="mbux-image-uploader">
             @if (imagePreview) {
-            <img [src]="imagePreview" alt="Preview" class="asset-preview-compact" />
+            <img [src]="imagePreview" alt="Preview" class="asset-large-preview" />
             } @else {
-            <div class="upload-placeholder-compact">
-              <i class="pi pi-image text-3xl text-secondary opacity-30"></i>
-              <p class="text-secondary text-xs mt-1">No image selected</p>
+            <div class="upload-placeholder">
+              <i class="pi pi-image text-5xl text-secondary opacity-30"></i>
+              <p class="text-secondary text-sm mt-2">No image selected</p>
             </div>
             }
             <p-fileUpload
@@ -181,7 +176,7 @@
               chooseLabel="Choose Image"
               (onSelect)="onImageSelect($event)"
               auto="true"
-              styleClass="upload-button-compact mt-2"
+              styleClass="mbux-upload-btn mt-3"
             ></p-fileUpload>
           </div>
         </div>
@@ -189,18 +184,18 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-      <div class="dialog-footer">
+      <div class="mbux-dialog-footer">
         <p-button
           label="Cancel"
           icon="pi pi-times"
           (click)="hideDialog()"
-          styleClass="cancel-button"
+          styleClass="mbux-btn-cancel"
         ></p-button>
         <p-button
           [label]="editingCar ? 'Update Vehicle' : 'Add Vehicle'"
           icon="pi pi-check"
           (click)="saveCar()"
-          styleClass="save-button"
+          styleClass="mbux-btn-save"
         ></p-button>
       </div>
     </ng-template>
