@@ -15,17 +15,43 @@ import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 
+import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
+
 @Component({
   selector: 'app-booking',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, CardModule,
-    ButtonModule, DatePickerModule, InputTextModule, RouterLink
+    CommonModule,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    DatePickerModule,
+    InputTextModule,
+    RouterLink,
   ],
   templateUrl: './booking.component.html',
-  styleUrl: './booking.component.scss'
+  styleUrl: './booking.component.scss',
 })
 export class BookingComponent implements OnInit {
+  readonly theme = DESIGN_SYSTEM;
+
+  readonly styles = {
+    previewStage: ['preview-stage', 'glass-panel', 'p-4', 'mb-6', 'relative', 'overflow-hidden'],
+    featureCard: ['feature-card', 'glass-panel', 'p-3', 'flex', 'align-items-center', 'gap-3'],
+    configPanel: ['config-panel', 'glass-panel', 'p-5', 'sticky', 'top-0'],
+    summarySection: ['summary-section', 'p-4', 'border-round-xl'],
+    validationWarning: ['validation-warning', 'mt-3'],
+    backLink: [
+      'text-secondary',
+      'no-underline',
+      'hover:text-white',
+      'transition-all',
+      'flex',
+      'align-items-center',
+      'gap-2',
+    ],
+  };
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -45,7 +71,7 @@ export class BookingComponent implements OnInit {
       dates: [null, [Validators.required]],
     });
 
-    this.bookingForm.get('dates')?.valueChanges.subscribe(value => {
+    this.bookingForm.get('dates')?.valueChanges.subscribe((value) => {
       if (value && value[0] && value[1]) {
         this.calculateTotal(value[0], value[1], carId);
       }
@@ -53,7 +79,7 @@ export class BookingComponent implements OnInit {
   }
 
   private calculateTotal(start: Date, end: Date, carId: number) {
-    this.car$.pipe(take(1)).subscribe(car => {
+    this.car$.pipe(take(1)).subscribe((car) => {
       const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
       this.totalPrice = days * car.pricePerDay;
     });
@@ -64,27 +90,30 @@ export class BookingComponent implements OnInit {
       const [start, end] = this.bookingForm.value.dates;
       const carId = Number(this.route.snapshot.paramMap.get('carId'));
 
-      this.store.select(selectUser).pipe(take(1)).subscribe(user => {
-        if (!user) {
-          this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
-          return;
-        }
+      this.store
+        .select(selectUser)
+        .pipe(take(1))
+        .subscribe((user) => {
+          if (!user) {
+            this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+            return;
+          }
 
-        this.car$.pipe(take(1)).subscribe(car => {
-          const reservation = {
-            userId: user.id,
-            carId,
-            startDate: start.toISOString(),
-            endDate: end ? end.toISOString() : start.toISOString(),
-            totalPrice: this.totalPrice,
-            currency: car.currency || 'USD',
-            status: 'Confirmed' as const
-          };
+          this.car$.pipe(take(1)).subscribe((car) => {
+            const reservation = {
+              userId: user.id,
+              carId,
+              startDate: start.toISOString(),
+              endDate: end ? end.toISOString() : start.toISOString(),
+              totalPrice: this.totalPrice,
+              currency: car.currency || 'USD',
+              status: 'Confirmed' as const,
+            };
 
-          this.store.dispatch(createReservation({ reservation }));
-          this.router.navigate(['/catalog']); // Redirect after booking
+            this.store.dispatch(createReservation({ reservation }));
+            this.router.navigate(['/catalog']); // Redirect after booking
+          });
         });
-      });
     }
   }
 }

@@ -4,42 +4,60 @@
     <a routerLink="/" class="logo-container no-underline">
       <img src="logo.png" alt="NEX Logo" class="mbux-logo shadow-8" />
       <div class="branding">
-          <span class="brand-name">NEX</span>
-          <span class="brand-motto">ReadyGo</span>
+        <span class="brand-name">NEX</span>
+        <span class="brand-motto">ReadyGo</span>
       </div>
     </a>
   </div>
 
   <div class="p-toolbar-group-center">
     <!-- Centered Navigation for Balanced Look -->
-    <div class="hidden md:flex nav-links gap-2">
-      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="nav-item">Home</a>
+    <div [class]="styles.navLinks">
+      <a
+        routerLink="/"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-item"
+        >Home</a
+      >
       <a routerLink="/catalog" routerLinkActive="active-link" class="nav-item">Fleet</a>
       <a routerLink="/services" routerLinkActive="active-link" class="nav-item">Services</a>
       <a routerLink="/contact" routerLinkActive="active-link" class="nav-item">Contact</a>
       @if (isAdmin$ | async) {
-        <a routerLink="/admin" routerLinkActive="active-link" class="nav-item admin-tool">Manage</a>
+      <a routerLink="/admin" routerLinkActive="active-link" class="nav-item admin-tool">Manage</a>
       }
     </div>
   </div>
 
   <div class="p-toolbar-group-end gap-3">
     @if (isLoggedIn$ | async) {
-      <div class="user-pill glass-panel px-3 py-2">
-        <span class="welcome-text mr-3 hidden lg:inline">Hello, <span class="text-white font-bold">{{ (user$ | async)?.name }}</span></span>
-        <p-avatar
-          icon="pi pi-user"
-          shape="circle"
-          styleClass="mbux-avatar cursor-pointer"
-          (click)="menu.toggle($event)">
-        </p-avatar>
-        <p-menu #menu [model]="userMenu" [popup]="true" appendTo="body"></p-menu>
-      </div>
+    <div [class]="styles.userPill">
+      <span [class]="styles.welcomeText"
+        >Hello, <span class="text-white font-bold">{{ (user$ | async)?.name }}</span></span
+      >
+      <p-avatar
+        icon="pi pi-user"
+        shape="circle"
+        styleClass="mbux-avatar cursor-pointer"
+        (click)="menu.toggle($event)"
+      >
+      </p-avatar>
+      <p-menu #menu [model]="userMenu" [popup]="true" appendTo="body"></p-menu>
+    </div>
     } @else {
-      <div class="auth-buttons flex gap-2">
-        <p-button label="Sign In" icon="pi pi-user" styleClass="p-button-text p-button-sm text-white" routerLink="/auth/login"></p-button>
-        <p-button label="Register" styleClass="p-button-sm p-button-primary" routerLink="/auth/register"></p-button>
-      </div>
+    <div [class]="styles.authButtons">
+      <p-button
+        label="Sign In"
+        icon="pi pi-user"
+        styleClass="p-button-text p-button-sm text-white"
+        routerLink="/auth/login"
+      ></p-button>
+      <p-button
+        label="Register"
+        styleClass="p-button-sm p-button-primary"
+        routerLink="/auth/register"
+      ></p-button>
+    </div>
     }
   </div>
 </p-toolbar>

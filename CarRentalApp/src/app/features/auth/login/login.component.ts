@@ -14,6 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
 import { animate, style, transition, trigger } from '@angular/animations';
+import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ButtonModule,
     PasswordModule,
     CheckboxModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -34,19 +35,45 @@ import { animate, style, transition, trigger } from '@angular/animations';
     trigger('loginAnimation', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-      ])
-    ])
-  ]
+        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+    ]),
+  ],
 })
 export class LoginComponent {
+  readonly theme = DESIGN_SYSTEM;
+
+  readonly styles = {
+    authWrapper: [
+      'auth-wrapper',
+      'flex',
+      'align-items-center',
+      'justify-content-center',
+      'min-h-screen',
+      'relative',
+      'overflow-hidden',
+    ],
+    authCard: ['glass-panel', 'auth-card', 'p-5', 'relative', 'overflow-hidden'],
+    logoBox: ['auth-logo-box', 'mb-4', 'glass-panel', 'inline-flex', 'p-3'],
+    validationWarning: ['validation-warning'],
+    label: [
+      'block',
+      'text-secondary',
+      'font-bold',
+      'uppercase',
+      'tracking-widest',
+      'text-xs',
+      'mb-2',
+    ],
+  };
+
   fb = inject(FormBuilder);
   store = inject(Store);
   submitted = false;
 
   loginForm: FormGroup = this.fb.group({
     email: ['user@carrental.com', [Validators.required, Validators.email]],
-    password: ['user', [Validators.required]] // Pre-filled for demo
+    password: ['user', [Validators.required]], // Pre-filled for demo
   });
 
   loading$ = this.store.select(selectAuthLoading);

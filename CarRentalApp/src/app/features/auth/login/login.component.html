@@ -1,61 +1,92 @@
-<div class="auth-wrapper flex align-items-center justify-content-center min-h-screen relative overflow-hidden">
+<div [class]="styles.authWrapper">
   <!-- Dynamic Background Effects -->
   <div class="auth-ambient"></div>
   <div class="auth-mesh"></div>
 
   <div class="auth-container p-4 fadein animation-duration-1000">
-    <div class="glass-panel auth-card p-5 relative overflow-hidden">
+    <div [class]="styles.authCard">
       <div class="text-center mb-6">
-        <div class="auth-logo-box mb-4 glass-panel inline-flex p-3">
+        <div [class]="styles.logoBox">
           <img src="logo.png" alt="NEX Logo" class="h-4rem" />
         </div>
-        <h2 class="text-4xl font-black mb-1 text-white">READY<span class="text-gradient">GO</span></h2>
-        <p class="text-secondary tracking-widest uppercase text-xs font-bold">Access Premium Mobility</p>
+        <h2 class="text-4xl font-black mb-1 text-white">
+          READY<span [class]="theme.ui.gradientText">GO</span>
+        </h2>
+        <p [class]="theme.typography.label">Access Premium Mobility</p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-5">
         @if (error$ | async; as error) {
-          <div class="validation-warning">
-            <i class="pi pi-exclamation-triangle mr-2"></i>
-            {{ error }}
-          </div>
+        <div [class]="styles.validationWarning">
+          <i class="pi pi-exclamation-triangle mr-2"></i>
+          {{ error }}
+        </div>
         }
 
         <div class="form-group">
-          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Identification</label>
-          <input pInputText formControlName="email" class="mbux-input" placeholder="Enter NEX email" />
+          <label [class]="styles.label">Identification</label>
+          <input
+            pInputText
+            formControlName="email"
+            class="mbux-input"
+            placeholder="Enter NEX email"
+          />
           @if ((submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid) {
-            <div class="validation-warning mt-2">
-              <i class="pi pi-info-circle mr-2"></i>
-              Invalid credentials format.
-            </div>
+          <div [class]="styles.validationWarning" class="mt-2">
+            <i class="pi pi-info-circle mr-2"></i>
+            Invalid credentials format.
+          </div>
           }
         </div>
 
         <div class="form-group">
-          <div class="flex justify-content-between align-items-center mb-2">
-            <label class="block text-secondary font-bold uppercase tracking-widest text-xs">Security Key</label>
-            <a class="text-primary font-bold text-xs no-underline hover:text-white cursor-pointer transition-all">Recover Access</a>
+          <div [class]="theme.layout.flexBetween" class="mb-2">
+            <label [class]="styles.label" class="mb-0">Security Key</label>
+            <a
+              class="text-primary font-bold text-xs no-underline hover:text-white cursor-pointer transition-all"
+              >Recover Access</a
+            >
           </div>
-          <p-password formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="mbux-input" placeholder="••••••••"></p-password>
-          @if ((submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.invalid) {
-            <div class="validation-warning mt-2">
-              <i class="pi pi-shield mr-2"></i>
-              Security key required.
-            </div>
+          <p-password
+            formControlName="password"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="mbux-input"
+            placeholder="••••••••"
+          ></p-password>
+          @if ((submitted || loginForm.get('password')?.touched) &&
+          loginForm.get('password')?.invalid) {
+          <div [class]="styles.validationWarning" class="mt-2">
+            <i class="pi pi-shield mr-2"></i>
+            Security key required.
+          </div>
           }
         </div>
 
         <div class="flex align-items-center">
-            <p-checkbox [binary]="true" inputId="remember" styleClass="mbux-checkbox"></p-checkbox>
-            <label for="remember" class="ml-2 text-secondary text-sm cursor-pointer">Maintain persistent session</label>
+          <p-checkbox [binary]="true" inputId="remember" styleClass="mbux-checkbox"></p-checkbox>
+          <label for="remember" class="ml-2 text-secondary text-sm cursor-pointer"
+            >Maintain persistent session</label
+          >
         </div>
 
-        <p-button label="Initialize Session" type="submit" [loading]="(loading$ | async) || false" styleClass="p-button-primary p-button-lg w-full py-4" [disabled]="loginForm.invalid"></p-button>
+        <p-button
+          label="Initialize Session"
+          type="submit"
+          [loading]="(loading$ | async) || false"
+          styleClass="p-button-primary p-button-lg w-full py-4"
+          [disabled]="loginForm.invalid"
+        ></p-button>
 
         <div class="text-center mt-4">
-            <span class="text-secondary text-sm">New to NEX? </span>
-            <a routerLink="/auth/register" class="text-gradient font-bold no-underline hover:brightness-150 transition-all cursor-pointer">Register Identity</a>
+          <span class="text-secondary text-sm">New to NEX? </span>
+          <a
+            routerLink="/auth/register"
+            [class]="theme.ui.gradientText"
+            class="no-underline hover:brightness-150 transition-all cursor-pointer"
+            >Register Identity</a
+          >
         </div>
       </form>
     </div>

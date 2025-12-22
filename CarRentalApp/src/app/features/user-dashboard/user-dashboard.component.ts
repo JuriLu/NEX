@@ -15,14 +15,25 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
+import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
+
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
   imports: [CommonModule, TableModule, TagModule, CardModule, RouterLink, ButtonModule],
   templateUrl: './user-dashboard.component.html',
-  styleUrl: './user-dashboard.component.scss'
+  styleUrl: './user-dashboard.component.scss',
 })
 export class UserDashboardComponent implements OnInit {
+  readonly theme = DESIGN_SYSTEM;
+
+  readonly styles = {
+    missionRow: ['mission-row'],
+    carUnitImg: ['car-unit-img', 'glass-panel', 'mr-4'],
+    tableContainer: ['glass-panel', 'overflow-hidden', 'fadeinup', 'animation-duration-1000'],
+    tableHeader: ['uppercase', 'tracking-widest', 'text-xs', 'font-bold', 'text-secondary'],
+  };
+
   private store = inject(Store);
   private carService = inject(CarService);
 
@@ -40,21 +51,25 @@ export class UserDashboardComponent implements OnInit {
         if (!user) return [];
 
         return reservations
-          .filter(res => res.userId === user.id)
-          .map(res => ({
+          .filter((res) => res.userId === user.id)
+          .map((res) => ({
             ...res,
-            car: cars.find(c => c.id === res.carId)
+            car: cars.find((c) => c.id === res.carId),
           }));
       })
     );
   }
 
-  getSeverity(status: string): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" {
+  getSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
     switch (status) {
-      case 'Confirmed': return 'success';
-      case 'Pending': return 'info';
-      case 'Cancelled': return 'danger';
-      default: return 'secondary';
+      case 'Confirmed':
+        return 'success';
+      case 'Pending':
+        return 'info';
+      case 'Cancelled':
+        return 'danger';
+      default:
+        return 'secondary';
     }
   }
 }

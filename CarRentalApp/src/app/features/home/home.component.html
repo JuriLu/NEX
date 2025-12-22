@@ -1,84 +1,106 @@
 <div class="home-container">
-    <!-- MBUX Cinematic Hero Section -->
-    <section class="hero-section flex align-items-center justify-content-center relative overflow-hidden">
-        <!-- Ambient Background Effects -->
-        <div class="hero-ambient-glow"></div>
-        <div class="hero-mesh-gradient"></div>
+  <!-- MBUX Cinematic Hero Section -->
+  <section [class]="styles.heroSection">
+    <!-- Ambient Background Effects -->
+    <div class="hero-ambient-glow"></div>
+    <div class="hero-mesh-gradient"></div>
 
-        <div class="container relative z-2 grid grid-nogutter align-items-center h-full px-4 lg:px-8">
-            <div class="col-12 lg:col-6 text-left py-8 fadeinleft animation-duration-1000">
-                <div class="flex align-items-center mb-4">
-                    <div class="line w-3rem h-2px bg-primary mr-3"></div>
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Future of Mobility</span>
-                </div>
-                <h1 class="hero-title mb-2">NEX: <span class="text-gradient">ReadyGo</span></h1>
-                <p class="hero-subtitle mb-6">Experience the pinnacle of automotive luxury and digital innovation.</p>
-                <div class="flex gap-3 mt-4">
-                    <p-button label="Explore Fleet" styleClass="p-button-lg p-button-primary" icon="pi pi-car" routerLink="/catalog"></p-button>
-                    <p-button label="Our Concept" styleClass="p-button-lg p-button-outlined" icon="pi pi-info-circle"></p-button>
-                </div>
-            </div>
-
-            <div class="col-12 lg:col-6 relative py-8 fadeinright animation-duration-1000">
-                <div class="car-showcase-container">
-                    <img src="images/mercedes.png" alt="Mercedes S-Class" class="hero-car-img" />
-                    <div class="car-shadow"></div>
-                </div>
-                <!-- Interactive Specs Floating Panels -->
-                <div class="spec-panel glass-panel p-3 absolute top-0 right-0 mt-5 mr-5 hidden lg:block hover:transform-scale">
-                    <i class="pi pi-bolt text-secondary text-2xl mb-2"></i>
-                    <div class="text-xs text-secondary font-bold uppercase mb-1">Acceleration</div>
-                    <div class="text-xl font-bold white-space-nowrap">0-100 in 3.8s</div>
-                </div>
-            </div>
+    <div
+      [class]="theme.layout.container"
+      class="relative z-2 grid grid-nogutter align-items-center h-full"
+    >
+      <div [class]="styles.heroContent">
+        <div [class]="styles.heroBadge">
+          <div [class]="styles.heroBadgeLine"></div>
+          <span [class]="theme.typography.label">Future of Mobility</span>
         </div>
-    </section>
-
-    <!-- Features Section - MBUX Cards -->
-    <section class="py-8 px-4 surface-ground">
-        <div class="container mx-auto">
-            <div class="text-center mb-8">
-                <h2 class="text-5xl font-black mb-3">Why NEX?</h2>
-                <p class="text-secondary text-xl">The standards are set by us.</p>
-            </div>
-
-            <div class="grid">
-                <div class="col-12 md:col-4 p-3">
-                    <div class="p-card h-full glass-panel hover-glow transition-all">
-                        <div class="p-card-body p-5">
-                            <div class="icon-box mb-4">
-                                <i class="pi pi-microchip text-4xl text-gradient"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3">Hyperscreen Tech</h3>
-                            <p class="text-secondary line-height-3">Fully digital interface with AI-driven personalization for every journey.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-4 p-3">
-                    <div class="p-card h-full glass-panel hover-glow transition-all">
-                        <div class="p-card-body p-5">
-                            <div class="icon-box mb-4">
-                                <i class="pi pi-shield text-4xl text-gradient"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3">Active Safety</h3>
-                            <p class="text-secondary line-height-3">Next-gen collision prevention and autonomous driving assistants.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 md:col-4 p-3">
-                    <div class="p-card h-full glass-panel hover-glow transition-all">
-                        <div class="p-card-body p-5">
-                            <div class="icon-box mb-4">
-                                <i class="pi pi-moon text-4xl text-gradient"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold mb-3">Ambient Luxury</h3>
-                            <p class="text-secondary line-height-3">Customizable interior lighting and premium Burmester sound systems.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h1 [class]="theme.typography.heroTitle">
+          NEX: <span [class]="theme.ui.gradientText">ReadyGo</span>
+        </h1>
+        <p [class]="theme.typography.heroSubtitle">
+          Experience the pinnacle of automotive luxury and digital innovation.
+        </p>
+        <div class="flex gap-3 mt-4">
+          <p-button
+            label="Explore Fleet"
+            styleClass="p-button-lg p-button-primary"
+            icon="pi pi-car"
+            routerLink="/catalog"
+          ></p-button>
+          <p-button
+            label="Our Concept"
+            styleClass="p-button-lg p-button-outlined"
+            icon="pi pi-info-circle"
+          ></p-button>
         </div>
-    </section>
+      </div>
+
+      <div class="col-12 lg:col-6 relative py-8 fadeinright animation-duration-1000">
+        <div class="car-showcase-container">
+          <img src="images/mercedes.png" alt="Mercedes S-Class" class="hero-car-img" />
+          <div class="car-shadow"></div>
+        </div>
+        <!-- Interactive Specs Floating Panels -->
+        <div [class]="styles.specPanel">
+          <i class="pi pi-bolt text-secondary text-2xl mb-2"></i>
+          <div class="text-xs text-secondary font-bold uppercase mb-1">Acceleration</div>
+          <div class="text-xl font-bold white-space-nowrap">0-100 in 3.8s</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section - MBUX Cards -->
+  <section [class]="theme.layout.section">
+    <div [class]="theme.layout.container">
+      <div class="text-center mb-8">
+        <h2 [class]="theme.typography.sectionHeading">Why NEX?</h2>
+        <p [class]="theme.typography.sectionSubheading">The standards are set by us.</p>
+      </div>
+
+      <div class="grid">
+        <div class="col-12 md:col-4 p-3">
+          <div [class]="styles.featureCard">
+            <div class="p-card-body p-5">
+              <div class="icon-box mb-4">
+                <i [class]="styles.featureIcon" class="pi-microchip"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Hyperscreen Tech</h3>
+              <p [class]="theme.typography.paragraph">
+                Fully digital interface with AI-driven personalization for every journey.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4 p-3">
+          <div [class]="styles.featureCard">
+            <div class="p-card-body p-5">
+              <div class="icon-box mb-4">
+                <i [class]="styles.featureIcon" class="pi-shield"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Active Safety</h3>
+              <p [class]="theme.typography.paragraph">
+                Next-gen collision prevention and autonomous driving assistants.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-4 p-3">
+          <div [class]="styles.featureCard">
+            <div class="p-card-body p-5">
+              <div class="icon-box mb-4">
+                <i [class]="styles.featureIcon" class="pi-moon"></i>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Ambient Luxury</h3>
+              <p [class]="theme.typography.paragraph">
+                Customizable interior lighting and premium Burmester sound systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

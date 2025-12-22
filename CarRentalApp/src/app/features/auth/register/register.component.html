@@ -1,57 +1,87 @@
-<div class="auth-wrapper flex align-items-center justify-content-center min-h-screen relative overflow-hidden">
+<div [class]="styles.authWrapper">
   <!-- Dynamic Background Effects -->
   <div class="auth-ambient"></div>
   <div class="auth-mesh"></div>
 
   <div class="auth-container p-4 fadein animation-duration-1000">
-    <div class="glass-panel auth-card p-5 relative overflow-hidden">
+    <div [class]="styles.authCard">
       <div class="text-center mb-6">
-        <div class="auth-logo-box mb-4 glass-panel inline-flex p-3">
+        <div [class]="styles.logoBox">
           <img src="logo.png" alt="NEX Logo" class="h-4rem" />
         </div>
-        <h2 class="text-4xl font-black mb-1 text-white">GENESIS<span class="text-gradient">HUB</span></h2>
-        <p class="text-secondary tracking-widest uppercase text-xs font-bold">Register Your NEX Identity</p>
+        <h2 class="text-4xl font-black mb-1 text-white">
+          GENESIS<span [class]="theme.ui.gradientText">HUB</span>
+        </h2>
+        <p [class]="theme.typography.label">Register Your NEX Identity</p>
       </div>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
         <div class="formgrid grid grid-nogutter gap-3">
           <div class="col">
-            <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">First Name</label>
-            <input pInputText formControlName="firstName" class="mbux-input" placeholder="Callsign" />
+            <label [class]="styles.label">First Name</label>
+            <input
+              pInputText
+              formControlName="firstName"
+              class="mbux-input"
+              placeholder="Callsign"
+            />
           </div>
           <div class="col">
-            <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Last Name</label>
+            <label [class]="styles.label">Last Name</label>
             <input pInputText formControlName="lastName" class="mbux-input" placeholder="Origin" />
           </div>
         </div>
 
         <div class="form-group">
-          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Email Identity</label>
-          <input pInputText formControlName="email" class="mbux-input" placeholder="name@nex-readygo.com" />
-          @if ((submitted || registerForm.get('email')?.touched) && registerForm.get('email')?.invalid) {
-            <div class="validation-warning mt-2">
-              <i class="pi pi-info-circle mr-2"></i>
-              Valid communication channel required.
-            </div>
+          <label [class]="styles.label">Email Identity</label>
+          <input
+            pInputText
+            formControlName="email"
+            class="mbux-input"
+            placeholder="name@nex-readygo.com"
+          />
+          @if ((submitted || registerForm.get('email')?.touched) &&
+          registerForm.get('email')?.invalid) {
+          <div [class]="styles.validationWarning" class="mt-2">
+            <i class="pi pi-info-circle mr-2"></i>
+            Valid communication channel required.
+          </div>
           }
         </div>
 
         <div class="form-group">
-          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Security Protocol</label>
-          <p-password formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="mbux-input" placeholder="••••••••"></p-password>
-          @if ((submitted || registerForm.get('password')?.touched) && registerForm.get('password')?.invalid) {
-            <div class="validation-warning mt-2">
-              <i class="pi pi-shield mr-2"></i>
-              Minimum 6 character encryption required.
-            </div>
+          <label [class]="styles.label">Security Protocol</label>
+          <p-password
+            formControlName="password"
+            [toggleMask]="true"
+            styleClass="w-full"
+            inputStyleClass="mbux-input"
+            placeholder="••••••••"
+          ></p-password>
+          @if ((submitted || registerForm.get('password')?.touched) &&
+          registerForm.get('password')?.invalid) {
+          <div [class]="styles.validationWarning" class="mt-2">
+            <i class="pi pi-shield mr-2"></i>
+            Minimum 6 character encryption required.
+          </div>
           }
         </div>
 
-        <p-button label="Establish Identity" type="submit" [loading]="loading" styleClass="p-button-primary p-button-lg w-full py-4 mt-2" [disabled]="registerForm.invalid"></p-button>
+        <p-button
+          label="Establish Identity"
+          type="submit"
+          [loading]="loading"
+          styleClass="p-button-primary p-button-lg w-full py-4 mt-2"
+          [disabled]="registerForm.invalid"
+        ></p-button>
 
         <div class="text-center mt-3">
-            <span class="text-secondary text-sm">Recognized Identity? </span>
-            <a routerLink="/auth/login" class="text-primary font-bold no-underline hover:text-white transition-all cursor-pointer">Sign In</a>
+          <span class="text-secondary text-sm">Recognized Identity? </span>
+          <a
+            routerLink="/auth/login"
+            class="text-primary font-bold no-underline hover:text-white transition-all cursor-pointer"
+            >Sign In</a
+          >
         </div>
       </form>
     </div>

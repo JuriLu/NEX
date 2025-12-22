@@ -1,61 +1,67 @@
 <footer class="mbux-footer py-8 mt-8">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid grid-nogutter">
-            <div class="col-12 md:col-4 p-3 mb-4 md:mb-0">
-                <div class="flex align-items-center mb-4">
-                    <img src="logo.png" alt="NEX Logo" class="footer-logo mr-3 shadow-6" />
-                    <div class="flex flex-column">
-                        <span class="text-4xl font-black tracking-tighter text-white">NEX</span>
-                        <span class="text-xs font-bold text-primary tracking-widest uppercase" style="margin-top: -5px;">ReadyGo</span>
-                    </div>
-                </div>
-                <p class="text-secondary line-height-4 max-w-20rem">
-                    Defining the next generation of premium mobility. Where performance meets absolute luxury.
-                </p>
-            </div>
-
-            <div class="col-6 md:col-2 md:col-offset-1 p-3">
-                <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Experience</h4>
-                <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">The Fleet</a></li>
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">Technologies</a></li>
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">Concierge</a></li>
-                </ul>
-            </div>
-
-            <div class="col-6 md:col-2 p-3">
-                <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Legal</h4>
-                <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">Privacy</a></li>
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">Terms</a></li>
-                    <li><a class="text-secondary hover:text-white transition-all cursor-pointer no-underline">Safety</a></li>
-                </ul>
-            </div>
-
-            <div class="col-12 md:col-3 p-3">
-                <h4 class="text-white font-bold mb-4 uppercase tracking-wider text-sm">Digital Pulse</h4>
-                <div class="flex gap-4">
-                    <div class="social-circle glass-panel flex align-items-center justify-content-center cursor-pointer">
-                        <i class="pi pi-facebook"></i>
-                    </div>
-                    <div class="social-circle glass-panel flex align-items-center justify-content-center cursor-pointer">
-                        <i class="pi pi-instagram"></i>
-                    </div>
-                    <div class="social-circle glass-panel flex align-items-center justify-content-center cursor-pointer">
-                        <i class="pi pi-twitter"></i>
-                    </div>
-                </div>
-            </div>
+  <div class="container mx-auto px-4 lg:px-8">
+    <div class="grid grid-nogutter">
+      <div class="col-12 md:col-4 p-3 mb-4 md:mb-0">
+        <div class="flex align-items-center mb-4">
+          <img src="logo.png" alt="NEX Logo" class="footer-logo mr-3 shadow-6" />
+          <div class="flex flex-column">
+            <span class="text-4xl font-black tracking-tighter text-white">NEX</span>
+            <span
+              class="text-xs font-bold text-primary tracking-widest uppercase"
+              style="margin-top: -5px"
+              >ReadyGo</span
+            >
+          </div>
         </div>
+        <p [class]="styles.secondaryText">
+          Defining the next generation of premium mobility. Where performance meets absolute luxury.
+        </p>
+      </div>
 
-        <div class="footer-bottom border-top-1 border-white-alpha-10 mt-6 pt-6 flex justify-content-between align-items-center flex-column md:flex-row gap-4">
-            <span class="text-secondary text-sm">&copy; 2025 NEX GLOBAL. ReadyGo.</span>
-            <div class="flex gap-4 text-xs font-bold tracking-widest uppercase text-secondary">
-                <span>London</span>
-                <span>Berlin</span>
-                <span>New York</span>
-                <span>Dubai</span>
-            </div>
+      <div [class]="styles.columnSection" class="md:col-offset-1">
+        <h4 [class]="styles.sectionHeading">Experience</h4>
+        <ul [class]="styles.listContainer">
+          <li><a [class]="styles.footerLink">The Fleet</a></li>
+          <li><a [class]="styles.footerLink">Technologies</a></li>
+          <li><a [class]="styles.footerLink">Concierge</a></li>
+        </ul>
+      </div>
+
+      <div [class]="styles.columnSection">
+        <h4 [class]="styles.sectionHeading">Legal</h4>
+        <ul [class]="styles.listContainer">
+          <li><a [class]="styles.footerLink">Privacy</a></li>
+          <li><a [class]="styles.footerLink">Terms</a></li>
+          <li><a [class]="styles.footerLink">Safety</a></li>
+        </ul>
+      </div>
+
+      <div class="col-12 md:col-3 p-3">
+        <h4 [class]="styles.sectionHeading">Digital Pulse</h4>
+        <div class="flex gap-4">
+          <div [class]="styles.socialCircle">
+            <i class="pi pi-facebook"></i>
+          </div>
+          <div [class]="styles.socialCircle">
+            <i class="pi pi-instagram"></i>
+          </div>
+          <div [class]="styles.socialCircle">
+            <i class="pi pi-twitter"></i>
+          </div>
         </div>
+      </div>
     </div>
+
+    <div
+      class="footer-bottom border-top-1 border-white-alpha-10 mt-6 pt-6 flex justify-content-between align-items-center flex-column md:flex-row gap-4"
+    >
+      <span class="text-secondary text-sm">&copy; 2025 NEX GLOBAL. ReadyGo.</span>
+      <div class="flex gap-4 text-xs font-bold tracking-widest uppercase text-secondary">
+        <span>London</span>
+        <span>Berlin</span>
+        <span>New York</span>
+        <span>Dubai</span>
+      </div>
+    </div>
+  </div>
 </footer>
