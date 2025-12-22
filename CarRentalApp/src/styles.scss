@@ -1,0 +1,29 @@
+/* Global Styles & Theme Configuration */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+/* Variables */
+:root {
+  --primary-color: #0f172a; /* Deep Blue */
+  --secondary-color: #ffffff; /* White */
+  --accent-color: #d4af37; /* Gold */
+  --text-color: #334155;
+  --bg-color: #f8fafc;
+  --font-family: 'Inter', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* Typography & Utilities overrides */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-top: 0;
+}
