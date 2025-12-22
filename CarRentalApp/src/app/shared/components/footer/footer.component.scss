@@ -1,0 +1,38 @@
+.mbux-footer {
+  background: rgba(10, 10, 12, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
+
+  .footer-logo {
+    height: 70px;
+    /* Increased from 50px */
+    width: auto;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+  }
+
+  .social-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+      transform: translateY(-3px);
+    }
+  }
+
+  .footer-bottom {
+    span {
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+  }
+}

@@ -10,10 +10,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
@@ -23,7 +25,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
   imports: [
     CommonModule, TableModule, ButtonModule, DialogModule,
     InputTextModule, InputNumberModule, ReactiveFormsModule,
-    ConfirmDialogModule, ToastModule, ToggleSwitchModule, SelectModule
+    ConfirmDialogModule, ToastModule, ToggleSwitchModule, SelectModule,
+    FileUploadModule, TagModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './car-management.component.html',
@@ -40,6 +43,8 @@ export class CarManagementComponent implements OnInit {
   carForm!: FormGroup;
   submitted = false;
   editingCar: Car | null = null;
+  selectedImageFile: File | null = null;
+  imagePreview: string | null = null;
 
   categories = [
     { label: 'Electric', value: 'Electric' },
@@ -47,6 +52,12 @@ export class CarManagementComponent implements OnInit {
     { label: 'Luxury', value: 'Luxury' },
     { label: 'SUV', value: 'SUV' },
     { label: 'Convertible', value: 'Convertible' }
+  ];
+
+  currencies = [
+    { label: 'USD ($)', value: 'USD' },
+    { label: 'EUR (€)', value: 'EUR' },
+    { label: 'GBP (£)', value: 'GBP' }
   ];
 
   ngOnInit() {
@@ -64,6 +75,7 @@ export class CarManagementComponent implements OnInit {
       model: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s-]+$/)]],
       category: [null, Validators.required],
       pricePerDay: [null, [Validators.required, Validators.min(1)]],
+      currency: ['USD', Validators.required],
       image: [''], // Optional
       available: [true]
     });
@@ -73,12 +85,16 @@ export class CarManagementComponent implements OnInit {
     this.editingCar = null;
     this.carForm.reset({ available: true, pricePerDay: 0 });
     this.submitted = false;
+    this.selectedImageFile = null;
+    this.imagePreview = null;
     this.carDialog = true;
   }
 
   editCar(car: Car) {
     this.editingCar = car;
     this.carForm.patchValue(car);
+    this.selectedImageFile = null;
+    this.imagePreview = car.image;
     this.carDialog = true;
   }
 
@@ -100,6 +116,19 @@ export class CarManagementComponent implements OnInit {
         });
       }
     });
+  }
+
+  onImageSelect(event: any) {
+    const file = event.files[0];
+    if (file) {
+      this.selectedImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target.result;
+        this.carForm.patchValue({ image: e.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   saveCar() {

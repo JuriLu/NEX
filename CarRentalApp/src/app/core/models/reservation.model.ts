@@ -5,5 +5,6 @@ export interface Reservation {
   startDate: string;
   endDate: string;
   totalPrice: number;
+  currency: string;
   status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
 }

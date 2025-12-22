@@ -1,30 +1,26 @@
-/* Global Styles & Theme Configuration */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600&display=swap');
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 
 /* Variables */
 :root {
-  /* Custom Variables */
-  --primary-color: #0f172a;
-  --secondary-color: #ffffff;
-  --accent-color: #d4af37;
-  --text-color: #334155;
-  --bg-color: #f8fafc;
+  /* Mercedes S-Class Interior Palette */
+  --bg-dark: #050507;
+  --bg-card: rgba(20, 20, 25, 0.82);
+  --primary-color: #8b5cf6;
+  --secondary-color: #ec4899;
+  --accent-color: #3b82f6;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --ambient-purple: rgba(139, 92, 246, 0.2);
   --font-family: 'Inter', sans-serif;
+  --font-heading: 'Montserrat', 'Outfit', sans-serif;
 
-  /* PrimeNG Override - Deep Blue Palette */
-  --p-primary-50: #f8fafc;
-  --p-primary-100: #f1f5f9;
-  --p-primary-200: #e2e8f0;
-  --p-primary-300: #cbd5e1;
-  --p-primary-400: #94a3b8;
-  --p-primary-500: #0f172a;
-  /* Main Brand Color */
-  --p-primary-600: #020617;
-  --p-primary-700: #000000;
-  --p-primary-800: #000000;
-  --p-primary-900: #000000;
-  --p-primary-950: #000000;
+  /* PrimeNG Override */
+  --p-primary-color: var(--primary-color);
+  --p-background: var(--bg-dark);
 }
 
 html,
@@ -33,44 +29,226 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family);
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
 }
 
-/* Typography & Utilities overrides */
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+}
+
+.ambient-glow {
+  box-shadow: 0 0 40px var(--ambient-purple);
+}
+
+/* Typography */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: var(--primary-color);
+  font-family: var(--font-heading);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin-top: 0;
 }
 
-/* Global Validation Warnings - Sunburn to Purple Gradient */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  border-radius: 10px;
+  border: 2px solid var(--bg-dark);
+}
+
+/* PrimeNG Customizations */
+.p-button {
+  border-radius: 14px;
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &.p-button-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(139, 92, 246, 0.4);
+    }
+  }
+
+  &.p-button-outlined {
+    border-color: var(--glass-border);
+    color: white;
+
+    &:hover {
+      background: var(--glass-bg);
+    }
+  }
+}
+
+.p-toolbar {
+  background: rgba(10, 10, 12, 0.8) !important;
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border) !important;
+  padding: 1rem 2rem;
+}
+
+.p-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* DataView & Fleet Fixes */
+.p-dataview {
+  background: transparent !important;
+
+  .p-dataview-content {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+}
+
+.p-paginator {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px;
+  margin-top: 2rem;
+  color: white !important;
+  padding: 0.5rem !important;
+
+  .p-paginator-page,
+  .p-paginator-next,
+  .p-paginator-last,
+  .p-paginator-first,
+  .p-paginator-prev {
+    color: var(--text-secondary) !important;
+    border-radius: 50%;
+    min-width: 2.5rem;
+    height: 2.5rem;
+
+    &.p-highlight {
+      background: var(--primary-color) !important;
+      color: white !important;
+    }
+
+    &:hover:not(.p-highlight) {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+}
+
+.p-tag {
+  border-radius: 8px;
+  padding: 0.25rem 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Global Validation Warnings */
 .validation-warning {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a18cd1 100%);
-  color: #3d2c5e;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  backdrop-filter: blur(10px);
+  color: #fecaca;
   font-size: 0.875rem;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(161, 140, 209, 0.3);
-  border-left: 4px solid #ff758c;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
   animation: slideInAndGlow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex;
   align-items: center;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* Menu & Popups */
+.p-menu {
+  background: rgba(15, 15, 20, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  padding: 0.5rem !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+
+  .p-menu-list {
+    padding: 0 !important;
+  }
+
+  .p-menuitem {
+    margin: 2px 0;
+
+    .p-menuitem-link {
+      border-radius: 10px;
+      padding: 0.75rem 1rem !important;
+      transition: all 0.2s ease;
+      background: transparent !important;
+
+      .p-menuitem-text {
+        color: var(--text-primary) !important;
+        font-weight: 500;
+      }
+
+      .p-menuitem-icon {
+        color: var(--primary-color) !important;
+      }
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.15) !important;
+
+        .p-menuitem-text {
+          color: white !important;
+        }
+      }
+    }
+  }
+
+  .p-menu-separator {
+    border-top: 1px solid var(--glass-border) !important;
+    margin: 0.5rem 0 !important;
+  }
 }
 
 @keyframes slideInAndGlow {
   0% {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
-    filter: brightness(1.5);
   }
 
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: brightness(1);
   }
 }

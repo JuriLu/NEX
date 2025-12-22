@@ -1,118 +1,122 @@
-<div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
-    <div class="card">
+<div class="ops-center py-8 px-4 lg:px-8">
+    <div class="container mx-auto">
         <p-toast></p-toast>
-        <div class="flex flex-column md:flex-row md:align-items-start md:justify-content-between mb-5">
-            <div>
-                <div class="text-900 font-bold text-3xl mb-2">Fleet Management</div>
-                <p class="mt-0 mb-0 text-700 text-xl">Manage the vehicles available in the catalog.</p>
+
+        <div class="flex flex-column md:flex-row md:align-items-end justify-content-between mb-6 gap-4">
+            <div class="fadeinleft animation-duration-800">
+                <h1 class="text-5xl font-black mb-2">Fleet <span class="text-gradient">Operations</span></h1>
+                <p class="text-secondary text-xl font-medium m-0">Synchronize and maintain the NEX vehicle network.</p>
             </div>
-            <p-button label="Add Vehicle" icon="pi pi-plus" (click)="openNew()" styleClass="p-button-primary mt-3 md:mt-0"></p-button>
+            <div class="fadeinright animation-duration-800">
+                <p-button label="Add Asset" icon="pi pi-plus" (click)="openNew()" styleClass="p-button-primary"></p-button>
+            </div>
         </div>
 
-        <p-table [value]="cars" [rows]="10" [paginator]="true" responsiveLayout="scroll" styleClass="p-datatable-gridlines">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Image</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Category</th>
-                    <th>Price/Day</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-car>
-                <tr>
-                    <td><img [src]="car.image" [alt]="car.brand" width="60" class="shadow-2 border-round" /></td>
-                    <td>{{ car.brand }}</td>
-                    <td>{{ car.model }}</td>
-                    <td>{{ car.category }}</td>
-                    <td>{{ car.pricePerDay | currency }}</td>
-                    <td>
-                        <span [class]="'product-badge status-' + (car.available ? 'instock' : 'outofstock')">
-                            {{ car.available ? 'Available' : 'Unavailable' }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="flex gap-2">
-                             <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="success" (click)="editCar(car)"></p-button>
-                             <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" (click)="deleteCar(car)"></p-button>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+        <div class="glass-panel overflow-hidden fadeinup animation-duration-1000">
+            <p-table [value]="cars" [rows]="10" [paginator]="true" responsiveLayout="scroll" styleClass="mbux-table">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="uppercase tracking-widest text-xs">Asset</th>
+                        <th class="uppercase tracking-widest text-xs">ID / Model</th>
+                        <th class="uppercase tracking-widest text-xs">Category</th>
+                        <th class="uppercase tracking-widest text-xs text-center">Daily Yield</th>
+                        <th class="uppercase tracking-widest text-xs text-center">Operational Status</th>
+                        <th class="uppercase tracking-widest text-xs">Command</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-car>
+                    <tr class="asset-row">
+                        <td>
+                            <div class="asset-preview glass-panel">
+                                <img [src]="car.image" [alt]="car.brand" class="w-full h-full object-contain" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-white font-bold text-lg">{{ car.brand }}</div>
+                            <div class="text-secondary text-sm">{{ car.model }}</div>
+                        </td>
+                        <td>
+                            <span class="text-primary font-bold text-xs uppercase tracking-widest">{{ car.category }}</span>
+                        </td>
+                        <td class="text-center font-bold text-white">
+                            {{ car.pricePerDay | currency: car.currency || 'USD' }}
+                        </td>
+                        <td class="text-center">
+                            <p-tag [value]="car.available ? 'Active' : 'Offline'"
+                                   [severity]="car.available ? 'success' : 'danger'"
+                                   styleClass="status-glow"></p-tag>
+                        </td>
+                        <td>
+                            <div class="flex gap-1">
+                                <p-button icon="pi pi-pencil" [text]="true" styleClass="text-secondary hover:text-white" (click)="editCar(car)"></p-button>
+                                <p-button icon="pi pi-trash" [text]="true" styleClass="text-secondary hover:text-danger" (click)="deleteCar(car)"></p-button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
     </div>
 
-    <p-dialog [(visible)]="carDialog" [header]="editingCar ? 'Edit Vehicle' : 'New Vehicle'" [modal]="true" styleClass="p-fluid" [style]="{ width: '450px' }">
+    <!-- Admin Dialog Styled for Dark Theme -->
+    <p-dialog [(visible)]="carDialog" [header]="editingCar ? 'Optimize Asset' : 'Deploy New Asset'" [modal]="true"
+              styleClass="mbux-dialog" [style]="{ width: '500px' }" appendTo="body">
         <ng-template pTemplate="content">
-            <form [formGroup]="carForm">
-                <div class="field mb-4">
-                    <label for="brand" class="block font-bold mb-2">Brand</label>
-                    <input type="text" pInputText id="brand" formControlName="brand" placeholder="e.g. Tesla" />
-                    @if ((submitted || carForm.get('brand')?.touched) && carForm.get('brand')?.invalid) {
-                        <div class="validation-warning mt-2 p-2 border-round">
-                            <i class="pi pi-exclamation-circle mr-2"></i>
-                            @if (carForm.get('brand')?.hasError('pattern')) {
-                                Only letters, spaces, and hyphens allowed.
-                            } @else {
-                                Brand is essential for the fleet.
-                            }
-                        </div>
-                    }
+            <form [formGroup]="carForm" class="pt-4">
+                <div class="field mb-5">
+                    <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Automotive Brand</label>
+                    <input type="text" pInputText formControlName="brand" class="mbux-input" />
                 </div>
-                <div class="field mb-4">
-                    <label for="model" class="block font-bold mb-2">Model</label>
-                    <input type="text" pInputText id="model" formControlName="model" placeholder="e.g. Model S" />
-                    @if ((submitted || carForm.get('model')?.touched) && carForm.get('model')?.invalid) {
-                        <div class="validation-warning mt-2 p-2 border-round">
-                            <i class="pi pi-exclamation-circle mr-2"></i>
-                            @if (carForm.get('model')?.hasError('pattern')) {
-                                Only alphanumeric characters allowed.
-                            } @else {
-                                Please specify the model.
-                            }
-                        </div>
-                    }
+
+                <div class="field mb-5">
+                    <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Technical Model</label>
+                    <input type="text" pInputText formControlName="model" class="mbux-input" />
                 </div>
-                <div class="field mb-4">
-                    <label for="category" class="block font-bold mb-2">Category</label>
-                    <p-select id="category" [options]="categories" formControlName="category" optionLabel="label" optionValue="value" placeholder="Select a Category" styleClass="w-full"></p-select>
-                    @if ((submitted || carForm.get('category')?.touched) && carForm.get('category')?.invalid) {
-                        <div class="validation-warning mt-2 p-2 border-round">
-                            <i class="pi pi-exclamation-circle mr-2"></i>
-                            Category is required for classification.
+
+                <div class="grid mb-5">
+                    <div class="field col-6">
+                        <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Class</label>
+                        <p-select [options]="categories" formControlName="category" optionLabel="label" optionValue="value" styleClass="mbux-select"></p-select>
+                    </div>
+                    <div class="field col-6">
+                        <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Operational Status</label>
+                        <div class="flex align-items-center gap-3 mt-2">
+                             <span class="text-sm" [class.text-primary]="carForm.get('available')?.value">{{ carForm.get('available')?.value ? 'Online' : 'Offline' }}</span>
+                             <p-toggleswitch formControlName="available"></p-toggleswitch>
                         </div>
-                    }
-                </div>
-                <div class="formgrid grid mb-4">
-                    <div class="field col">
-                        <label for="pricePerDay" class="block font-bold mb-2">Price Per Day</label>
-                        <p-inputNumber id="pricePerDay" formControlName="pricePerDay" mode="currency" currency="USD" locale="en-US" placeholder="$0.00"></p-inputNumber>
-                        @if ((submitted || carForm.get('pricePerDay')?.touched) && carForm.get('pricePerDay')?.invalid) {
-                            <div class="validation-warning mt-2 p-2 border-round">
-                                <i class="pi pi-exclamation-circle mr-2"></i>
-                                Rental price must be at least $1.
-                            </div>
-                        }
                     </div>
                 </div>
-                 <div class="field mb-4">
-                    <label for="image" class="block font-bold mb-2">Image URL (Optional)</label>
-                    <input type="text" pInputText id="image" formControlName="image" placeholder="https://..." />
+
+                <div class="formgrid grid mb-5">
+                    <div class="field col-8">
+                        <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Rate per 24h</label>
+                        <p-inputNumber formControlName="pricePerDay" mode="decimal" [minFractionDigits]="2" styleClass="mbux-input-number"></p-inputNumber>
+                    </div>
+                    <div class="field col-4">
+                        <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Symbol</label>
+                        <p-select [options]="currencies" formControlName="currency" optionLabel="label" optionValue="value" styleClass="mbux-select"></p-select>
+                    </div>
                 </div>
-                <div class="field flex align-items-center gap-3">
-                    <label for="available" class="font-bold">Available</label>
-                    <p-toggleswitch formControlName="available"></p-toggleswitch>
+
+                <div class="field mb-5">
+                    <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Visual ID</label>
+                    <div class="image-uploader glass-panel p-4 flex flex-column align-items-center gap-4">
+                        @if (imagePreview) {
+                            <img [src]="imagePreview" alt="Preview" class="asset-large-preview" />
+                        } @else {
+                            <i class="pi pi-image text-5xl text-secondary opacity-20"></i>
+                        }
+                        <p-fileUpload mode="basic" chooseLabel="Upload Source" (onSelect)="onImageSelect($event)" auto="true" styleClass="p-button-outlined p-button-sm"></p-fileUpload>
+                    </div>
                 </div>
             </form>
         </ng-template>
 
         <ng-template pTemplate="footer">
-            <p-button label="Cancel" icon="pi pi-times" [text]="true" (click)="hideDialog()"></p-button>
-            <p-button label="Save" icon="pi pi-check" [text]="true" (click)="saveCar()"></p-button>
+            <p-button label="Terminate" [text]="true" (click)="hideDialog()" styleClass="text-secondary"></p-button>
+            <p-button label="Commit Changes" [text]="true" (click)="saveCar()" styleClass="font-bold text-primary"></p-button>
         </ng-template>
     </p-dialog>
 
-    <p-confirmdialog [style]="{ width: '450px' }"></p-confirmdialog>
+    <p-confirmdialog appendTo="body" styleClass="mbux-confirm-dialog"></p-confirmdialog>
 </div>

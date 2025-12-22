@@ -31,6 +31,12 @@
   - Execution reports
 - Integrate reports into **SonarQube** for quality analysis.
 
+## Documentation Policies
+- **Mandatory Documentation**: Every change must be recorded to maintain project integrity.
+- **Coding Changes**: All logic, state management (NgRx), or architectural changes must be documented in `.github/documentation/Coding-Documentation.md`.
+- **UI/UX Changes**: All design, aesthetic, animation, and branding modifications must be documented in `.github/documentation/UI-UX-Documentation.md`.
+- **Refinement**: Ensure both documents are synchronized with the codebase after every implementation step.
+
 ## Revision History
 
 | Version | Date       | Author | Description                     |

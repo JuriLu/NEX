@@ -25,3 +25,10 @@
   - Display validation warnings when a field is `invalid` AND (`touched` OR `submitted`).
   - Use the premium "Sunburn to Purple" gradient style for validation warnings.
 - **SQL/Script Injection**: Never trust user input. Treat all form values as raw data, not executable code.
+
+## Angular + Snyk Security Cooperation
+- **Angular InnerHTML**: Avoid using `[innerHTML]` unless absolutely necessary. If used, the value MUST be sanitized via Angular's `DomSanitizer`.
+- **Content Security Policy (CSP)**: Maintain the CSP meta tag in `index.html` to mitigate XSS and data injection risks (Snyk recommendation).
+- **Dependency Audit**: Regularly run `npm audit` or use Snyk's CLI to identify vulnerable packages.
+- **Context-Aware Encoding**: Rely on Angular's built-in interpolation `{{ }}` and property binding `[ ]` which automatically encode data to prevent script execution.
+- **Strict URI Schemes**: Use `SecurityUtils` to strip out dangerous schemes like `javascript:` and non-image `data:` URIs.

@@ -1,65 +1,95 @@
-<div class="surface-ground px-4 py-8 md:px-6 lg:px-8 flex justify-content-center">
-    <div class="w-full md:w-8 lg:w-6" *ngIf="car$ | async as car">
-        <p-card [header]="'Booking Summary: ' + car.brand + ' ' + car.model">
-            <div class="flex flex-column md:flex-row gap-4 mb-5">
-                <div class="flex-1">
-                    <img [src]="car.image" [alt]="car.brand" class="w-full border-round-xl shadow-2" />
-                </div>
-                <div class="flex-1">
-                    <h3 class="text-2xl font-bold mb-3">{{ car.brand }} {{ car.model }}</h3>
-                    <p class="text-600 mb-2">Category: <span class="text-900 font-medium">{{ car.category }}</span></p>
-                    <p class="text-600 mb-4">Daily Rate: <span class="text-primary font-bold">{{ car.pricePerDay | currency }}</span></p>
+<div class="booking-configurator py-8 px-4 lg:px-8" *ngIf="car$ | async as car">
+    <div class="container mx-auto">
+        <!-- Breadcrumb / Back Button -->
+        <div class="mb-5 fadein animation-duration-500">
+            <a routerLink="/catalog" class="text-secondary no-underline hover:text-white transition-all flex align-items-center gap-2">
+                <i class="pi pi-arrow-left"></i>
+                <span class="font-bold uppercase tracking-widest text-xs">Back to Fleet</span>
+            </a>
+        </div>
 
-                    <div class="surface-100 p-3 border-round">
-                        <h4 class="font-bold mb-2">Features</h4>
-                        <ul class="list-none p-0 m-0 flex flex-column gap-2">
-                            <li *ngFor="let feature of car.features" class="flex align-items-center">
-                                <i class="pi pi-check-circle text-green-500 mr-2"></i>
-                                <span>{{ feature }}</span>
-                            </li>
-                        </ul>
+        <div class="grid grid-nogutter align-items-start gap-6">
+            <!-- Left Side: Cinematic Car Preview -->
+            <div class="col-12 lg:col-7 fadeinleft animation-duration-1000">
+                <div class="preview-stage glass-panel p-4 mb-6 relative overflow-hidden">
+                    <div class="ambient-light"></div>
+                    <img [src]="car.image" [alt]="car.brand" class="car-hero-img" />
+
+                    <div class="car-info-overlay p-4">
+                        <span class="text-primary font-bold text-sm tracking-widest uppercase mb-2 block">{{ car.category }}</span>
+                        <h1 class="text-6xl font-black mb-0">{{ car.brand }} <span class="text-gradient">{{ car.model }}</span></h1>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="col-12 md:col-6 p-2" *ngFor="let feature of car.features; let i = index">
+                        <div class="feature-card glass-panel p-3 flex align-items-center gap-3">
+                            <div class="icon-circle">
+                                <i class="pi pi-check text-primary"></i>
+                            </div>
+                            <span class="font-bold text-sm">{{ feature }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-                <div class="flex flex-column gap-4">
-                    <div>
-                        <label for="dates" class="block font-bold mb-2">Select Rental Dates</label>
-                        <p-datepicker
-                            formControlName="dates"
-                            selectionMode="range"
-                            [minDate]="minDate"
-                            [readonlyInput]="true"
-                            [showIcon]="true"
-                            placeholder="Choose start and end dates"
-                            styleClass="w-full"
-                        ></p-datepicker>
-                        @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
-                            <div class="validation-warning mt-2 p-2 border-round">
-                                <i class="pi pi-exclamation-circle mr-2"></i>
-                                Rental dates are required to proceed.
+            <!-- Right Side: Configuration & Booking Form -->
+            <div class="col-12 lg:col-4 fadeinright animation-duration-1000">
+                <div class="config-panel glass-panel p-5 sticky top-0">
+                    <h2 class="text-3xl mb-5">Configure <span class="text-secondary">Mission</span></h2>
+
+                    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+                        <div class="flex flex-column gap-5">
+                            <!-- Date Selection -->
+                            <div class="form-group">
+                                <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-3">Rental Window</label>
+                                <p-datepicker
+                                    formControlName="dates"
+                                    selectionMode="range"
+                                    [minDate]="minDate"
+                                    [readonlyInput]="true"
+                                    [showIcon]="true"
+                                    placeholder="Select arrival & departure"
+                                    styleClass="mbux-datepicker w-full"
+                                    appendTo="body"
+                                ></p-datepicker>
+                                @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
+                                    <div class="validation-warning mt-3">
+                                        <i class="pi pi-exclamation-triangle mr-2"></i>
+                                        Please define your rental window.
+                                    </div>
+                                }
                             </div>
-                        }
-                        <small class="text-secondary" *ngIf="!totalPrice && bookingForm.get('dates')?.valid">Please select a range to see total price</small>
-                    </div>
 
-                    <div class="surface-0 p-4 border-round-xl border-1 surface-border" *ngIf="totalPrice > 0">
-                        <div class="flex justify-content-between align-items-center">
-                            <span class="text-xl">Total Price</span>
-                            <span class="text-3xl font-bold text-primary">{{ totalPrice | currency }}</span>
+                            <!-- Summary Card -->
+                            <div class="summary-section p-4 border-round-xl" [class.active]="totalPrice > 0">
+                                <div class="flex justify-content-between mb-2">
+                                    <span class="text-secondary">Daily Rate</span>
+                                    <span class="font-bold">{{ car.pricePerDay | currency: car.currency || 'USD' }}</span>
+                                </div>
+                                <div class="flex justify-content-between mb-4 border-top-1 border-white-alpha-10 pt-2" *ngIf="totalPrice > 0">
+                                    <span class="text-xl font-bold">Estimated Total</span>
+                                    <span class="text-3xl font-black text-gradient">{{ totalPrice | currency: car.currency || 'USD' }}</span>
+                                </div>
+                                <p class="text-xs text-secondary text-center italic" *ngIf="!totalPrice">Select dates to calculate mission costs.</p>
+                            </div>
+
+                            <p-button
+                                label="Proceed to Checkout"
+                                type="submit"
+                                [disabled]="bookingForm.invalid || !totalPrice"
+                                styleClass="p-button-primary p-button-lg w-full py-4 text-xl"
+                            ></p-button>
+
+                            <div class="text-center mt-3">
+                                <span class="text-xs text-secondary font-bold uppercase tracking-widest">
+                                    <i class="pi pi-shield mr-1"></i> Full Insurance Included
+                                </span>
+                            </div>
                         </div>
-                    </div>
-
-                    <p-button
-                        label="Confirm Reservation"
-                        type="submit"
-                        icon="pi pi-check"
-                        [disabled]="bookingForm.invalid || !totalPrice"
-                        styleClass="p-button-lg w-full"
-                    ></p-button>
+                    </form>
                 </div>
-            </form>
-        </p-card>
+            </div>
+        </div>
     </div>
 </div>

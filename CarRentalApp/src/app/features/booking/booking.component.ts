@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { Car } from '../../core/models/car.model';
@@ -14,14 +14,13 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-booking',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule, CardModule,
-    ButtonModule, DatePickerModule, InputTextModule, MessageModule
+    ButtonModule, DatePickerModule, InputTextModule, RouterLink
   ],
   templateUrl: './booking.component.html',
   styleUrl: './booking.component.scss'
@@ -71,17 +70,20 @@ export class BookingComponent implements OnInit {
           return;
         }
 
-        const reservation = {
-          userId: user.id,
-          carId,
-          startDate: start.toISOString(),
-          endDate: end ? end.toISOString() : start.toISOString(),
-          totalPrice: this.totalPrice,
-          status: 'Confirmed' as const
-        };
+        this.car$.pipe(take(1)).subscribe(car => {
+          const reservation = {
+            userId: user.id,
+            carId,
+            startDate: start.toISOString(),
+            endDate: end ? end.toISOString() : start.toISOString(),
+            totalPrice: this.totalPrice,
+            currency: car.currency || 'USD',
+            status: 'Confirmed' as const
+          };
 
-        this.store.dispatch(createReservation({ reservation }));
-        this.router.navigate(['/catalog']); // Redirect after booking
+          this.store.dispatch(createReservation({ reservation }));
+          this.router.navigate(['/catalog']); // Redirect after booking
+        });
       });
     }
   }

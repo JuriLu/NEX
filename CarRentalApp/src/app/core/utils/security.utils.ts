@@ -10,13 +10,19 @@ export class SecurityUtils {
   static sanitizeInput(input: string | null | undefined): string {
     if (!input) return '';
 
-    // Remove common script tags and event handlers
+    // Skip sanitization for Base64 data URLs (images) to avoid corruption
+    if (input.startsWith('data:image/')) {
+      return input;
+    }
+
+    // Remove complex script tags, event handlers, and malicious URI schemes (Snyk Best Practice)
     let sanitized = input
-      .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, '')
-      .replace(/on\w+="[^"]*"/gim, '')
-      .replace(/on\w+='[^']*'/gim, '')
-      .replace(/on\w+=[^\s>]+/gim, '')
-      .replace(/javascript:[^\s>]+/gim, '');
+      .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, '') // <script> tags
+      .replace(/on\w+\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gim, '') // any on* event handlers
+      .replace(/javascript\s*:[^\s>]+/gim, '') // javascript: URIs
+      .replace(/data\s*:[^\s>]+;base64[^\s>]+/gim, (match) => match.startsWith('data:image/') ? match : '') // base64 except images
+      .replace(/<iframe\b[^>]*>([\s\S]*?)<\/iframe>/gim, '') // iframes
+      .replace(/<object\b[^>]*>([\s\S]*?)<\/object>/gim, ''); // objects
 
     // Escape basic HTML characters to prevent rendering as tags
     const entityMap: { [key: string]: string } = {

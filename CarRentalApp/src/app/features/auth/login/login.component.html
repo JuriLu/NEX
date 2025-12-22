@@ -1,61 +1,63 @@
-<div class="login-wrapper">
-  <div class="login-container" [@loginAnimation]>
-    <p-card styleClass="shadow-6 border-round-xl login-card">
-      <ng-template pTemplate="header">
-        <div class="text-center pt-5 pb-2">
-          <div class="logo-circle bg-primary-50 inline-flex align-items-center justify-content-center border-circle mb-3" style="width: 64px; height: 64px">
-            <i class="pi pi-car text-3xl text-primary"></i>
-          </div>
-          <h2 class="text-3xl font-bold m-0 text-900">Welcome Back</h2>
-          <p class="text-500 mt-2">Sign in to your premium rental experience</p>
-        </div>
-      </ng-template>
+<div class="auth-wrapper flex align-items-center justify-content-center min-h-screen relative overflow-hidden">
+  <!-- Dynamic Background Effects -->
+  <div class="auth-ambient"></div>
+  <div class="auth-mesh"></div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 p-3">
+  <div class="auth-container p-4 fadein animation-duration-1000">
+    <div class="glass-panel auth-card p-5 relative overflow-hidden">
+      <div class="text-center mb-6">
+        <div class="auth-logo-box mb-4 glass-panel inline-flex p-3">
+          <img src="logo.png" alt="NEX Logo" class="h-4rem" />
+        </div>
+        <h2 class="text-4xl font-black mb-1 text-white">READY<span class="text-gradient">GO</span></h2>
+        <p class="text-secondary tracking-widest uppercase text-xs font-bold">Access Premium Mobility</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-5">
         @if (error$ | async; as error) {
-          <div class="p-3 bg-red-50 border-round mb-3">
-            <p class="text-red-700 m-0">{{ error }}</p>
+          <div class="validation-warning">
+            <i class="pi pi-exclamation-triangle mr-2"></i>
+            {{ error }}
           </div>
         }
 
-
-        <div class="field">
-          <label for="email" class="block font-medium mb-2 text-900">Email</label>
-          <input pInputText id="email" formControlName="email" class="w-full p-inputtext-lg" placeholder="user@carrental.com" />
+        <div class="form-group">
+          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Identification</label>
+          <input pInputText formControlName="email" class="mbux-input" placeholder="Enter NEX email" />
           @if ((submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid) {
-            <div class="validation-warning mt-2 p-2 border-round">
-              <i class="pi pi-exclamation-circle mr-2"></i>
-              Please enter a valid email address.
+            <div class="validation-warning mt-2">
+              <i class="pi pi-info-circle mr-2"></i>
+              Invalid credentials format.
             </div>
           }
         </div>
 
-        <div class="field">
-          <label for="password" class="block font-medium mb-2 text-900">Password</label>
-          <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full p-inputtext-lg" placeholder="••••••••"></p-password>
+        <div class="form-group">
+          <div class="flex justify-content-between align-items-center mb-2">
+            <label class="block text-secondary font-bold uppercase tracking-widest text-xs">Security Key</label>
+            <a class="text-primary font-bold text-xs no-underline hover:text-white cursor-pointer transition-all">Recover Access</a>
+          </div>
+          <p-password formControlName="password" [feedback]="false" [toggleMask]="true" styleClass="w-full" inputStyleClass="mbux-input" placeholder="••••••••"></p-password>
           @if ((submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.invalid) {
-            <div class="validation-warning mt-2 p-2 border-round">
-              <i class="pi pi-exclamation-circle mr-2"></i>
-              Password is required to sign in.
+            <div class="validation-warning mt-2">
+              <i class="pi pi-shield mr-2"></i>
+              Security key required.
             </div>
           }
         </div>
 
-        <div class="flex justify-content-between align-items-center mb-4">
-            <div class="flex align-items-center">
-                <p-checkbox [binary]="true" inputId="remember"></p-checkbox>
-                <label for="remember" class="ml-2 text-900 cursor-pointer">Remember me</label>
-            </div>
-            <a class="text-primary font-medium no-underline hover:underline cursor-pointer">Forgot password?</a>
+        <div class="flex align-items-center">
+            <p-checkbox [binary]="true" inputId="remember" styleClass="mbux-checkbox"></p-checkbox>
+            <label for="remember" class="ml-2 text-secondary text-sm cursor-pointer">Maintain persistent session</label>
         </div>
 
-        <p-button label="Sign In" type="submit" [loading]="(loading$ | async) || false" styleClass="w-full p-button-lg" [disabled]="loginForm.invalid"></p-button>
+        <p-button label="Initialize Session" type="submit" [loading]="(loading$ | async) || false" styleClass="p-button-primary p-button-lg w-full py-4" [disabled]="loginForm.invalid"></p-button>
 
         <div class="text-center mt-4">
-            <span class="text-600">Don't have an account? </span>
-            <a routerLink="/auth/register" class="text-primary font-bold no-underline hover:underline cursor-pointer">Create account</a>
+            <span class="text-secondary text-sm">New to NEX? </span>
+            <a routerLink="/auth/register" class="text-gradient font-bold no-underline hover:brightness-150 transition-all cursor-pointer">Register Identity</a>
         </div>
       </form>
-    </p-card>
+    </div>
   </div>
 </div>

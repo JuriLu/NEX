@@ -1,70 +1,59 @@
-<div class="register-wrapper">
-  <div class="register-container">
-    <p-card styleClass="shadow-6 border-round-xl login-card">
-      <ng-template pTemplate="header">
-        <div class="text-center pt-5 pb-2">
-          <div class="logo-circle bg-primary-50 inline-flex align-items-center justify-content-center border-circle mb-3" style="width: 64px; height: 64px">
-            <i class="pi pi-user-plus text-3xl text-primary"></i>
+<div class="auth-wrapper flex align-items-center justify-content-center min-h-screen relative overflow-hidden">
+  <!-- Dynamic Background Effects -->
+  <div class="auth-ambient"></div>
+  <div class="auth-mesh"></div>
+
+  <div class="auth-container p-4 fadein animation-duration-1000">
+    <div class="glass-panel auth-card p-5 relative overflow-hidden">
+      <div class="text-center mb-6">
+        <div class="auth-logo-box mb-4 glass-panel inline-flex p-3">
+          <img src="logo.png" alt="NEX Logo" class="h-4rem" />
+        </div>
+        <h2 class="text-4xl font-black mb-1 text-white">GENESIS<span class="text-gradient">HUB</span></h2>
+        <p class="text-secondary tracking-widest uppercase text-xs font-bold">Register Your NEX Identity</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+        <div class="formgrid grid grid-nogutter gap-3">
+          <div class="col">
+            <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">First Name</label>
+            <input pInputText formControlName="firstName" class="mbux-input" placeholder="Callsign" />
           </div>
-          <h2 class="text-3xl font-bold m-0 text-900">Create Account</h2>
-          <p class="text-500 mt-2">Join us and start your journey</p>
-        </div>
-      </ng-template>
-
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-3 p-3">
-
-        <div class="formgrid grid">
-            <div class="field col-12 md:col-6">
-                <label for="firstname" class="block font-medium mb-2 text-900">First Name</label>
-                <input pInputText id="firstname" formControlName="firstName" class="w-full" placeholder="John" />
-                @if ((submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.invalid) {
-                  <div class="validation-warning mt-2 p-2 border-round">
-                    <i class="pi pi-exclamation-circle mr-2"></i>
-                    Letters only, please.
-                  </div>
-                }
-            </div>
-            <div class="field col-12 md:col-6">
-                <label for="lastname" class="block font-medium mb-2 text-900">Last Name</label>
-                <input pInputText id="lastname" formControlName="lastName" class="w-full" placeholder="Doe" />
-                @if ((submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.invalid) {
-                  <div class="validation-warning mt-2 p-2 border-round">
-                    <i class="pi pi-exclamation-circle mr-2"></i>
-                    Letters only, please.
-                  </div>
-                }
-            </div>
+          <div class="col">
+            <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Last Name</label>
+            <input pInputText formControlName="lastName" class="mbux-input" placeholder="Origin" />
+          </div>
         </div>
 
-        <div class="field">
-          <label for="email" class="block font-medium mb-2 text-900">Email</label>
-          <input pInputText id="email" formControlName="email" class="w-full" placeholder="user@carrental.com" />
+        <div class="form-group">
+          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Email Identity</label>
+          <input pInputText formControlName="email" class="mbux-input" placeholder="name@nex-readygo.com" />
           @if ((submitted || registerForm.get('email')?.touched) && registerForm.get('email')?.invalid) {
-            <div class="validation-warning mt-2 p-2 border-round">
-              <i class="pi pi-exclamation-circle mr-2"></i>
-              Valid email is required.
+            <div class="validation-warning mt-2">
+              <i class="pi pi-info-circle mr-2"></i>
+              Valid communication channel required.
             </div>
           }
         </div>
 
-        <div class="field">
-          <label for="password" class="block font-medium mb-2 text-900">Password</label>
-          <p-password id="password" formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full" placeholder="Min 6 characters"></p-password>
+        <div class="form-group">
+          <label class="block text-secondary font-bold uppercase tracking-widest text-xs mb-2">Security Protocol</label>
+          <p-password formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="mbux-input" placeholder="••••••••"></p-password>
           @if ((submitted || registerForm.get('password')?.touched) && registerForm.get('password')?.invalid) {
-            <div class="validation-warning mt-2 p-2 border-round">
-              <i class="pi pi-exclamation-circle mr-2"></i>
-              Min 6 characters required.
+            <div class="validation-warning mt-2">
+              <i class="pi pi-shield mr-2"></i>
+              Minimum 6 character encryption required.
             </div>
           }
         </div>
 
-        <p-button label="Create Account" type="submit" [loading]="loading" styleClass="w-full p-button-lg" [disabled]="registerForm.invalid"></p-button>
+        <p-button label="Establish Identity" type="submit" [loading]="loading" styleClass="p-button-primary p-button-lg w-full py-4 mt-2" [disabled]="registerForm.invalid"></p-button>
 
-        <div class="text-center mt-4">
-            <span class="text-600">Already have an account? </span>
-            <a routerLink="/auth/login" class="text-primary font-bold no-underline hover:underline cursor-pointer">Sign In</a>
+        <div class="text-center mt-3">
+            <span class="text-secondary text-sm">Recognized Identity? </span>
+            <a routerLink="/auth/login" class="text-primary font-bold no-underline hover:text-white transition-all cursor-pointer">Sign In</a>
         </div>
       </form>
-    </p-card>
+    </div>
   </div>
 </div>

@@ -18,8 +18,9 @@ export class InMemoryDataService implements InMemoryDbService {
          brand: 'Tesla',
          model: 'Model S Plaid',
          pricePerDay: 250,
+         currency: 'USD',
          category: 'Electric',
-         image: 'assets/images/tesla.png',
+         image: 'images/tesla.png',
          available: true,
          features: ['Autopilot', '0-60 in 1.99s', 'Range 396mi']
        },
@@ -28,8 +29,9 @@ export class InMemoryDataService implements InMemoryDbService {
          brand: 'BMW',
          model: 'M4 Competition',
          pricePerDay: 180,
+         currency: 'USD',
          category: 'Sport',
-         image: 'assets/images/bmw.png',
+         image: 'images/bmw.png',
          available: true,
          features: ['503 HP', 'Carbon Bucket Seats', 'Drift Mode']
        },
@@ -38,8 +40,9 @@ export class InMemoryDataService implements InMemoryDbService {
          brand: 'Mercedes',
          model: 'S-Class',
          pricePerDay: 300,
+         currency: 'USD',
          category: 'Luxury',
-         image: 'assets/images/mercedes.png',
+         image: 'images/mercedes.png',
          available: true,
          features: ['Massage Seats', 'Ambient Lighting', 'Chauffeur Package']
        }

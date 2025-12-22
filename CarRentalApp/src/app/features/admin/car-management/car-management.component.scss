@@ -1,22 +1,91 @@
+.ops-center {
+  min-height: 80vh;
+}
+
+.asset-preview {
+  width: 80px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.asset-large-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+}
+
+.image-uploader {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--glass-border);
+}
+
 :host ::ng-deep {
-  .p-datatable {
-    .product-badge {
-      border-radius: 2px;
-      padding: .25em .5rem;
-      text-transform: uppercase;
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: .3px;
+  .mbux-dialog {
+    .p-dialog-header {
+      background: rgba(15, 15, 20, 0.98) !important;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border) !important;
+      color: white !important;
+      padding: 1.5rem !important;
+    }
 
-      &.status-instock {
-        background: #C8E6C9;
-        color: #256029;
-      }
+    .p-dialog-content {
+      background: rgba(10, 10, 12, 0.98) !important;
+      color: var(--text-primary) !important;
+      padding: 1.5rem !important;
+    }
 
-      &.status-outofstock {
-        background: #FFCDD2;
-        color: #C63737;
+    .p-dialog-footer {
+      background: rgba(15, 15, 20, 0.98) !important;
+      border-top: 1px solid var(--glass-border) !important;
+      padding: 1rem !important;
+    }
+  }
+
+  /* Universal Input styling for MBUX Admin */
+  .mbux-input,
+  .p-inputtext,
+  .mbux-input-number .p-inputtext {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: white !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 12px !important;
+    width: 100%;
+
+    &:focus {
+      border-color: var(--primary-color) !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+
+  .mbux-select {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px !important;
+
+    .p-select-label {
+      color: white !important;
+    }
+  }
+
+  .p-toggleswitch {
+    .p-toggleswitch-slider {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-radius: 20px !important;
+
+      &:before {
+        background: white !important;
       }
+    }
+
+    &.p-toggleswitch-checked .p-toggleswitch-slider {
+      background: var(--primary-color) !important;
     }
   }
 }
