@@ -1,17 +1,30 @@
 /* Global Styles & Theme Configuration */
 @import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
 
 /* Variables */
 :root {
+  /* Custom Variables */
   --primary-color: #0f172a;
-  /* Deep Blue */
   --secondary-color: #ffffff;
-  /* White */
   --accent-color: #d4af37;
-  /* Gold */
   --text-color: #334155;
   --bg-color: #f8fafc;
   --font-family: 'Inter', sans-serif;
+
+  /* PrimeNG Override - Deep Blue Palette */
+  --p-primary-50: #f8fafc;
+  --p-primary-100: #f1f5f9;
+  --p-primary-200: #e2e8f0;
+  --p-primary-300: #cbd5e1;
+  --p-primary-400: #94a3b8;
+  --p-primary-500: #0f172a;
+  /* Main Brand Color */
+  --p-primary-600: #020617;
+  --p-primary-700: #000000;
+  --p-primary-800: #000000;
+  --p-primary-900: #000000;
+  --p-primary-950: #000000;
 }
 
 html,

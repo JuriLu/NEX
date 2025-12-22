@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { login } from '../../../core/store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '../../../core/store/auth/auth.selectors';
@@ -22,7 +23,8 @@ import { PasswordModule } from 'primeng/password';
     InputTextModule,
     ButtonModule,
     PasswordModule,
-    CheckboxModule
+    CheckboxModule,
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
