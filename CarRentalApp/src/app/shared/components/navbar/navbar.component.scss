@@ -136,7 +136,8 @@
 
       &:hover {
         background: var(--secondary-color);
-        color: white;
+        color: #000000; /* Black text for contrast against pink background */
+        font-weight: 700;
       }
     }
   }
@@ -149,10 +150,62 @@
   border: 1px solid var(--glass-border);
   background: rgba(139, 92, 246, 0.05);
 
-  .welcome-text {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
+  /* Fix for Sign In Button Hover Contrast */
+  &.auth-buttons {
+  /* Fix for Sign In Button Hover Contrast (Round 3 - Explicit Class) */
+  &.auth-buttons {
+    ::ng-deep .mbux-signin-btn {
+        transition: all 0.3s ease;
+        color: white !important; /* Normal state: White */
+        
+        .p-button-label, .p-button-icon {
+            color: white !important;
+        }
+        
+        &:hover {
+             background: rgba(255, 255, 255, 0.95) !important;
+             border-color: transparent !important;
+             
+             /* Hover state: Black */
+             color: #000000 !important;
+             .p-button-label, 
+             .p-button-icon {
+                 color: #000000 !important;
+                 font-weight: 700;
+             }
+        }
+    }
   }
+  }
+
+  .admin-tool {
+      border: 1px dashed var(--secondary-color);
+      color: var(--secondary-color);
+      font-weight: 700 !important; /* Bold by default */
+      text-shadow: 0 0 12px rgba(236, 72, 153, 0.5); /* Glow for visibility */
+      background: rgba(236, 72, 153, 0.05); /* Slight tint */
+
+      &:hover {
+        background: var(--secondary-color);
+        color: #000000 !important; /* Black text for contrast */
+        text-shadow: none;
+      }
+    }
+  }
+
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    border-radius: 40px;
+    border: 1px solid var(--glass-border);
+    background: rgba(139, 92, 246, 0.05);
+    position: relative; /* Added relative for dropdown positioning */
+
+    .welcome-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
 
   .mbux-avatar {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
