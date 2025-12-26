@@ -108,7 +108,7 @@
               *ngIf="carForm.get('brand')?.invalid && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
-              <span>Brand is required.</span>
+              <span>{{ carForm.get('brand')?.hasError('required') ? 'Brand is required.' : 'Invalid format (letters only).' }}</span>
             </div>
           </div>
         </div>
@@ -129,11 +129,11 @@
               *ngIf="carForm.get('model')?.invalid && (carForm.get('model')?.dirty || carForm.get('model')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
-              <span>Model is required.</span>
+               <span>{{ carForm.get('model')?.hasError('required') ? 'Model is required.' : 'Invalid format (alphanumeric).' }}</span>
             </div>
           </div>
         </div>
-
+        
         <div class="field mb-5 mbux-inline-field">
           <label class="mbux-field-label">Class</label>
           <div class="input-wrapper">
@@ -197,7 +197,7 @@
                     *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
                 >
                     <i class="pi pi-exclamation-circle"></i>
-                    <span>Price is required.</span>
+                    <span>{{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
                 </div>
              </div>
         </div>

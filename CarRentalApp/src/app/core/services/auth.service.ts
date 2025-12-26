@@ -10,6 +10,30 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'api/users';
 
+  register(user: Partial<User>): Observable<User> {
+    return this.http.post<User>(this.apiUrl, user).pipe(
+      map(newUser => {
+        // Mock successful registration
+        const userWithToken = { ...newUser, token: 'mock-jwt-token' } as User;
+        return userWithToken;
+      }),
+      tap(createdUser => {
+        localStorage.setItem('user', JSON.stringify(createdUser));
+      })
+    );
+  }
+
+  checkUsernameUnique(username: string): Observable<boolean> {
+    // Mock check: simulate uniqueness (always true for now unless specific mock value)
+    return new Observable(observer => {
+      setTimeout(() => {
+        const isTaken = username.toLowerCase() === 'admin'; // Mock 'admin' as taken
+        observer.next(!isTaken);
+        observer.complete();
+      }, 500);
+    });
+  }
+
   login(email: string, password: string): Observable<User> {
     return this.http.get<User[]>(this.apiUrl).pipe(
       map(users => {

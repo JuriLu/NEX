@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { catchError, map, of } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { SecurityUtils } from '../../../core/utils/security.utils';
+import { MessageService } from 'primeng/api';
 
 // PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +13,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 
+import { ToastModule } from 'primeng/toast';
 import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
 
 @Component({
@@ -23,7 +27,9 @@ import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
     InputTextModule,
     ButtonModule,
     PasswordModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -54,19 +60,26 @@ export class RegisterComponent {
     ],
   };
 
-  fb = inject(FormBuilder);
-  router = inject(Router);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService); // Inject AuthService
+  private messageService = inject(MessageService); // Assuming MessageService is available or will handle toast differently
+
   submitted = false;
+  loading = false;
 
   registerForm: FormGroup = this.fb.group({
     firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
     lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
+    username: [
+      '', 
+      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)], 
+      [this.usernameUniqueValidator.bind(this)]
+    ],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]],
-  });
-
-  loading = false;
+  }, { validators: this.passwordMatchValidator });
 
   onSubmit() {
     this.submitted = true;
@@ -75,11 +88,33 @@ export class RegisterComponent {
       const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
       console.log('Register Payload (Sanitized):', sanitizedData);
 
-      // Mock success for now
-      setTimeout(() => {
-        this.loading = false;
-        this.router.navigate(['/auth/login']);
-      }, 1500);
+      this.authService.register(sanitizedData).subscribe({
+        next: () => {
+          // Success Toast would go here
+          setTimeout(() => {
+            this.loading = false;
+            this.router.navigate(['/auth/login']);
+          }, 1500);
+        },
+        error: (err) => {
+          console.error('Registration failed', err);
+          this.loading = false;
+        }
+      });
     }
+  }
+
+  // Custom Validator: Password Match
+  passwordMatchValidator(g: FormGroup) {
+    return g.get('password')?.value === g.get('confirmPassword')?.value
+      ? null : { mismatch: true };
+  }
+
+  // Async Validator: Username Unique
+  usernameUniqueValidator(control: AbstractControl) {
+    return this.authService.checkUsernameUnique(control.value).pipe(
+      map(isUnique => (isUnique ? null : { notUnique: true })),
+      catchError(() => of(null))
+    );
   }
 }

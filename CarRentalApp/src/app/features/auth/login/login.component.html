@@ -32,9 +32,9 @@
             placeholder="Enter NEX email"
           />
           @if ((submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.invalid) {
-          <div [class]="styles.validationWarning" class="mt-2">
+          <div [class]="styles.validationWarning" [class.innovative]="loginForm.get('email')?.hasError('email')" class="mt-2">
             <i class="pi pi-info-circle mr-2"></i>
-            Invalid credentials format.
+            {{ loginForm.get('email')?.hasError('required') ? 'Email is required.' : 'Invalid email format.' }}
           </div>
           }
         </div>

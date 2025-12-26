@@ -4,6 +4,7 @@
   <div class="auth-mesh"></div>
 
   <div class="auth-container p-4 fadein animation-duration-1000">
+    <p-toast></p-toast>
     <div [class]="styles.authCard">
       <div class="text-center mb-6">
         <div [class]="styles.logoBox">
@@ -25,11 +26,41 @@
               class="mbux-input"
               placeholder="Callsign"
             />
+             @if ((submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.invalid) {
+            <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('firstName')?.hasError('pattern')" class="mt-2">
+              <i class="pi pi-info-circle mr-2"></i>
+              {{ registerForm.get('firstName')?.hasError('required') ? 'Required.' : 'Letters only.' }}
+            </div>
+            }
           </div>
           <div class="col">
             <label [class]="styles.label">Last Name</label>
             <input pInputText formControlName="lastName" class="mbux-input" placeholder="Origin" />
+             @if ((submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.invalid) {
+            <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('lastName')?.hasError('pattern')" class="mt-2">
+              <i class="pi pi-info-circle mr-2"></i>
+              {{ registerForm.get('lastName')?.hasError('required') ? 'Required.' : 'Letters only.' }}
+            </div>
+            }
           </div>
+        </div>
+
+        <div class="form-group">
+          <label [class]="styles.label">Username</label>
+          <input
+            pInputText
+            formControlName="username"
+            class="mbux-input"
+            placeholder="genesis_pilot"
+          />
+          @if ((submitted || registerForm.get('username')?.touched) && registerForm.get('username')?.invalid) {
+          <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('username')?.errors && !registerForm.get('username')?.hasError('required')" class="mt-2">
+            <i class="pi pi-info-circle mr-2"></i>
+            @if (registerForm.get('username')?.hasError('required')) { Username required. }
+            @if (registerForm.get('username')?.hasError('pattern')) { Alphanumeric only. }
+            @if (registerForm.get('username')?.hasError('notUnique')) { Username taken. }
+          </div>
+          }
         </div>
 
         <div class="form-group">
@@ -60,10 +91,37 @@
           ></p-password>
           @if ((submitted || registerForm.get('password')?.touched) &&
           registerForm.get('password')?.invalid) {
-          <div [class]="styles.validationWarning" class="mt-2">
+          <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('password')?.hasError('minlength')" class="mt-2">
             <i class="pi pi-shield mr-2"></i>
-            Minimum 6 character required.
+            @if (registerForm.get('password')?.hasError('required')) { Password required. }
+            @if (registerForm.get('password')?.hasError('minlength')) { Minimum 6 characters. }
           </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label [class]="styles.label">Confirm Password</label>
+          <p-password
+            formControlName="confirmPassword"
+            [toggleMask]="true"
+            [feedback]="false"
+            styleClass="w-full"
+            inputStyleClass="mbux-input"
+            placeholder="••••••••"
+          ></p-password>
+          @if ((submitted || registerForm.hasError('mismatch')) && registerForm.get('confirmPassword')?.touched) {
+             @if (registerForm.hasError('mismatch')) {
+              <div [class]="styles.validationWarning" class="innovative mt-2">
+                <i class="pi pi-exclamation-triangle mr-2"></i>
+                Passwords do not match.
+              </div>
+             }
+             @if (registerForm.get('confirmPassword')?.hasError('required') && !registerForm.hasError('mismatch')) {
+               <div [class]="styles.validationWarning" class="mt-2">
+                <i class="pi pi-exclamation-circle mr-2"></i>
+                Confirmation required.
+              </div>
+             }
           }
         </div>
 
@@ -72,7 +130,6 @@
           type="submit"
           [loading]="loading"
           styleClass="p-button-primary p-button-lg w-full py-4 mt-2"
-          [disabled]="registerForm.invalid"
         ></p-button>
 
         <div class="text-center mt-3">

@@ -114,6 +114,22 @@ h6 {
   }
 }
 
+/* Password Eye Icon Hover Effect */
+.p-password {
+  .p-input-icon-right > i,
+  .p-password-show-icon, 
+  .p-password-hide-icon {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      color: var(--primary-color) !important;
+      transform: scale(1.2) rotate(10deg);
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+  }
+}
+
 .p-toolbar {
   background: rgba(10, 10, 12, 0.8) !important;
   backdrop-filter: blur(20px);
@@ -205,11 +221,48 @@ h6 {
 
   &.innovative {
     background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(255, 215, 0, 0.5);
+    border: none;
+    position: relative;
+    z-index: 1;
     color: #ffd700;
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
-    border-left: 4px solid #ffd700;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 12px;
+      padding: 1px;
+      background: linear-gradient(90deg, #ffd700, #8b5cf6, #ffd700);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+      animation: innovative-border 3s linear infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #ffd700;
+    }
   }
+}
+
+@keyframes innovative-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Menu & Popups */
