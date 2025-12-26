@@ -13,19 +13,40 @@
   }
 }
 
+@keyframes mbux-pulse {
+  0% {
+    filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
+    transform: scale(1.02);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.6));
+    transform: scale(1.05);
+  }
+  100% {
+    filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.4));
+    transform: scale(1.02);
+  }
+}
+
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: transform 0.3s ease;
+  gap: 16px; /* Increased gap */
+  transition: all 0.5s ease;
+  padding: 8px 16px;
+  border-radius: 16px;
+
+  /* Base Glow */
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.2));
 
   &:hover {
-    transform: scale(1.02);
+    /* MBUX Surprise: Breathing Glow Animation */
+    animation: mbux-pulse 3s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.03); /* Subtle highlight background */
   }
 
   .mbux-logo {
     height: 144px;
-    /* Increased from 56px */
     width: auto;
     border-radius: 12px;
     border: 1px solid var(--glass-border);
@@ -45,26 +66,39 @@
   .branding {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
     .brand-name {
-      font-size: 2.2rem;
-      /* Slightly bigger */
+      font-size: 3.5rem; /* Much bigger */
       font-weight: 900;
       color: white;
-      line-height: 1;
+      line-height: 0.9;
       letter-spacing: -2px;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
     }
 
     .brand-motto {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #ffffff !important;
-      letter-spacing: 3px;
+      font-size: 1.2rem; /* Bigger */
+      font-weight: 800;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      margin-top: -2px;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      margin-top: 4px;
+      
+      /* Restored Color Effect & Enhanced */
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 4s linear infinite;
+      text-shadow: none; /* Remove white shadow to let gradient shine */
     }
+  }
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
   }
 }
 
