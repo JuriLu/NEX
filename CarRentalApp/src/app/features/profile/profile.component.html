@@ -1,0 +1,68 @@
+<div class="profile-container p-4 fadein animation-duration-500">
+  <div class="profile-card glass-panel overflow-hidden">
+    <!-- Header with Gradient Background -->
+    <div class="profile-header p-6 flex align-items-center gap-4">
+      <p-avatar 
+        icon="pi pi-user" 
+        size="xlarge" 
+        shape="circle" 
+        styleClass="mbux-avatar bg-primary-100 text-primary-900 border-2 border-primary-500">
+      </p-avatar>
+      <div class="flex flex-column">
+        <h1 class="text-3xl font-bold m-0 text-white mb-1">
+          {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
+        </h1>
+        <span class="text-secondary text-lg">
+          <i class="pi pi-verified text-primary mr-1"></i>
+          NEX Member
+        </span>
+      </div>
+    </div>
+
+    <!-- User Details Grid -->
+    <div class="p-6">
+      <div class="grid">
+        <div class="col-12 md:col-6 mb-3">
+          <div class="info-item p-4 h-full">
+            <label class="block mb-2">Username</label>
+            <div class="value">{{ (user$ | async)?.username }}</div>
+          </div>
+        </div>
+        
+        <div class="col-12 md:col-6 mb-3">
+          <div class="info-item p-4 h-full">
+            <label class="block mb-2">Email Address</label>
+            <div class="value">{{ (user$ | async)?.email }}</div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6 mb-3">
+          <div class="info-item p-4 h-full">
+            <label class="block mb-2">Account Role</label>
+            <div class="value capitalize">
+              <span class="inline-flex align-items-center gap-2">
+                <i class="pi pi-shield text-primary"></i>
+                {{ (user$ | async)?.role }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6 mb-3">
+          <div class="info-item p-4 h-full">
+            <label class="block mb-2">Member Since</label>
+            <div class="value">December 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-content-end mt-4">
+        <p-button 
+          label="Edit Profile" 
+          icon="pi pi-pencil" 
+          styleClass="p-button-outlined p-button-secondary">
+        </p-button>
+      </div>
+    </div>
+  </div>
+</div>

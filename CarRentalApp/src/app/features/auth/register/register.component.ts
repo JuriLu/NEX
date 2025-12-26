@@ -6,6 +6,8 @@ import { catchError, map, of } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { SecurityUtils } from '../../../core/utils/security.utils';
 import { MessageService } from 'primeng/api';
+import { Store } from '@ngrx/store';
+import { loginSuccess } from '../../../core/store/auth/auth.actions';
 
 // PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -63,7 +65,8 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService); // Inject AuthService
-  private messageService = inject(MessageService); // Assuming MessageService is available or will handle toast differently
+  private messageService = inject(MessageService); 
+  private store = inject(Store); // Inject Store
 
   submitted = false;
   loading = false;
@@ -86,19 +89,35 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.loading = true;
       const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
-      console.log('Register Payload (Sanitized):', sanitizedData);
-
+      
       this.authService.register(sanitizedData).subscribe({
-        next: () => {
-          // Success Toast would go here
+        next: (user) => {
+          // 1. Show Glowy Success Toast
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Welcome to NEX',
+            detail: `Initiating Launch Sequence for pilot: <b>${user.firstName} ${user.lastName}</b>`,
+            life: 5000,
+            styleClass: 'mbux-toast-success' // We can style this class if needed 
+          });
+
+          // 2. Auto-Login: Dispatch to Store to update Global State
+          // This ensures AuthGuard and Header know we are logged in.
+          this.store.dispatch(loginSuccess({ user }));
+
           setTimeout(() => {
-            this.loading = false;
-            this.router.navigate(['/auth/login']);
+             this.loading = false;
+             this.router.navigate(['/catalog']); // Redirect to main app
           }, 1500);
         },
         error: (err) => {
           console.error('Registration failed', err);
           this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Registration Failed',
+            detail: 'Could not create identity.',
+          });
         }
       });
     }

@@ -44,18 +44,28 @@
 
 :host ::ng-deep {
   .mbux-input {
-    background: rgba(255, 255, 255, 0.04) !important;
+    background: #131316 !important; /* Solid color to match autofill */
     border: 1px solid var(--glass-border) !important;
     color: white !important;
     padding: 1rem !important;
     border-radius: 12px !important;
     transition: all 0.3s ease;
     width: 100%;
+    outline: none !important; /* No default focus ring */
+
+    /* Ensure Autofill Overrides match */
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover, 
+    &:-webkit-autofill:focus, 
+    &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #131316 inset !important;
+        -webkit-text-fill-color: white !important;
+    }
 
     &:focus {
       border-color: var(--primary-color) !important;
       box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1) !important;
-      background: rgba(255, 255, 255, 0.07) !important;
+      background: #18181b !important; /* Slightly lighter on focus */
     }
   }
 }

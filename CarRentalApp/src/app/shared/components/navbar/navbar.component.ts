@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -48,18 +48,33 @@ export class NavbarComponent implements OnInit {
   user$: Observable<User | null> = this.store.select(selectUser);
   isAdmin$: Observable<boolean> = this.store.select(selectIsAdmin);
 
-  userMenu: MenuItem[] = [];
+  userMenu: MenuItem[] = []; // Kept for reference or future use if needed, but not used in template anymore
+  isMenuOpen = false;
 
   ngOnInit() {
-    this.userMenu = [
-      { label: 'Profile', icon: 'pi pi-user', routerLink: '/profile' },
-      { label: 'My Bookings', icon: 'pi pi-calendar', routerLink: '/bookings' },
-      { separator: true },
-      { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.onLogout() },
-    ];
+    // Menu items are now hardcoded in HTML for manual control, or could be mapped here.
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
   }
 
   onLogout() {
+    this.closeMenu();
     this.store.dispatch(logout());
+  }
+
+  // Click Outside Listener
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const clickedInside = target.closest('.user-pill-container'); 
+    if (!clickedInside) {
+      this.closeMenu();
+    }
   }
 }

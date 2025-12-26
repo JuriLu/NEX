@@ -24,7 +24,7 @@
               pInputText
               formControlName="firstName"
               class="mbux-input"
-              placeholder="Callsign"
+              placeholder="First Name"
             />
              @if ((submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.invalid) {
             <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('firstName')?.hasError('pattern')" class="mt-2">
@@ -35,7 +35,7 @@
           </div>
           <div class="col">
             <label [class]="styles.label">Last Name</label>
-            <input pInputText formControlName="lastName" class="mbux-input" placeholder="Origin" />
+            <input pInputText formControlName="lastName" class="mbux-input" placeholder="Last Name" />
              @if ((submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.invalid) {
             <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('lastName')?.hasError('pattern')" class="mt-2">
               <i class="pi pi-info-circle mr-2"></i>
@@ -51,7 +51,7 @@
             pInputText
             formControlName="username"
             class="mbux-input"
-            placeholder="genesis_pilot"
+            placeholder="Username"
           />
           @if ((submitted || registerForm.get('username')?.touched) && registerForm.get('username')?.invalid) {
           <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('username')?.errors && !registerForm.get('username')?.hasError('required')" class="mt-2">
@@ -69,7 +69,7 @@
             pInputText
             formControlName="email"
             class="mbux-input"
-            placeholder="name@nex-readygo.com"
+            placeholder="name@email.com"
           />
           @if ((submitted || registerForm.get('email')?.touched) &&
           registerForm.get('email')?.invalid) {

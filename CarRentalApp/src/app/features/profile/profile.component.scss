@@ -1,0 +1,40 @@
+.profile-container {
+  min-height: 80vh;
+  padding-top: 2rem;
+}
+
+.profile-card {
+  max-width: 800px;
+  margin: 0 auto;
+  
+  .profile-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border-bottom: 1px solid var(--glass-border);
+  }
+}
+
+.info-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary-color);
+  }
+
+  label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .value {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+}

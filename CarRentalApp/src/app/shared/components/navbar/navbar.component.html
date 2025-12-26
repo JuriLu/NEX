@@ -31,18 +31,36 @@
 
   <div class="p-toolbar-group-end gap-3">
     @if (isLoggedIn$ | async) {
-    <div [class]="styles.userPill">
+    <div [class]="styles.userPill" class="user-pill-container relative"> <!-- Added relative for dropdown positioning -->
       <span [class]="styles.welcomeText"
-        >Hello, <span class="text-white font-bold">{{ (user$ | async)?.name }}</span></span
+        >Hello, <span class="text-white font-bold">{{ (user$ | async)?.firstName }}</span></span
       >
       <p-avatar
         icon="pi pi-user"
         shape="circle"
         styleClass="mbux-avatar cursor-pointer"
-        (click)="menu.toggle($event)"
+        (click)="toggleMenu()"
       >
       </p-avatar>
-      <p-menu #menu [model]="userMenu" [popup]="true" appendTo="body"></p-menu>
+
+      <!-- Manual Dropdown Menu -->
+      @if (isMenuOpen) {
+      <div class="mbux-dropdown-menu">
+        <a routerLink="/profile" class="mbux-menu-item" (click)="closeMenu()">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+        </a>
+        <a routerLink="/bookings" class="mbux-menu-item" (click)="closeMenu()">
+            <i class="pi pi-calendar"></i>
+            <span>My Bookings</span>
+        </a>
+        <div class="menu-separator"></div>
+        <button class="mbux-menu-item logout-item" (click)="onLogout()">
+            <i class="pi pi-sign-out"></i>
+            <span>Logout</span>
+        </button>
+      </div>
+      }
     </div>
     } @else {
     <div [class]="styles.authButtons">
