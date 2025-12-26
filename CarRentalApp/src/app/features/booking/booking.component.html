@@ -38,7 +38,7 @@
       <!-- Right Side: Configuration & Booking Form -->
       <div class="col-12 lg:col-4 fadeinright animation-duration-1000">
         <div [class]="styles.configPanel">
-          <h2 class="text-3xl mb-5">Configure <span class="text-secondary">Mission</span></h2>
+          <h2 class="text-3xl mb-5">Rental <span class="text-secondary">Configuration</span></h2>
 
           <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
             <div class="flex flex-column gap-5">
@@ -56,7 +56,10 @@
                   appendTo="body"
                 ></p-datepicker>
                 @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
-                <div [class]="styles.validationWarning">
+                <div
+                  [class]="styles.validationWarning"
+                  [class.innovative]="bookingForm.get('dates')?.errors && !bookingForm.get('dates')?.hasError('required')"
+                >
                   <i class="pi pi-exclamation-triangle mr-2"></i>
                   Please define your rental window.
                 </div>

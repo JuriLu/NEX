@@ -132,11 +132,21 @@ h6 {
 /* DataView & Fleet Fixes */
 .p-dataview {
   background: transparent !important;
+  border: none !important;
 
   .p-dataview-content {
     background: transparent !important;
     border: none !important;
     padding: 0 !important;
+  }
+
+  .p-dataview-header,
+  .p-dataview-footer {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
   }
 }
 
@@ -192,6 +202,14 @@ h6 {
   align-items: center;
   padding: 1rem;
   border-radius: 12px;
+
+  &.innovative {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    border-left: 4px solid #ffd700;
+  }
 }
 
 /* Menu & Popups */
@@ -217,8 +235,9 @@ h6 {
       background: transparent !important;
 
       .p-menuitem-text {
-        color: var(--text-primary) !important;
-        font-weight: 500;
+        color: #ffffff !important;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+        font-weight: 600;
       }
 
       .p-menuitem-icon {

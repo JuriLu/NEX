@@ -24,14 +24,22 @@
   }
 
   .mbux-logo {
-    height: 72px;
+    height: 144px;
     /* Increased from 56px */
     width: auto;
-    border-radius: 20px;
+    border-radius: 12px;
     border: 1px solid var(--glass-border);
     background: rgba(255, 255, 255, 0.05);
     padding: 6px;
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+
+    &.innovative {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      color: #ffd700;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+      border-left: 4px solid #ffd700;
+    }
   }
 
   .branding {
@@ -50,11 +58,12 @@
 
     .brand-motto {
       font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--primary-color);
+      font-weight: 600;
+      color: #ffffff !important;
       letter-spacing: 3px;
       text-transform: uppercase;
       margin-top: -2px;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
   }
 }

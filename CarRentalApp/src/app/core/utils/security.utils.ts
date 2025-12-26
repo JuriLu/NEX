@@ -36,7 +36,7 @@ export class SecurityUtils {
       '=': '&#x3D;'
     };
 
-    return sanitized.replace(/[&<>"'`=\/]/g, (s) => entityMap[s]);
+    return sanitized.replace(/[&<>"'`=]/g, (s) => entityMap[s]);
   }
 
   /**

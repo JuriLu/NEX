@@ -104,6 +104,7 @@
             />
             <div
               class="validation-warning"
+              [class.innovative]="carForm.get('brand')?.errors && !carForm.get('brand')?.hasError('required')"
               *ngIf="carForm.get('brand')?.invalid && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
@@ -124,6 +125,7 @@
             />
             <div
               class="validation-warning"
+              [class.innovative]="carForm.get('model')?.errors && !carForm.get('model')?.hasError('required')"
               *ngIf="carForm.get('model')?.invalid && (carForm.get('model')?.dirty || carForm.get('model')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
@@ -145,6 +147,7 @@
             ></p-select>
              <div
               class="validation-warning"
+              [class.innovative]="carForm.get('category')?.errors && !carForm.get('category')?.hasError('required')"
               *ngIf="carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
@@ -188,8 +191,9 @@
                         ></p-select>
                     </div>
                  </div>
-                 <div
+                  <div
                     class="validation-warning"
+                    [class.innovative]="carForm.get('pricePerDay')?.errors && !carForm.get('pricePerDay')?.hasError('required')"
                     *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
                 >
                     <i class="pi pi-exclamation-circle"></i>
@@ -210,6 +214,10 @@
                   [auto]="true"
                 ></p-fileupload>
               </div>
+              <small class="block mt-2 text-secondary text-center">
+                <i class="pi pi-info-circle mr-1"></i>
+                Recommended: 1920x1080px (HQ) for premium display.
+              </small>
             </div>
             <div *ngIf="imagePreview" class="preview-container relative">
               <img [src]="imagePreview" class="asset-large-preview" />
