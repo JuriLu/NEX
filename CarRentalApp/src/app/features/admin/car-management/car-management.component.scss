@@ -12,23 +12,24 @@
   align-items: center;
   justify-content: center;
   padding: 12px;
-  border-radius: 16px;
-  overflow: hidden;
+  border-radius: 24px; /* MATCH DIALOG SQUARE CORNERS */
+  overflow: hidden !important;
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(139, 92, 246, 0.3);
   }
 
   img {
     object-fit: contain;
     width: 100%;
     height: 100%;
+    border-radius: 20px !important; /* FORCE INNER ROUNDING */
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
   }
 }
@@ -54,12 +55,123 @@
   filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2));
 }
 
-.asset-large-preview {
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
-  border-radius: 12px;
+/* Decisive Action Button Overrides */
+:host ::ng-deep {
+  .action-edit.p-button {
+    color: #8b5cf6 !important;
+    transition: all 0.3s ease !important;
+    background: transparent !important;
+    border: none !important;
+
+    &:not(.p-disabled):hover {
+      background: rgba(139, 92, 246, 0.15) !important;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4) !important;
+      transform: scale(1.1) !important;
+      color: #a78bfa !important;
+    }
+  }
+
+  .action-delete.p-button {
+    color: #ef4444 !important;
+    transition: all 0.3s ease !important;
+    background: transparent !important;
+    border: none !important;
+
+    &:not(.p-disabled):hover {
+      background: rgba(239, 68, 68, 0.15) !important;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
+      transform: scale(1.1) !important;
+      color: #f87171 !important;
+    }
+  }
+
+  /* Table Customization */
+  .mbux-table {
+    .p-datatable-tbody > tr {
+      background: transparent !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      &:hover {
+        background: rgba(139, 92, 246, 0.05) !important;
+        transform: translateY(-2px);
+      }
+    }
+
+    /* PREMIUM STATUS SHINE WITH MBUX SHIMMER */
+    .status-glow {
+      padding: 0.5rem 1.25rem !important;
+      font-weight: 800 !important;
+      letter-spacing: 1.5px !important;
+      text-transform: uppercase !important;
+      border-radius: 30px !important;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease !important;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -100%;
+        width: 50%;
+        height: 200%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transform: rotate(30deg);
+        animation: status-shine 3s infinite;
+      }
+
+      &.p-tag-success {
+        background: rgba(34, 197, 94, 0.1) !important;
+        color: #4ade80 !important;
+        border: 1px solid rgba(34, 197, 94, 0.4) !important;
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3) !important;
+        text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+      }
+
+      &.p-tag-danger {
+        background: rgba(239, 68, 68, 0.1) !important;
+        color: #f87171 !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        box-shadow: 0 0 20px rgba(239, 68, 68, 0.3) !important;
+        text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+      }
+    }
+  }
+}
+
+@keyframes status-shine {
+  0% { left: -100%; }
+  20% { left: 150%; }
+  100% { left: 150%; }
+}
+
+.asset-preview {
+  width: 240px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px !important; /* Remove padding to let image fill and clip */
+  border-radius: 24px;
+  overflow: hidden !important; /* DECISIVE CLIPPING */
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important; /* Cover ensures rounding is visible at edges */
+    border-radius: 24px;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+  }
 }
 
 /* Local Form Layout Logic - S-Class MBUX Refinement */
@@ -137,7 +249,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 20px;
+      border-radius: 24px !important; /* MATCH THE SQUARE CONTAINER EXACTLY */
     }
   }
 }
@@ -147,7 +259,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.5rem;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     border: 1px solid rgba(139, 92, 246, 0.2);
@@ -171,42 +283,36 @@
     }
 
     ::ng-deep .p-toggleswitch {
-      width: 140px !important; /* THE TRACK LENGTH */
+      width: 140px !important;
       height: 36px !important;
       
       .p-toggleswitch-slider {
         background: #050505 !important;
-        border: 2px solid rgba(139, 92, 246, 0.3) !important;
+        border: 2px solid rgba(139, 92, 246, 0.4) !important;
         border-radius: 40px !important;
-        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.9) !important;
+        display: flex;
+        align-items: center;
+        padding: 0 !important;
         position: relative !important;
-        overflow: hidden !important; /* Hide anything outside */
 
-        /* THE CONTROLLED HANDLE (OVERRIDE DEFAULT) */
-        &::before {
-          content: "" !important;
-          width: 28px !important; /* Slightly smaller handle for better track fit */
-          height: 28px !important;
-          background: linear-gradient(145deg, #ffffff, #888888) !important; /* METALLIC */
-          border-radius: 50% !important;
-          box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 1px white !important;
-          position: absolute !important;
-          left: 4px !important;
-          top: 50% !important;
-          margin-top: -14px !important; /* Center vertically */
-          transition: transform 0.4s cubic-bezier(0.3, 0, 0, 1) !important;
-          border: none !important;
-          z-index: 10 !important;
+        &::before, &::after {
+          display: none !important;
         }
 
-        /* SUPPRESS ALL OTHER ELEMENTS (THE "SMALL CIRCLE") */
-        &::after, 
-        .p-toggleswitch-handle, 
-        .p-toggleswitch-icon,
-        .p-toggleswitch-input {
-          display: none !important;
-          opacity: 0 !important;
-          visibility: hidden !important;
+        .p-toggleswitch-handle {
+          width: 28px !important;
+          height: 28px !important;
+          background: linear-gradient(145deg, #ffffff, #888888) !important;
+          border-radius: 50% !important;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8), inset 0 1px 1px white !important;
+          position: absolute !important;
+          left: 6px !important; /* BUFFER FROM LEFT LINE */
+          top: 50% !important;
+          margin-top: -14px !important;
+          transition: transform 0.4s cubic-bezier(0.3, 0, 0, 1) !important;
+          border: none !important;
+          display: block !important;
         }
       }
 
@@ -215,9 +321,10 @@
           background: rgba(139, 92, 246, 0.1) !important;
           border-color: #8b5cf6 !important;
           
-          &::before {
-            transform: translateX(96px) !important; /* PERFECT RIGHT ALIGNMENT WITHIN TRACK */
-            background: linear-gradient(145deg, #ffffff, #888888) !important;
+          .p-toggleswitch-handle {
+            transform: translateX(96px) !important; /* PERFECT TRAVEL TO RIGHT BUFFER */
+            background: linear-gradient(145deg, #ffffff, #8b5cf6) !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.6), 0 4px 10px rgba(0,0,0,0.8) !important;
           }
         }
       }

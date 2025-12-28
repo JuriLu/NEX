@@ -157,7 +157,7 @@
         </div>
 
         <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">Availability</label>
+          <label class="mbux-field-label">State</label>
           <div class="input-wrapper">
             <div class="mbux-availability-toggle">
               <span class="availability-status" [class.active]="carForm.get('available')?.value">
@@ -252,7 +252,7 @@
           [label]="editingCar ? 'Update Vehicle' : 'Add Vehicle'"
           icon="pi pi-check"
           (click)="saveCar()"
-          styleClass="mbux-btn-save"
+          styleClass="mbux-btn-save ml-4"
         ></p-button>
       </div>
     </ng-template>
