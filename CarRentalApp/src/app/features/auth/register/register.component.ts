@@ -80,7 +80,13 @@ export class RegisterComponent {
       [this.usernameUniqueValidator.bind(this)]
     ],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [
+      Validators.required, 
+      Validators.minLength(6),
+      (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+      (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+      (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
+    ]],
     confirmPassword: ['', [Validators.required]],
   }, { validators: this.passwordMatchValidator });
 

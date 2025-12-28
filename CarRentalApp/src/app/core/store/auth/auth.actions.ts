@@ -20,3 +20,13 @@ export const logout = createAction('[Auth] Logout');
 
 export const init = createAction('[Auth] Init');
 
+export const updateUser = createAction(
+  '[Auth] Update User',
+  props<{ user: User }>()
+);
+
+export const updateUserSuccess = createAction(
+  '[Auth] Update User Success',
+  props<{ user: User }>()
+);
+

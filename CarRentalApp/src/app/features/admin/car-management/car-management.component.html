@@ -108,7 +108,7 @@
               *ngIf="carForm.get('brand')?.invalid && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
-              <span>{{ carForm.get('brand')?.hasError('required') ? 'Brand is required.' : 'Invalid format (letters only).' }}</span>
+              <span> {{ carForm.get('brand')?.hasError('required') ? 'Brand is required.' : 'Invalid format (letters only).' }}</span>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
               *ngIf="carForm.get('model')?.invalid && (carForm.get('model')?.dirty || carForm.get('model')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
-               <span>{{ carForm.get('model')?.hasError('required') ? 'Model is required.' : 'Invalid format (alphanumeric).' }}</span>
+               <span> {{ carForm.get('model')?.hasError('required') ? 'Model is required.' : 'Invalid format (alphanumeric).' }}</span>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@
               *ngIf="carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)"
             >
               <i class="pi pi-exclamation-circle"></i>
-              <span>Category is required.</span>
+              <span> Category is required.</span>
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@
                 *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
             >
                 <i class="pi pi-exclamation-circle"></i>
-                <span>{{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
+                <span> {{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
             </div>
           </div>
         </div>

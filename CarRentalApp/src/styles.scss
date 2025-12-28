@@ -539,16 +539,18 @@ div[role="dialog"].mbux-premium-dialog {
     /* FIX: Decouple Innovative Validation from Red Base */
     .validation-warning {
         display: flex !important;
-        align-items: center !important;
-        padding: 1rem !important;
+        align-items: flex-start !important; /* BETTER FOR MULTILINE */
+        gap: 14px !important; /* RELIABLE SPACING */
+        padding: 1.25rem !important;
         border-radius: 12px !important;
         margin-top: 0.75rem !important;
         font-size: 0.9rem !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
+        line-height: 1.4 !important;
         
         i {
-            margin-right: 12px !important; 
-            font-size: 1.1rem;
+            font-size: 1.2rem !important;
+            margin-top: 2px !important; /* ALIGN WITH FIRST LINE */
         }
 
         /* Default Red Style */

@@ -3,14 +3,31 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, tap } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
+  private userService = inject(UserService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  updateUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.updateUser),
+      mergeMap(({ user }) =>
+        this.userService.updateUser(user).pipe(
+          map((updatedUser) => AuthActions.updateUserSuccess({ user: updatedUser || user })),
+          tap(({ user: finalUser }) => {
+            // Update local storage so session persists
+            localStorage.setItem('auth_user', JSON.stringify(finalUser));
+          })
+        )
+      )
+    )
+  );
 
   init$ = createEffect(() =>
     this.actions$.pipe(

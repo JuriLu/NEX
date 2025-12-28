@@ -91,10 +91,15 @@
           ></p-password>
           @if ((submitted || registerForm.get('password')?.touched) &&
           registerForm.get('password')?.invalid) {
-          <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('password')?.hasError('minlength')" class="mt-2">
+          <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('password')?.invalid && !registerForm.get('password')?.hasError('required')" class="mt-2">
             <i class="pi pi-shield mr-2"></i>
-            @if (registerForm.get('password')?.hasError('required')) { Password required. }
-            @if (registerForm.get('password')?.hasError('minlength')) { Minimum 6 characters. }
+            <div class="flex flex-column">
+              @if (registerForm.get('password')?.hasError('required')) { <span>Password required.</span> }
+              @if (registerForm.get('password')?.hasError('minlength')) { <span>Minimum 6 characters.</span> }
+              @if (registerForm.get('password')?.hasError('uppercase')) { <span>Integration: Uppercase character required.</span> }
+              @if (registerForm.get('password')?.hasError('number')) { <span>Segment: Numerical character required.</span> }
+              @if (registerForm.get('password')?.hasError('special')) { <span>Entropy: Symbolic character required.</span> }
+            </div>
           </div>
           }
         </div>

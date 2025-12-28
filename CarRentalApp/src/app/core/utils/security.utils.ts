@@ -45,6 +45,9 @@ export class SecurityUtils {
   static sanitizeObject<T extends object>(obj: T): T {
     const result = { ...obj } as any;
     for (const key in result) {
+      // Skip sanitization for sensitive cryptographic fields to avoid character corruption (entropy loss)
+      if (key === 'password' || key === 'token') continue;
+
       if (typeof result[key] === 'string') {
         result[key] = this.sanitizeInput(result[key]);
       } else if (typeof result[key] === 'object' && result[key] !== null) {

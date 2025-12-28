@@ -88,7 +88,13 @@ export class UserManagementComponent implements OnInit {
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
       username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_\-]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [
+        Validators.required, 
+        Validators.minLength(6),
+        (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+        (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+        (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
+      ]],
       role: ['user', Validators.required],
     });
   }

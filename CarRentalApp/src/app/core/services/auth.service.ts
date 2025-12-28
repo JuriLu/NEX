@@ -18,7 +18,7 @@ export class AuthService {
         return userWithToken;
       }),
       tap(createdUser => {
-        localStorage.setItem('user', JSON.stringify(createdUser));
+        localStorage.setItem('auth_user', JSON.stringify(createdUser));
       })
     );
   }
@@ -46,17 +46,17 @@ export class AuthService {
         throw new Error('Invalid email or password');
       }),
       tap(user => {
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('auth_user', JSON.stringify(user));
       })
     );
   }
 
   logout(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('auth_user');
   }
 
   getCurrentUser(): User | null {
-    const userJson = localStorage.getItem('user');
+    const userJson = localStorage.getItem('auth_user');
     return userJson ? JSON.parse(userJson) : null;
   }
 }

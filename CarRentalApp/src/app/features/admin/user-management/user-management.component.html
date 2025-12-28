@@ -157,7 +157,13 @@
           @if ((submitted || userForm.get('password')?.touched) && userForm.get('password')?.invalid) {
           <div [class]="styles.validationWarning" class="innovative mt-1">
             <i class="pi pi-shield"></i>
-            <span>{{ userForm.get('password')?.hasError('required') ? 'Password required.' : 'Minimum 6 characters.' }}</span>
+            <div class="flex flex-column">
+              @if (userForm.get('password')?.hasError('required')) { <span>Password required.</span> }
+              @if (userForm.get('password')?.hasError('minlength')) { <span>Minimum 6 characters.</span> }
+              @if (userForm.get('password')?.hasError('uppercase')) { <span>Integration: Uppercase character required.</span> }
+              @if (userForm.get('password')?.hasError('number')) { <span>Segment: Numerical character required.</span> }
+              @if (userForm.get('password')?.hasError('special')) { <span>Entropy: Symbolic character required.</span> }
+            </div>
           </div>
           }
         </div>

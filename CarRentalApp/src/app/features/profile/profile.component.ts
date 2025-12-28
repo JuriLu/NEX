@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, take } from 'rxjs';
 import { User } from '../../core/models/user.model';
 import { selectUser } from '../../core/store/auth/auth.selectors';
+import * as AuthActions from '../../core/store/auth/auth.actions';
+import { UserService } from '../../core/services/user.service';
 import { CarService } from '../../core/services/car.service';
 import { ReservationService } from '../../core/services/reservation.service';
 import { SecurityUtils } from '../../core/utils/security.utils';
@@ -45,6 +47,7 @@ export class ProfileComponent implements OnInit {
   readonly theme = DESIGN_SYSTEM;
   private store = inject(Store);
   private fb = inject(FormBuilder);
+  private userService = inject(UserService);
   private carService = inject(CarService);
   private reservationService = inject(ReservationService);
   private messageService = inject(MessageService);
@@ -73,15 +76,21 @@ export class ProfileComponent implements OnInit {
 
   initForms() {
     this.profileForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      lastName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       email: ['', [Validators.required, Validators.email]],
-      username: ['', Validators.required]
+      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9]*$/)]]
     });
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [
+        Validators.required, 
+        Validators.minLength(6),
+        (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+        (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+        (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
+      ]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
   }
@@ -110,7 +119,7 @@ export class ProfileComponent implements OnInit {
   }
 
   openEdit() {
-    this.user$.subscribe(user => {
+    this.user$.pipe(take(1)).subscribe(user => {
       if (user) {
         this.profileForm.patchValue(user);
         this.editDialog = true;
@@ -120,20 +129,65 @@ export class ProfileComponent implements OnInit {
 
   saveProfile() {
     if (this.profileForm.valid) {
-      const sanitizedData = SecurityUtils.sanitizeObject(this.profileForm.value);
-      // Mock save
-      this.messageService.add({severity:'success', summary:'Profile Updated', detail:'Personal identity synchronized successfully.'});
-      this.editDialog = false;
+      this.user$.pipe(take(1)).subscribe(user => {
+        if (user) {
+          // fetch full user data to ensure the password is NOT lost during the update (since it's missing from the store)
+          this.userService.getUsers().pipe(take(1)).subscribe((users: User[]) => {
+             const fullUser = users.find((u: User) => u.id === user.id);
+             if (fullUser) {
+               const updatedUser = { ...fullUser, ...this.profileForm.value };
+               const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
+               this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
+               this.messageService.add({
+                 severity: 'success', 
+                 summary: 'Profile Updated', 
+                 detail: 'Personal identity synchronized successfully.'
+               });
+               this.editDialog = false;
+             }
+          });
+        }
+      });
     }
   }
 
   updatePassword() {
     if (this.passwordForm.valid) {
-      const sanitizedData = SecurityUtils.sanitizeObject(this.passwordForm.value);
-      // Mock save
-      this.messageService.add({severity:'success', summary:'Security Enhanced', detail:'Master key successfully rotated.'});
-      this.passwordDialog = false;
-      this.passwordForm.reset();
+      const currentInput = this.passwordForm.get('currentPassword')?.value;
+      const newKey = this.passwordForm.get('newPassword')?.value;
+
+      this.user$.pipe(take(1)).subscribe(user => {
+        if (user) {
+          // fetch full user data from service to get the actual password (which is stripped in the store for security)
+          this.userService.getUsers().pipe(take(1)).subscribe((users: User[]) => {
+            const fullUser = users.find((u: User) => u.id === user.id);
+            
+            if (fullUser && fullUser.password === currentInput) {
+              const updatedUser = { ...fullUser, password: newKey };
+              const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
+              
+              this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
+              
+              this.messageService.add({
+                severity:'success', 
+                summary:'Security Enhanced', 
+                detail:'Master key successfully rotated.'
+              });
+              
+              this.passwordDialog = false;
+              this.passwordForm.reset();
+            } else {
+              // Set manual error for visual feedback
+              this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Authentication Failed',
+                detail: 'The current master key provided is invalid.'
+              });
+            }
+          });
+        }
+      });
     }
   }
 
