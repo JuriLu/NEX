@@ -5,11 +5,13 @@
       <!-- Left Column: Identity Card & Settings -->
       <div class="col-12 lg:col-5 xl:col-4">
         <div class="identity-card glass-panel fadeinleft animation-duration-800">
-           <div class="card-chip"></div>
            <div class="card-header p-6">
               <div class="flex justify-content-between align-items-start mb-4">
                  <img src="logo.png" alt="NEX" class="card-logo" />
-                 <span class="card-type">PREMIUM ACCESS</span>
+                 <div class="flex flex-column align-items-end">
+                   <span class="card-type">PREMIUM ACCESS</span>
+                   <div class="card-chip"></div>
+                 </div>
               </div>
               <div class="flex flex-column align-items-center mb-4">
                  <p-avatar 
@@ -104,7 +106,7 @@
                                 </div>
                                 <div class="flex flex-column">
                                     <span class="text-white font-bold">{{ booking.car?.brand }}</span>
-                                    <span class="text-secondary text-xs">{{ booking.car?.model }}</span>
+                                    <span class="mbux-model-shine">{{ booking.car?.model }}</span>
                                 </div>
                             </div>
                         </td>
@@ -112,7 +114,7 @@
                             <div class="text-white font-medium text-sm">
                                 {{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d, y' }}
                             </div>
-                            <span class="text-secondary text-xs uppercase tracking-tighter">Cost: {{ booking.totalPrice | currency:booking.currency }}</span>
+                            <span class="mbux-cost-shine">Cost: {{ booking.totalPrice | currency:booking.currency }}</span>
                         </td>
                         <td>
                             <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" styleClass="status-glow"></p-tag>
