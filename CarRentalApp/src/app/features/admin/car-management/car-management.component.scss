@@ -85,21 +85,30 @@
   .mbux-image-section {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
+    align-items: center; /* CENTER ELEMENTS */
+    text-align: center;
+    margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px solid rgba(139, 92, 246, 0.2);
+
+    .mbux-field-label {
+        width: 100%;
+        text-align: center;
+        margin-left: 0 !important;
+    }
 
     .mbux-image-centered-container {
       width: 100%;
       display: flex;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 0; /* Remove padding that might cause offset */
+      margin-top: 1rem;
     }
 
     .mbux-image-uploader-square {
-      width: 440px; /* WIDENED to fit text on one line */
-      height: 300px; /* Adjusted height for better balance */
+      width: 440px;
+      height: 300px;
+      margin: 0 auto; /* FORCE CENTER */
       background: rgba(255, 255, 255, 0.02);
       border: 2px dashed rgba(139, 92, 246, 0.3);
       border-radius: 24px;
@@ -151,7 +160,7 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       transition: all 0.4s ease;
-      width: 100px; /* Reduced width to prevent pushing labels */
+      width: 100px;
       flex-shrink: 0;
       margin-right: 1.5rem;
 
@@ -171,21 +180,33 @@
         border-radius: 40px !important;
         box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8) !important;
         position: relative !important;
+        overflow: hidden !important; /* Hide anything outside */
 
         /* THE CONTROLLED HANDLE (OVERRIDE DEFAULT) */
         &::before {
           content: "" !important;
-          width: 30px !important;
-          height: 30px !important;
+          width: 28px !important; /* Slightly smaller handle for better track fit */
+          height: 28px !important;
           background: linear-gradient(145deg, #ffffff, #888888) !important; /* METALLIC */
           border-radius: 50% !important;
           box-shadow: 0 4px 10px rgba(0,0,0,0.8), inset 0 1px 1px white !important;
           position: absolute !important;
-          left: 3px !important;
+          left: 4px !important;
           top: 50% !important;
-          margin-top: -15px !important; /* Center vertically */
+          margin-top: -14px !important; /* Center vertically */
           transition: transform 0.4s cubic-bezier(0.3, 0, 0, 1) !important;
           border: none !important;
+          z-index: 10 !important;
+        }
+
+        /* SUPPRESS ALL OTHER ELEMENTS (THE "SMALL CIRCLE") */
+        &::after, 
+        .p-toggleswitch-handle, 
+        .p-toggleswitch-icon,
+        .p-toggleswitch-input {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
         }
       }
 
@@ -195,8 +216,8 @@
           border-color: #8b5cf6 !important;
           
           &::before {
-            transform: translateX(101px) !important; /* PERFECT RIGHT ALIGNMENT */
-            background: linear-gradient(145deg, #ffffff, #8b5cf6) !important;
+            transform: translateX(96px) !important; /* PERFECT RIGHT ALIGNMENT WITHIN TRACK */
+            background: linear-gradient(145deg, #ffffff, #888888) !important;
           }
         }
       }
