@@ -469,47 +469,106 @@ div[role="dialog"].mbux-premium-dialog {
     .p-inputtext,
     .mbux-input,
     .p-password,
-    .p-password input,
     .p-select,
     .p-autocomplete,
     .p-inputnumber,
-    .p-inputnumber-input {
+    .p-toggleswitch {
         width: 100% !important; /* ABSOLUTE FULL WIDTH */
+        box-sizing: border-box !important;
+    }
+
+    /* Standard Dark Style for all controls */
+    .p-inputtext,
+    .mbux-input,
+    .p-password input,
+    .p-select,
+    .p-inputnumber-input {
         background: #0d0d12 !important;
-        border: 2px solid rgba(255, 255, 255, 0.15) !important;
+        border: 2px solid rgba(139, 92, 246, 0.3) !important;
         color: white !important;
         padding: 1rem !important;
         border-radius: 12px !important;
-        box-sizing: border-box !important;
+        transition: all 0.3s ease !important;
 
         &:hover, &:focus {
             border-color: #8b5cf6 !important;
+            background: #13131a !important;
+        }
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.3) !important;
         }
     }
 
-    /* Exceptions for nested internal elements */
-    .p-password input {
+    /* FIX: Remove double borders on complex components */
+    .p-password,
+    .p-inputnumber,
+    .p-autocomplete {
         border: none !important;
-        padding: 0 !important;
         background: transparent !important;
+        padding: 0 !important;
+    }
+
+    /* FIX: Select Label Visibility (FORCE WHITE) */
+    .p-select {
+        padding: 0 !important; /* Wrapper should not have padding if inner label has it */
+        
+        .p-select-label {
+            color: white !important;
+            padding: 1rem !important;
+            font-size: 1rem !important;
+            display: flex;
+            align-items: center;
+
+            &.p-placeholder {
+                color: rgba(255, 255, 255, 0.3) !important;
+            }
+        }
     }
 
     .mbux-field-label {
-        color: rgba(255, 255, 255, 0.8) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
         display: block;
         margin-bottom: 0.75rem;
         font-weight: 800;
         letter-spacing: 1px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
     }
 
-    /* Validation Icon Spacing Fix */
+    /* FIX: Decouple Innovative Validation from Red Base */
     .validation-warning {
         display: flex !important;
         align-items: center !important;
+        padding: 1rem !important;
+        border-radius: 12px !important;
+        margin-top: 0.75rem !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
         
         i {
             margin-right: 12px !important; 
             font-size: 1.1rem;
+        }
+
+        /* Default Red Style */
+        &:not(.innovative) {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border: 1px solid rgba(239, 68, 68, 0.4) !important;
+            color: #fecaca !important;
+            i { color: #f87171 !important; }
+        }
+
+        /* Innovative Style (Gold/Violet) override all red props */
+        &.innovative {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(139, 92, 246, 0.1)) !important;
+            border: none !important;
+            color: #f1f5f9 !important;
+            
+            &::before {
+                background: linear-gradient(to bottom, #ffd700, #8b5cf6) !important;
+            }
+            i { color: #ffd700 !important; }
         }
     }
 }

@@ -168,65 +168,72 @@
           </div>
         </div>
 
-        <div class="field mb-5 mbux-inline-field align-items-start">
-             <label class="mbux-field-label mt-3">Pricing</label>
-             <div class="input-wrapper">
-                 <div class="flex gap-3 w-full">
-                    <div class="flex-grow-1">
-                        <p-inputNumber
-                        formControlName="pricePerDay"
-                        mode="decimal"
-                        [minFractionDigits]="2"
-                        styleClass="mbux-input-number w-full"
-                        placeholder="Price per Day"
-                        ></p-inputNumber>
-                    </div>
-                    <div class="w-auto" style="min-width: 120px;">
-                        <p-select
-                        [options]="currencies"
-                        formControlName="currency"
-                        optionLabel="label"
-                        optionValue="value"
-                        styleClass="mbux-select w-full"
-                        ></p-select>
-                    </div>
-                 </div>
-                  <div
-                    class="validation-warning"
-                    [class.innovative]="carForm.get('pricePerDay')?.errors && !carForm.get('pricePerDay')?.hasError('required')"
-                    *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
-                >
-                    <i class="pi pi-exclamation-circle"></i>
-                    <span>{{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
+        <div class="field mb-5 mbux-inline-field">
+          <label class="mbux-field-label">Pricing</label>
+          <div class="input-wrapper">
+              <div class="flex gap-3 w-full">
+                <div class="flex-grow-1">
+                    <p-inputNumber
+                    formControlName="pricePerDay"
+                    mode="decimal"
+                    [minFractionDigits]="2"
+                    styleClass="mbux-input-number w-full"
+                    placeholder="Price per Day"
+                    ></p-inputNumber>
                 </div>
-             </div>
+                <div class="w-auto" style="min-width: 120px;">
+                    <p-select
+                    [options]="currencies"
+                    formControlName="currency"
+                    optionLabel="label"
+                    optionValue="value"
+                    styleClass="mbux-select w-full"
+                    ></p-select>
+                </div>
+              </div>
+              <div
+                class="validation-warning"
+                [class.innovative]="carForm.get('pricePerDay')?.errors && !carForm.get('pricePerDay')?.hasError('required')"
+                *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
+            >
+                <i class="pi pi-exclamation-circle"></i>
+                <span>{{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
+            </div>
+          </div>
         </div>
 
-        <div class="field mb-5" style="position: relative;">           
-          <div class="mbux-image-uploader w-full">
-            <div *ngIf="!imagePreview" class="upload-placeholder">
-              <div class="mbux-upload-btn">
-                <p-fileupload
-                  mode="basic"
-                  chooseLabel="Select Vehicle Image"
-                  accept="image/*"
-                  (onSelect)="onImageSelect($event)"
-                  [auto]="true"
-                ></p-fileupload>
+        <!-- Centered Image Section -->
+        <div class="field mbux-image-section">
+          <label class="mbux-field-label mb-3">Vehicle Identity (Image)</label>
+          <div class="mbux-image-centered-container">
+            <div class="mbux-image-uploader-square">
+              <div *ngIf="!imagePreview" class="upload-placeholder">
+                <div class="mbux-upload-icon mb-3">
+                  <i class="pi pi-camera" style="font-size: 2.5rem; color: rgba(139, 92, 246, 0.5);"></i>
+                </div>
+                <div class="mbux-upload-btn">
+                  <p-fileupload
+                    mode="basic"
+                    chooseLabel="Select Vehicle Image"
+                    accept="image/*"
+                    (onSelect)="onImageSelect($event)"
+                    [auto]="true"
+                  ></p-fileupload>
+                </div>
+                <small class="block mt-3 text-secondary text-center px-4">
+                  <i class="pi pi-info-circle mr-1"></i>
+                  1920x1080px (HQ) recommended.
+                </small>
               </div>
-              <small class="block mt-2 text-secondary text-center">
-                <i class="pi pi-info-circle mr-1"></i>
-                Recommended: 1920x1080px (HQ) for premium display.
-              </small>
-            </div>
-            <div *ngIf="imagePreview" class="preview-container relative">
-              <img [src]="imagePreview" class="asset-large-preview" />
-              <button
-                pButton
-                icon="pi pi-times"
-                class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
-                (click)="imagePreview = null; carForm.patchValue({ image: null })"
-              ></button>
+              <div *ngIf="imagePreview" class="preview-container relative w-full h-full">
+                <img [src]="imagePreview" class="asset-square-preview" />
+                <button
+                  pButton
+                  icon="pi pi-times"
+                  class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
+                  (click)="imagePreview = null; carForm.patchValue({ image: null })"
+                ></button>
+              </div>
             </div>
           </div>
         </div>
