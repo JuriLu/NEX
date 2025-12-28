@@ -1,4 +1,4 @@
-@import '../../../styles.scss';
+@use '../../../styles.scss';
 
 .profile-page {
   background: var(--mbux-bg-dark);
@@ -50,7 +50,7 @@
     background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
     border-radius: 8px;
     opacity: 0.95;
-    margin-top: 1px; /* PRECISE MARGIN AS REQUESTED */
+    margin-top: 5px; /* PRECISE MARGIN AS REQUESTED */
     position: relative;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     

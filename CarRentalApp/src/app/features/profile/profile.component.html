@@ -138,59 +138,85 @@
   <!-- Edit Profile Dialog -->
   <p-dialog 
      [(visible)]="editDialog" 
-     header="Synchronize Identity" 
+     header="Edit Profile" 
      [modal]="true" 
      styleClass="mbux-premium-dialog" 
-     [style]="{ width: '450px' }"
+     [style]="{ width: '600px' }"
      appendTo="body">
      <ng-template pTemplate="content">
         <form [formGroup]="profileForm" class="grid mt-2">
             <div class="col-12 md:col-6 field flex flex-column">
                 <label class="mbux-field-label">First Name</label>
                 <input type="text" pInputText formControlName="firstName" class="mbux-input w-full" />
-                <div class="validation-warning innovative mt-2" *ngIf="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched">
-                    <i class="pi pi-exclamation-triangle"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="profileForm.get('firstName')?.errors?.['required']">Identity naming is mandatory.</span>
-                        <span *ngIf="profileForm.get('firstName')?.errors?.['minlength']">Identity requires 3+ segments.</span>
-                        <span *ngIf="profileForm.get('firstName')?.errors?.['pattern']">Invalid characters.</span>
+                @if (profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
+                    <div class="validation-warning mt-2">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <span>FirstName Required</span>
                     </div>
-                </div>
+                }
+                @if (profileForm.get('firstName')?.invalid && !profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <div class="flex flex-column">
+                            @if (profileForm.get('firstName')?.errors?.['minlength']) { <span>Identity requires 3+ segments.</span> }
+                            @if (profileForm.get('firstName')?.errors?.['pattern']) { <span>Invalid characters.</span> }
+                        </div>
+                    </div>
+                }
             </div>
             <div class="col-12 md:col-6 field flex flex-column">
                 <label class="mbux-field-label">Last Name</label>
                 <input type="text" pInputText formControlName="lastName" class="mbux-input w-full" />
-                <div class="validation-warning innovative mt-2" *ngIf="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched">
-                    <i class="pi pi-exclamation-triangle"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="profileForm.get('lastName')?.errors?.['required']">Hereditary data required.</span>
-                        <span *ngIf="profileForm.get('lastName')?.errors?.['minlength']">Data segment requires 3+ chars.</span>
-                        <span *ngIf="profileForm.get('lastName')?.errors?.['pattern']">Invalid characters.</span>
+                @if (profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
+                    <div class="validation-warning mt-2">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <span>Last Name required.</span>
                     </div>
-                </div>
+                }
+                @if (profileForm.get('lastName')?.invalid && !profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-exclamation-triangle"></i>
+                        <div class="flex flex-column">
+                            @if (profileForm.get('lastName')?.errors?.['minlength']) { <span>Min. 3+ chars.</span> }
+                            @if (profileForm.get('lastName')?.errors?.['pattern']) { <span>Invalid characters.</span> }
+                        </div>
+                    </div>
+                }
             </div>
             <div class="col-12 field flex flex-column">
-                <label class="mbux-field-label">Email Node</label>
+                <label class="mbux-field-label">Email</label>
                 <input type="email" pInputText formControlName="email" class="mbux-input w-full" />
-                <div class="validation-warning innovative mt-2" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
-                    <i class="pi pi-envelope"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="profileForm.get('email')?.errors?.['required']">Email REquired.</span>
-                        <span *ngIf="profileForm.get('email')?.errors?.['email']">Invalid email.</span>
+                @if (profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
+                    <div class="validation-warning mt-2">
+                        <i class="pi pi-envelope"></i>
+                        <span>Email Required.</span>
                     </div>
-                </div>
+                }
+                @if (profileForm.get('email')?.invalid && !profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-envelope"></i>
+                        <span>Invalid email.</span>
+                    </div>
+                }
             </div>
             <div class="col-12 field flex flex-column">
                 <label class="mbux-field-label">System Username</label>
                 <input type="text" pInputText formControlName="username" class="mbux-input w-full" />
-                <div class="validation-warning innovative mt-2" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
-                    <i class="pi pi-user"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="profileForm.get('username')?.errors?.['required']">Username required.</span>
-                        <span *ngIf="profileForm.get('username')?.errors?.['minlength']">Handle requires 3+ chars.</span>
-                        <span *ngIf="profileForm.get('username')?.errors?.['pattern']">Invalid characters.</span>
+                @if (profileForm.get('username')?.hasError('required') && profileForm.get('username')?.touched) {
+                    <div class="validation-warning mt-2">
+                        <i class="pi pi-user"></i>
+                        <span>Username required.</span>
                     </div>
-                </div>
+                }
+                @if (profileForm.get('username')?.invalid && !profileForm.get('username')?.hasError('required') && profileForm.get('username')?.touched) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-user"></i>
+                        <div class="flex flex-column">
+                            @if (profileForm.get('username')?.errors?.['minlength']) { <span>Min. 3+ chars.</span> }
+                            @if (profileForm.get('username')?.errors?.['pattern']) { <span>Invalid characters.</span> }
+                        </div>
+                    </div>
+                }
             </div>
         </form>
      </ng-template>
@@ -208,43 +234,51 @@
      header="Security Protocol" 
      [modal]="true" 
      styleClass="mbux-premium-dialog" 
-     [style]="{ width: '400px' }"
+     [style]="{ width: '500px' }"
      appendTo="body">
      <ng-template pTemplate="content">
         <form [formGroup]="passwordForm" class="flex flex-column gap-3 mt-2">
             <div class="field flex flex-column">
                 <label class="mbux-field-label">Current Master Key</label>
                 <input type="password" pInputText formControlName="currentPassword" class="mbux-input w-full" autocomplete="new-password" />
-                <div class="validation-warning mt-2" *ngIf="passwordForm.get('currentPassword')?.touched && (passwordForm.get('currentPassword')?.invalid || passwordForm.get('currentPassword')?.hasError('incorrect'))">
-                    <i class="pi pi-lock"></i>
-                    <span *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">Primary authorization required.</span>
-                    <span *ngIf="passwordForm.get('currentPassword')?.hasError('incorrect')" class="text-error">Incorrect Password. Protocol rejected.</span>
-                </div>
+                @if (passwordForm.get('currentPassword')?.touched && (passwordForm.get('currentPassword')?.invalid || passwordForm.get('currentPassword')?.hasError('incorrect'))) {
+                    <div class="validation-warning mt-2">
+                        <i class="pi pi-lock"></i>
+                        <div class="flex flex-column">
+                            @if (passwordForm.get('currentPassword')?.errors?.['required']) { <span>Primary authorization required.</span> }
+                            @if (passwordForm.get('currentPassword')?.hasError('incorrect')) { <span class="text-error">Incorrect Password. Protocol rejected.</span> }
+                        </div>
+                    </div>
+                }
             </div>
             <div class="field flex flex-column">
                 <label class="mbux-field-label">New Master Key</label>
                 <input type="password" pInputText formControlName="newPassword" class="mbux-input w-full" autocomplete="new-password" />
-                <div class="validation-warning innovative mt-2" *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
-                    <i class="pi pi-shield"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']">Protocol requires new password.</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">Security scale: 6+ segments required.</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.errors?.['uppercase']">Integration: Uppercase character required.</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.errors?.['number']">Segment: Numerical character required.</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.errors?.['special']">Entropy: Symbolic character required.</span>
+                @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-shield"></i>
+                        <div class="flex flex-column">
+                            @if (passwordForm.get('newPassword')?.errors?.['required']) { <span>Password required.</span> }
+                            @if (passwordForm.get('newPassword')?.errors?.['minlength']) { <span>Min: 6+ segments.</span> }
+                            @if (passwordForm.get('newPassword')?.errors?.['uppercase']) { <span>Uppercase required.</span> }
+                            @if (passwordForm.get('newPassword')?.errors?.['number']) { <span>Num. char required.</span> }
+                            @if (passwordForm.get('newPassword')?.errors?.['special']) { <span>Symbolic char required.</span> }
+                        </div>
                     </div>
-                </div>
+                }
             </div>
             <div class="field flex flex-column">
                 <label class="mbux-field-label">Confirm New Key</label>
                 <input type="password" pInputText formControlName="confirmPassword" class="mbux-input w-full" autocomplete="new-password" />
-                <div class="validation-warning innovative mt-2" *ngIf="(passwordForm.get('confirmPassword')?.touched || passwordForm.hasError('mismatch')) && (passwordForm.get('confirmPassword')?.invalid || passwordForm.hasError('mismatch'))">
-                    <i class="pi pi-sync"></i>
-                    <div class="flex flex-column">
-                        <span *ngIf="passwordForm.hasError('mismatch')">Security mismatch: Passwords do not match.</span>
-                        <span *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">Password confirmation required.</span>
+                @if ((passwordForm.get('confirmPassword')?.touched || passwordForm.hasError('mismatch')) && (passwordForm.get('confirmPassword')?.invalid || passwordForm.hasError('mismatch'))) {
+                    <div class="validation-warning innovative mt-2">
+                        <i class="pi pi-sync"></i>
+                        <div class="flex flex-column">
+                            @if (passwordForm.hasError('mismatch')) { <span>Security mismatch: Passwords do not match.</span> }
+                            @if (passwordForm.get('confirmPassword')?.errors?.['required']) { <span>Password confirmation required.</span> }
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </form>
      </ng-template>

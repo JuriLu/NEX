@@ -248,29 +248,41 @@ input:-webkit-autofill:active {
 
 /* Global Validation Warnings */
 .validation-warning {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  backdrop-filter: blur(10px);
-  color: #fecaca;
-  font-size: 0.875rem;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
-  border-left: 4px solid #ef4444;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 20px !important; /* MBUX Ergonomic Precision */
+  padding: 1.25rem !important;
+  border-radius: 12px !important;
+  margin-top: 0.75rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  backdrop-filter: blur(12px) !important;
   animation: slideInAndGlow 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 
-  /* Innovative: Calm Gold/Violet Gradient */
+  i {
+    font-size: 1.2rem !important;
+    margin-top: 2px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Default Red Style */
+  &:not(.innovative) {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    border-left: 4px solid #ef4444 !important;
+    color: #fecaca !important;
+    i { color: #f87171 !important; }
+  }
+
+  /* Innovative Style (Gold/Violet) */
   &.innovative {
-    border: none;
-    border-left: none; /* Remove existing left border */
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(139, 92, 246, 0.15));
-    color: #e2e8f0; /* Softer text color */
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(139, 92, 246, 0.1)) !important;
+    border: none !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15) !important;
     
     &::before {
       content: '';
@@ -279,11 +291,10 @@ input:-webkit-autofill:active {
       left: 0;
       width: 4px;
       height: 100%;
-      background: linear-gradient(to bottom, #ffd700, #8b5cf6);
-      box-shadow: 2px 0 10px rgba(139, 92, 246, 0.4);
+      background: linear-gradient(to bottom, #ffd700, #8b5cf6) !important;
+      box-shadow: 2px 0 10px rgba(139, 92, 246, 0.4) !important;
     }
 
-    /* Subtle shimmer/pulse overlay */
     &::after {
       content: '';
       position: absolute;
@@ -298,8 +309,8 @@ input:-webkit-autofill:active {
     }
     
     i {
-      color: #ffd700; /* Gold Icon */
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      color: #ffd700 !important;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4) !important;
     }
   }
 }
@@ -536,43 +547,6 @@ div[role="dialog"].mbux-premium-dialog {
         text-transform: uppercase;
     }
 
-    /* FIX: Decouple Innovative Validation from Red Base */
-    .validation-warning {
-        display: flex !important;
-        align-items: flex-start !important; /* BETTER FOR MULTILINE */
-        gap: 14px !important; /* RELIABLE SPACING */
-        padding: 1.25rem !important;
-        border-radius: 12px !important;
-        margin-top: 0.75rem !important;
-        font-size: 0.9rem !important;
-        font-weight: 500 !important;
-        line-height: 1.4 !important;
-        
-        i {
-            font-size: 1.2rem !important;
-            margin-top: 2px !important; /* ALIGN WITH FIRST LINE */
-        }
-
-        /* Default Red Style */
-        &:not(.innovative) {
-            background: rgba(239, 68, 68, 0.1) !important;
-            border: 1px solid rgba(239, 68, 68, 0.4) !important;
-            color: #fecaca !important;
-            i { color: #f87171 !important; }
-        }
-
-        /* Innovative Style (Gold/Violet) override all red props */
-        &.innovative {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(139, 92, 246, 0.1)) !important;
-            border: none !important;
-            color: #f1f5f9 !important;
-            
-            &::before {
-                background: linear-gradient(to bottom, #ffd700, #8b5cf6) !important;
-            }
-            i { color: #ffd700 !important; }
-        }
-    }
 }
 
 /* RED HOVER FOR CANCEL BUTTONS - SUPER AGGRESSIVE OVERRIDE */

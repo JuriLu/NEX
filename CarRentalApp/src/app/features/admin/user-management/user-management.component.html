@@ -68,14 +68,15 @@
                   pTooltip="View Missions"
                   (click)="viewBookings(user)"
                 ></p-button>
-                <p-button
-                  icon="pi pi-trash"
-                  [text]="true"
-                  styleClass="action-delete"
-                  pTooltip="Revoke Access"
-                  (click)="deleteUser(user)"
-                  *ngIf="user.id !== 1"
-                ></p-button>
+                @if (user.id !== 1) {
+                  <p-button
+                    icon="pi pi-trash"
+                    [text]="true"
+                    styleClass="action-delete"
+                    pTooltip="Revoke Access"
+                    (click)="deleteUser(user)"
+                  ></p-button>
+                }
               </div>
             </td>
           </tr>
@@ -100,11 +101,17 @@
                 <div class="flex flex-column gap-2">
                     <label class="mbux-field-label">First Name</label>
                     <input type="text" pInputText formControlName="firstName" class="mbux-input" placeholder="John" />
-                    @if ((submitted || userForm.get('firstName')?.touched) && userForm.get('firstName')?.invalid) {
-                    <div [class]="styles.validationWarning" [class.innovative]="userForm.get('firstName')?.hasError('pattern')" class="mt-1">
-                        <i class="pi pi-info-circle"></i>
-                        <span>{{ userForm.get('firstName')?.hasError('required') ? 'Required.' : 'Letters only.' }}</span>
-                    </div>
+                    @if (userForm.get('firstName')?.hasError('required') && (submitted || userForm.get('firstName')?.touched)) {
+                        <div [class]="styles.validationWarning" class="mt-1">
+                            <i class="pi pi-info-circle"></i>
+                            <span>Required.</span>
+                        </div>
+                    }
+                    @if (userForm.get('firstName')?.invalid && !userForm.get('firstName')?.hasError('required') && (submitted || userForm.get('firstName')?.touched)) {
+                        <div [class]="styles.validationWarning" class="innovative mt-1">
+                            <i class="pi pi-info-circle"></i>
+                            <span>Letters only.</span>
+                        </div>
                     }
                 </div>
             </div>
@@ -112,11 +119,17 @@
                 <div class="flex flex-column gap-2">
                     <label class="mbux-field-label">Last Name</label>
                     <input type="text" pInputText formControlName="lastName" class="mbux-input" placeholder="Doe" />
-                    @if ((submitted || userForm.get('lastName')?.touched) && userForm.get('lastName')?.invalid) {
-                    <div [class]="styles.validationWarning" [class.innovative]="userForm.get('lastName')?.hasError('pattern')" class="mt-1">
-                        <i class="pi pi-info-circle"></i>
-                        <span>{{ userForm.get('lastName')?.hasError('required') ? 'Required.' : 'Letters only.' }}</span>
-                    </div>
+                    @if (userForm.get('lastName')?.hasError('required') && (submitted || userForm.get('lastName')?.touched)) {
+                        <div [class]="styles.validationWarning" class="mt-1">
+                            <i class="pi pi-info-circle"></i>
+                            <span>Required.</span>
+                        </div>
+                    }
+                    @if (userForm.get('lastName')?.invalid && !userForm.get('lastName')?.hasError('required') && (submitted || userForm.get('lastName')?.touched)) {
+                        <div [class]="styles.validationWarning" class="innovative mt-1">
+                            <i class="pi pi-info-circle"></i>
+                            <span>Letters only.</span>
+                        </div>
                     }
                 </div>
             </div>
@@ -125,11 +138,17 @@
         <div class="flex flex-column gap-2">
           <label class="mbux-field-label">Username</label>
           <input type="text" pInputText formControlName="username" class="mbux-input" placeholder="johndoe" />
-          @if ((submitted || userForm.get('username')?.touched) && userForm.get('username')?.invalid) {
-          <div [class]="styles.validationWarning" [class.innovative]="userForm.get('username')?.hasError('pattern')" class="mt-1">
-            <i class="pi pi-info-circle"></i>
-            <span>{{ userForm.get('username')?.hasError('required') ? 'Username required.' : ' Alphanumeric only.' }}</span>
-          </div>
+          @if (userForm.get('username')?.hasError('required') && (submitted || userForm.get('username')?.touched)) {
+            <div [class]="styles.validationWarning" class="mt-1">
+                <i class="pi pi-info-circle"></i>
+                <span>Username required.</span>
+            </div>
+          }
+          @if (userForm.get('username')?.invalid && !userForm.get('username')?.hasError('required') && (submitted || userForm.get('username')?.touched)) {
+            <div [class]="styles.validationWarning" class="innovative mt-1">
+                <i class="pi pi-info-circle"></i>
+                <span>Alphanumeric only.</span>
+            </div>
           }
         </div>
 

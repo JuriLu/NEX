@@ -102,14 +102,18 @@
               class="mbux-input"
               placeholder="e.g., Mercedes-Benz"
             />
-            <div
-              class="validation-warning"
-              [class.innovative]="carForm.get('brand')?.errors && !carForm.get('brand')?.hasError('required')"
-              *ngIf="carForm.get('brand')?.invalid && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)"
-            >
-              <i class="pi pi-exclamation-circle"></i>
-              <span> {{ carForm.get('brand')?.hasError('required') ? 'Brand is required.' : 'Invalid format (letters only).' }}</span>
-            </div>
+            @if (carForm.get('brand')?.hasError('required') && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)) {
+              <div class="validation-warning mt-2">
+                <i class="pi pi-exclamation-circle"></i>
+                <span>Brand is required.</span>
+              </div>
+            }
+            @if (carForm.get('brand')?.invalid && !carForm.get('brand')?.hasError('required') && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)) {
+              <div class="validation-warning innovative mt-2">
+                <i class="pi pi-exclamation-circle"></i>
+                <span>Invalid format (letters only).</span>
+              </div>
+            }
           </div>
         </div>
 
@@ -123,14 +127,18 @@
               class="mbux-input"
               placeholder="e.g., S-Class"
             />
-            <div
-              class="validation-warning"
-              [class.innovative]="carForm.get('model')?.errors && !carForm.get('model')?.hasError('required')"
-              *ngIf="carForm.get('model')?.invalid && (carForm.get('model')?.dirty || carForm.get('model')?.touched)"
-            >
-              <i class="pi pi-exclamation-circle"></i>
-               <span> {{ carForm.get('model')?.hasError('required') ? 'Model is required.' : 'Invalid format (alphanumeric).' }}</span>
-            </div>
+            @if (carForm.get('model')?.hasError('required') && (carForm.get('model')?.dirty || carForm.get('model')?.touched)) {
+              <div class="validation-warning mt-2">
+                <i class="pi pi-exclamation-circle"></i>
+                <span>Model is required.</span>
+              </div>
+            }
+            @if (carForm.get('model')?.invalid && !carForm.get('model')?.hasError('required') && (carForm.get('model')?.dirty || carForm.get('model')?.touched)) {
+              <div class="validation-warning innovative mt-2">
+                <i class="pi pi-exclamation-circle"></i>
+                <span>Invalid format (alphanumeric).</span>
+              </div>
+            }
           </div>
         </div>
         
@@ -145,14 +153,12 @@
               styleClass="mbux-select w-full"
               placeholder="Select class"
             ></p-select>
-             <div
-              class="validation-warning"
-              [class.innovative]="carForm.get('category')?.errors && !carForm.get('category')?.hasError('required')"
-              *ngIf="carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)"
-            >
-              <i class="pi pi-exclamation-circle"></i>
-              <span> Category is required.</span>
-            </div>
+            @if (carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)) {
+              <div class="validation-warning" [class.innovative]="carForm.get('category')?.errors && !carForm.get('category')?.hasError('required')">
+                <i class="pi pi-exclamation-circle"></i>
+                <span>Category is required.</span>
+              </div>
+            }
           </div>
         </div>
 
@@ -191,14 +197,18 @@
                     ></p-select>
                 </div>
               </div>
-              <div
-                class="validation-warning"
-                [class.innovative]="carForm.get('pricePerDay')?.errors && !carForm.get('pricePerDay')?.hasError('required')"
-                *ngIf="carForm.get('pricePerDay')?.invalid && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)"
-            >
-                <i class="pi pi-exclamation-circle"></i>
-                <span> {{ carForm.get('pricePerDay')?.hasError('required') ? 'Price is required.' : 'Must be greater than 0.' }}</span>
-            </div>
+            @if (carForm.get('pricePerDay')?.hasError('required') && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)) {
+              <div class="validation-warning mt-2">
+                  <i class="pi pi-exclamation-circle"></i>
+                  <span>Price is required.</span>
+              </div>
+            }
+            @if (carForm.get('pricePerDay')?.invalid && !carForm.get('pricePerDay')?.hasError('required') && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)) {
+              <div class="validation-warning innovative mt-2">
+                  <i class="pi pi-exclamation-circle"></i>
+                  <span>Must be greater than 0.</span>
+              </div>
+            }
           </div>
         </div>
 
@@ -207,33 +217,37 @@
           <label class="mbux-field-label mb-3">Vehicle Identity (Image)</label>
           <div class="mbux-image-centered-container">
             <div class="mbux-image-uploader-square">
-              <div *ngIf="!imagePreview" class="upload-placeholder">
-                <div class="mbux-upload-icon mb-3">
-                  <i class="pi pi-camera" style="font-size: 2.5rem; color: rgba(139, 92, 246, 0.5);"></i>
+              @if (!imagePreview) {
+                <div class="upload-placeholder">
+                  <div class="mbux-upload-icon mb-3">
+                    <i class="pi pi-camera" style="font-size: 2.5rem; color: rgba(139, 92, 246, 0.5);"></i>
+                  </div>
+                  <div class="mbux-upload-btn">
+                    <p-fileupload
+                      mode="basic"
+                      chooseLabel="Select Vehicle Image"
+                      accept="image/*"
+                      (onSelect)="onImageSelect($event)"
+                      [auto]="true"
+                    ></p-fileupload>
+                  </div>
+                  <small class="block mt-3 text-secondary text-center px-4">
+                    <i class="pi pi-info-circle mr-1"></i>
+                    1920x1080px (HQ) recommended.
+                  </small>
                 </div>
-                <div class="mbux-upload-btn">
-                  <p-fileupload
-                    mode="basic"
-                    chooseLabel="Select Vehicle Image"
-                    accept="image/*"
-                    (onSelect)="onImageSelect($event)"
-                    [auto]="true"
-                  ></p-fileupload>
+              }
+              @if (imagePreview) {
+                <div class="preview-container relative w-full h-full">
+                  <img [src]="imagePreview" class="asset-square-preview" />
+                  <button
+                    pButton
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
+                    (click)="imagePreview = null; carForm.patchValue({ image: null })"
+                  ></button>
                 </div>
-                <small class="block mt-3 text-secondary text-center px-4">
-                  <i class="pi pi-info-circle mr-1"></i>
-                  1920x1080px (HQ) recommended.
-                </small>
-              </div>
-              <div *ngIf="imagePreview" class="preview-container relative w-full h-full">
-                <img [src]="imagePreview" class="asset-square-preview" />
-                <button
-                  pButton
-                  icon="pi pi-times"
-                  class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
-                  (click)="imagePreview = null; carForm.patchValue({ image: null })"
-                ></button>
-              </div>
+              }
             </div>
           </div>
         </div>

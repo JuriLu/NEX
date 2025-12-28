@@ -1,110 +1,117 @@
-<div class="booking-configurator py-8 px-4 lg:px-8" *ngIf="car$ | async as car">
-  <div [class]="theme.layout.container">
-    <!-- Breadcrumb / Back Button -->
-    <div class="mb-5 fadein animation-duration-500">
-      <a routerLink="/catalog" [class]="styles.backLink">
-        <i class="pi pi-arrow-left"></i>
-        <span [class]="theme.typography.label">Back to Fleet</span>
-      </a>
-    </div>
-
-    <div [class]="theme.layout.grid" class="align-items-start gap-6">
-      <!-- Left Side: Cinematic Car Preview -->
-      <div class="col-12 lg:col-7 fadeinleft animation-duration-1000">
-        <div [class]="styles.previewStage">
-          <div class="ambient-light"></div>
-          <img [src]="car.image" [alt]="car.brand" class="car-hero-img" />
-
-          <div class="car-info-overlay p-4">
-            <span [class]="theme.typography.label" class="mb-2 block">{{ car.category }}</span>
-            <h1 class="text-6xl font-black mb-0">
-              {{ car.brand }} <span [class]="theme.ui.gradientText">{{ car.model }}</span>
-            </h1>
-          </div>
-        </div>
-
-        <div class="grid">
-          <div class="col-12 md:col-6 p-2" *ngFor="let feature of car.features; let i = index">
-            <div [class]="styles.featureCard">
-              <div class="icon-circle">
-                <i class="pi pi-check text-primary"></i>
-              </div>
-              <span class="font-bold text-sm">{{ feature }}</span>
-            </div>
-          </div>
-        </div>
+@if (car$ | async; as car) {
+  <div class="booking-configurator py-8 px-4 lg:px-8">
+    <div [class]="theme.layout.container">
+      <!-- Breadcrumb / Back Button -->
+      <div class="mb-5 fadein animation-duration-500">
+        <a routerLink="/catalog" [class]="styles.backLink">
+          <i class="pi pi-arrow-left"></i>
+          <span [class]="theme.typography.label">Back to Fleet</span>
+        </a>
       </div>
 
-      <!-- Right Side: Configuration & Booking Form -->
-      <div class="col-12 lg:col-4 fadeinright animation-duration-1000">
-        <div [class]="styles.configPanel">
-          <h2 class="text-3xl mb-5">Rental <span class="text-secondary">Configuration</span></h2>
+      <div [class]="theme.layout.grid" class="align-items-start gap-6">
+        <!-- Left Side: Cinematic Car Preview -->
+        <div class="col-12 lg:col-7 fadeinleft animation-duration-1000">
+          <div [class]="styles.previewStage">
+            <div class="ambient-light"></div>
+            <img [src]="car.image" [alt]="car.brand" class="car-hero-img" />
 
-          <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
-            <div class="flex flex-column gap-5">
-              <!-- Date Selection -->
-              <div class="form-group">
-                <label [class]="theme.typography.label" class="block mb-3">Rental Window</label>
-                <p-datepicker
-                  formControlName="dates"
-                  selectionMode="range"
-                  [minDate]="minDate"
-                  [readonlyInput]="true"
-                  [showIcon]="true"
-                  placeholder="Select arrival & departure"
-                  styleClass="mbux-datepicker w-full"
-                  appendTo="body"
-                ></p-datepicker>
-                @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
-                <div
-                  [class]="styles.validationWarning"
-                  [class.innovative]="bookingForm.get('dates')?.errors && !bookingForm.get('dates')?.hasError('required')"
-                >
-                  <i class="pi pi-exclamation-triangle mr-2"></i>
-                  Please define your rental window.
-                </div>
-                }
-              </div>
-
-              <!-- Summary Card -->
-              <div [class]="styles.summarySection" [class.active]="totalPrice > 0">
-                <div [class]="theme.layout.flexBetween" class="mb-2">
-                  <span class="text-secondary">Daily Rate</span>
-                  <span class="font-bold">{{
-                    car.pricePerDay | currency : car.currency || 'USD'
-                  }}</span>
-                </div>
-                <div
-                  [class]="theme.layout.flexBetween"
-                  class="mb-4 border-top-1 border-white-alpha-10 pt-2"
-                  *ngIf="totalPrice > 0"
-                >
-                  <span class="text-xl font-bold">Estimated Total</span>
-                  <span class="text-3xl font-black text-gradient">{{
-                    totalPrice | currency : car.currency || 'USD'
-                  }}</span>
-                </div>
-                <p class="text-xs text-secondary text-center italic" *ngIf="!totalPrice">
-                  Select dates to calculate mission costs.
-                </p>
-              </div>
-
-              <p-button
-                label="Proceed to Checkout"
-                type="submit"
-                [disabled]="bookingForm.invalid || !totalPrice"
-                styleClass="p-button-primary p-button-lg w-full py-4 text-xl"
-              ></p-button>
-
-              <div class="text-center mt-3">
-                <span [class]="theme.typography.label">
-                  <i class="pi pi-shield mr-1"></i> Full Insurance Included
-                </span>
-              </div>
+            <div class="car-info-overlay p-4">
+              <span [class]="theme.typography.label" class="mb-2 block">{{ car.category }}</span>
+              <h1 class="text-6xl font-black mb-0">
+                {{ car.brand }} <span [class]="theme.ui.gradientText">{{ car.model }}</span>
+              </h1>
             </div>
-          </form>
+          </div>
+
+          <div class="grid">
+            @for (feature of car.features; track $index) {
+              <div class="col-12 md:col-6 p-2">
+                <div [class]="styles.featureCard">
+                  <div class="icon-circle">
+                    <i class="pi pi-check text-primary"></i>
+                  </div>
+                  <span class="font-bold text-sm">{{ feature }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Right Side: Configuration & Booking Form -->
+        <div class="col-12 lg:col-4 fadeinright animation-duration-1000">
+          <div [class]="styles.configPanel">
+            <h2 class="text-3xl mb-5">Rental <span class="text-secondary">Configuration</span></h2>
+
+            <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+              <div class="flex flex-column gap-5">
+                <!-- Date Selection -->
+                <div class="form-group">
+                  <label [class]="theme.typography.label" class="block mb-3">Rental Window</label>
+                  <p-datepicker
+                    formControlName="dates"
+                    selectionMode="range"
+                    [minDate]="minDate"
+                    [readonlyInput]="true"
+                    [showIcon]="true"
+                    placeholder="Select arrival & departure"
+                    styleClass="mbux-datepicker w-full"
+                    appendTo="body"
+                  ></p-datepicker>
+                  @if (bookingForm.get('dates')?.touched && bookingForm.get('dates')?.invalid) {
+                  <div
+                    [class]="styles.validationWarning"
+                    [class.innovative]="bookingForm.get('dates')?.errors && !bookingForm.get('dates')?.hasError('required')"
+                  >
+                    <i class="pi pi-exclamation-triangle mr-2"></i>
+                    Please define your rental window.
+                  </div>
+                  }
+                </div>
+
+                <!-- Summary Card -->
+                <div [class]="styles.summarySection" [class.active]="totalPrice > 0">
+                  <div [class]="theme.layout.flexBetween" class="mb-2">
+                    <span class="text-secondary">Daily Rate</span>
+                    <span class="font-bold">{{
+                      car.pricePerDay | currency : car.currency || 'USD'
+                    }}</span>
+                  </div>
+                  @if (totalPrice > 0) {
+                    <div
+                      [class]="theme.layout.flexBetween"
+                      class="mb-4 border-top-1 border-white-alpha-10 pt-2"
+                    >
+                      <span class="text-xl font-bold">Estimated Total</span>
+                      <span class="text-3xl font-black text-gradient">{{
+                        totalPrice | currency : car.currency || 'USD'
+                      }}</span>
+                    </div>
+                  }
+                  @if (!totalPrice) {
+                    <p class="text-xs text-secondary text-center italic">
+                      Select dates to calculate mission costs.
+                    </p>
+                  }
+                </div>
+
+                <p-button
+                  label="Proceed to Checkout"
+                  type="submit"
+                  [disabled]="bookingForm.invalid || !totalPrice"
+                  styleClass="p-button-primary p-button-lg w-full py-4 text-xl"
+                ></p-button>
+
+                <div class="text-center mt-3">
+                  <span [class]="theme.typography.label">
+                    <i class="pi pi-shield mr-1"></i> Full Insurance Included
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+}

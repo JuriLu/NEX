@@ -28,8 +28,8 @@
             />
              @if ((submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.invalid) {
             <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('firstName')?.hasError('pattern')" class="mt-2">
-              <i class="pi pi-info-circle mr-2"></i>
-              {{ registerForm.get('firstName')?.hasError('required') ? 'Required.' : 'Letters only.' }}
+              <i class="pi pi-info-circle"></i>
+              <span>{{ registerForm.get('firstName')?.hasError('required') ? 'Required.' : 'Letters only.' }}</span>
             </div>
             }
           </div>
@@ -38,8 +38,8 @@
             <input pInputText formControlName="lastName" class="mbux-input" placeholder="Last Name" />
              @if ((submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.invalid) {
             <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('lastName')?.hasError('pattern')" class="mt-2">
-              <i class="pi pi-info-circle mr-2"></i>
-              {{ registerForm.get('lastName')?.hasError('required') ? 'Required.' : 'Letters only.' }}
+              <i class="pi pi-info-circle"></i>
+              <span>{{ registerForm.get('lastName')?.hasError('required') ? 'Required.' : 'Letters only.' }}</span>
             </div>
             }
           </div>
@@ -55,10 +55,12 @@
           />
           @if ((submitted || registerForm.get('username')?.touched) && registerForm.get('username')?.invalid) {
           <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('username')?.errors && !registerForm.get('username')?.hasError('required')" class="mt-2">
-            <i class="pi pi-info-circle mr-2"></i>
-            @if (registerForm.get('username')?.hasError('required')) { Username required. }
-            @if (registerForm.get('username')?.hasError('pattern')) { Alphanumeric only. }
-            @if (registerForm.get('username')?.hasError('notUnique')) { Username taken. }
+            <i class="pi pi-info-circle"></i>
+            <div class="flex flex-column">
+              @if (registerForm.get('username')?.hasError('required')) { <span>Username required.</span> }
+              @if (registerForm.get('username')?.hasError('pattern')) { <span>Alphanumeric only.</span> }
+              @if (registerForm.get('username')?.hasError('notUnique')) { <span>Username taken.</span> }
+            </div>
           </div>
           }
         </div>
@@ -74,8 +76,8 @@
           @if ((submitted || registerForm.get('email')?.touched) &&
           registerForm.get('email')?.invalid) {
           <div [class]="styles.validationWarning" class="mt-2">
-            <i class="pi pi-info-circle mr-2"></i>
-            Valid email required.
+            <i class="pi pi-info-circle"></i>
+            <span>Valid email required.</span>
           </div>
           }
         </div>
@@ -92,7 +94,7 @@
           @if ((submitted || registerForm.get('password')?.touched) &&
           registerForm.get('password')?.invalid) {
           <div [class]="styles.validationWarning" [class.innovative]="registerForm.get('password')?.invalid && !registerForm.get('password')?.hasError('required')" class="mt-2">
-            <i class="pi pi-shield mr-2"></i>
+            <i class="pi pi-shield"></i>
             <div class="flex flex-column">
               @if (registerForm.get('password')?.hasError('required')) { <span>Password required.</span> }
               @if (registerForm.get('password')?.hasError('minlength')) { <span>Minimum 6 characters.</span> }
@@ -117,13 +119,13 @@
           @if ((submitted || registerForm.hasError('mismatch')) && registerForm.get('confirmPassword')?.touched) {
              @if (registerForm.hasError('mismatch')) {
               <div [class]="styles.validationWarning" class="innovative mt-2">
-                <i class="pi pi-exclamation-triangle mr-2"></i>
+                <i class="pi pi-exclamation-triangle"></i>
                 Passwords do not match.
               </div>
              }
              @if (registerForm.get('confirmPassword')?.hasError('required') && !registerForm.hasError('mismatch')) {
                <div [class]="styles.validationWarning" class="mt-2">
-                <i class="pi pi-exclamation-circle mr-2"></i>
+                <i class="pi pi-exclamation-circle"></i>
                 Confirmation required.
               </div>
              }

@@ -10,61 +10,63 @@
     <p-dataView #dv [value]="(cars$ | async) || []" layout="grid" [rows]="8" [paginator]="true">
       <ng-template #grid let-items>
         <div [class]="theme.layout.grid">
-          <div [class]="styles.gridCol" *ngFor="let car of items">
-            <div [class]="styles.carCard">
-              <div class="car-image-container relative overflow-hidden">
-                <img class="car-image" [src]="car.image" [alt]="car.brand" />
-                <div class="image-overlay"></div>
-                <p-tag
-                  [value]="car.available ? 'ReadyGo' : 'On a Mission'"
-                  [severity]="getSeverity(car)"
-                  class="absolute"
-                  [style.left.px]="15"
-                  [style.top.px]="15"
-                >
-                </p-tag>
-              </div>
-
-              <div class="p-4 flex flex-column justify-content-between flex-grow-1">
-                <div class="flex flex-row justify-content-between align-items-start mb-4">
-                  <div>
-                    <span [class]="theme.typography.label">{{ car.category }}</span>
-                    <div class="text-2xl font-bold mt-1 text-white">
-                      {{ car.brand }} {{ car.model }}
-                    </div>
-                  </div>
-                  <div [class]="styles.pricePill">
-                    <span class="text-white font-bold">{{
-                      car.pricePerDay | currency : car.currency || 'USD'
-                    }}</span>
-                    <span class="text-secondary text-xs">/day</span>
-                  </div>
+          @for (car of items; track car.id) {
+            <div [class]="styles.gridCol">
+              <div [class]="styles.carCard">
+                <div class="car-image-container relative overflow-hidden">
+                  <img class="car-image" [src]="car.image" [alt]="car.brand" />
+                  <div class="image-overlay"></div>
+                  <p-tag
+                    [value]="car.available ? 'ReadyGo' : 'On a Mission'"
+                    [severity]="getSeverity(car)"
+                    class="absolute"
+                    [style.left.px]="15"
+                    [style.top.px]="15"
+                  >
+                  </p-tag>
                 </div>
 
-                <div class="flex flex-column gap-4">
-                  <div class="flex flex-wrap gap-2">
-                    @for (feature of car.features; track $index) {
-                    <span class="feature-chip">{{ feature }}</span>
-                    }
+                <div class="p-4 flex flex-column justify-content-between flex-grow-1">
+                  <div class="flex flex-row justify-content-between align-items-start mb-4">
+                    <div>
+                      <span [class]="theme.typography.label">{{ car.category }}</span>
+                      <div class="text-2xl font-bold mt-1 text-white">
+                        {{ car.brand }} {{ car.model }}
+                      </div>
+                    </div>
+                    <div [class]="styles.pricePill">
+                      <span class="text-white font-bold">{{
+                        car.pricePerDay | currency : car.currency || 'USD'
+                      }}</span>
+                      <span class="text-secondary text-xs">/day</span>
+                    </div>
                   </div>
-                  <div class="flex gap-3">
-                    <p-button
-                      icon="pi pi-bolt"
-                      [outlined]="true"
-                      label="Specs"
-                      styleClass="p-button-sm"
-                    ></p-button>
-                    <p-button
-                      class="flex-auto"
-                      label="Reserve"
-                      [disabled]="!car.available"
-                      [routerLink]="['/booking', car.id]"
-                    ></p-button>
+
+                  <div class="flex flex-column gap-4">
+                    <div class="flex flex-wrap gap-2">
+                      @for (feature of car.features; track $index) {
+                      <span class="feature-chip">{{ feature }}</span>
+                      }
+                    </div>
+                    <div class="flex gap-3">
+                      <p-button
+                        icon="pi pi-bolt"
+                        [outlined]="true"
+                        label="Specs"
+                        styleClass="p-button-sm"
+                      ></p-button>
+                      <p-button
+                        class="flex-auto"
+                        label="Reserve"
+                        [disabled]="!car.available"
+                        [routerLink]="['/booking', car.id]"
+                      ></p-button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </ng-template>
       <ng-template #empty>
