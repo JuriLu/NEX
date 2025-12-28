@@ -119,11 +119,11 @@
         background: linear-gradient(
           to right,
           transparent,
-          rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.6),
           transparent
         );
         transform: rotate(30deg);
-        animation: status-shine 3s infinite;
+        animation: status-shine 2s infinite;
       }
 
       &.p-tag-success {
@@ -283,7 +283,12 @@
     }
 
     ::ng-deep .p-toggleswitch {
-      width: 140px !important;
+      /* MBUX DESIGN TOKENS */
+      --track-w: 140px;
+      --handle-s: 28px;
+      --pad: 6px;
+
+      width: var(--track-w) !important;
       height: 36px !important;
       
       .p-toggleswitch-slider {
@@ -301,18 +306,19 @@
         }
 
         .p-toggleswitch-handle {
-          width: 28px !important;
-          height: 28px !important;
+          width: var(--handle-s) !important;
+          height: var(--handle-s) !important;
           background: linear-gradient(145deg, #ffffff, #888888) !important;
           border-radius: 50% !important;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8), inset 0 1px 1px white !important;
           position: absolute !important;
-          left: 6px !important; /* BUFFER FROM LEFT LINE */
+          left: var(--pad) !important; /* STARTING POSITION */
           top: 50% !important;
-          margin-top: -14px !important;
-          transition: transform 0.4s cubic-bezier(0.3, 0, 0, 1) !important;
+          margin-top: calc(var(--handle-s) / -2) !important;
+          transition: left 0.5s cubic-bezier(0.3, 0, 0, 1) !important;
           border: none !important;
           display: block !important;
+          transform: none !important; /* DISABLE TRANSFORM FOR TRUE RESPONSIVENESS */
         }
       }
 
@@ -322,7 +328,8 @@
           border-color: #8b5cf6 !important;
           
           .p-toggleswitch-handle {
-            transform: translateX(96px) !important; /* PERFECT TRAVEL TO RIGHT BUFFER */
+            /* TRAVEL TO FAR RIGHT END RESPONSIVELY */
+            left: calc(100% - var(--handle-s) - var(--pad)) !important;
             background: linear-gradient(145deg, #ffffff, #8b5cf6) !important;
             box-shadow: 0 0 15px rgba(139, 92, 246, 0.6), 0 4px 10px rgba(0,0,0,0.8) !important;
           }
