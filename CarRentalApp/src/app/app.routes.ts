@@ -18,7 +18,15 @@ export const routes: Routes = [
   { path: 'contact', loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent) },
   { path: 'booking/:carId', component: BookingComponent, canActivate: [authGuard] },
   { path: 'bookings', component: UserDashboardComponent, canActivate: [authGuard] },
-  { path: 'admin', component: CarManagementComponent, canActivate: [adminGuard] },
+  { 
+    path: 'admin', 
+    children: [
+      { path: '', redirectTo: 'fleet', pathMatch: 'full' },
+      { path: 'fleet', component: CarManagementComponent },
+      { path: 'users', loadComponent: () => import('./features/admin/user-management/user-management.component').then(m => m.UserManagementComponent) },
+    ],
+    canActivate: [adminGuard] 
+  },
   { 
     path: 'auth', 
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),

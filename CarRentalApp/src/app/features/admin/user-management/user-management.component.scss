@@ -1,0 +1,46 @@
+@import '../../../../styles.scss';
+
+.ops-center {
+  background: var(--mbux-bg-dark);
+}
+
+/* Local table logic - specific to this component's data presentation */
+.mbux-table {
+  .p-datatable-tbody > tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  td {
+    .text-white {
+        color: rgba(255, 255, 255, 0.9) !important;
+    }
+    .text-secondary {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+  }
+}
+
+.action-view {
+  color: #3b82f6;
+  &:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+  }
+}
+
+.action-delete {
+  color: #ef4444;
+  &:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+/* Local form spacing */
+.mbux-dialog-form {
+    .field {
+        margin-bottom: 2rem;
+    }
+}

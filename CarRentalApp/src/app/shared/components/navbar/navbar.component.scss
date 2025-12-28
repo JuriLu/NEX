@@ -125,7 +125,7 @@
     }
 
     &.active-link {
-      color: white;
+      color: white !important;
       background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
     }

@@ -2,12 +2,11 @@
 
 ## 🚀 Future Enhancements
 
-- [ ] **Admin User Configuration **:
+- [x] **Admin User Management **:
 
   - In the admin role it should add a new section to manage users.
   - "The admin can see all users, and the the bookings that the user has currently active, has made before and the upcoming, if he has any.
   - Admin can have possibility to add new user and delete new user.
-  - Also admin can have the possibility to edit all of the user data, including password.
 
 - [ ] **Payment Integration Mockup**:
 
@@ -21,9 +20,9 @@
   - Fleet utilization charts, revenue tracking, and mission density heatmaps.
   - Animated high-tech dashboard widgets.
 
-- [ ] **User Profiles**:
+- [x] **User Profiles**:
 
-  - Further polishing the personal data management section.
+  - Further polishing the personal data management section, so for the user role, I want him/her to have the possibility to edit all of its user data, including password, and look at its bookings history, the actual and the future ones.
   - "Driver Identity" card with premium aesthetics.
   - Preferences for cabin ambient lighting (matching the UI colors).
   - Digital key management interface.

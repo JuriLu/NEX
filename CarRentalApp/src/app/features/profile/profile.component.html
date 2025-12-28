@@ -1,68 +1,205 @@
-<div class="profile-container p-4 fadein animation-duration-500">
-  <div class="profile-card glass-panel overflow-hidden">
-    <!-- Header with Gradient Background -->
-    <div class="profile-header p-6 flex align-items-center gap-4">
-      <p-avatar 
-        icon="pi pi-user" 
-        size="xlarge" 
-        shape="circle" 
-        styleClass="mbux-avatar bg-primary-100 text-primary-900 border-2 border-primary-500">
-      </p-avatar>
-      <div class="flex flex-column">
-        <h1 class="text-3xl font-bold m-0 text-white mb-1">
-          {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
-        </h1>
-        <span class="text-secondary text-lg">
-          <i class="pi pi-verified text-primary mr-1"></i>
-          NEX Member
-        </span>
-      </div>
-    </div>
-
-    <!-- User Details Grid -->
-    <div class="p-6">
-      <div class="grid">
-        <div class="col-12 md:col-6 mb-3">
-          <div class="info-item p-4 h-full">
-            <label class="block mb-2">Username</label>
-            <div class="value">{{ (user$ | async)?.username }}</div>
-          </div>
+<div class="profile-page py-6 px-4 lg:px-8">
+  <p-toast></p-toast>
+  <div [class]="theme.layout.container">
+    <div class="grid">
+      <!-- Left Column: Identity Card & Settings -->
+      <div class="col-12 lg:col-5 xl:col-4">
+        <div class="identity-card glass-panel fadeinleft animation-duration-800">
+           <div class="card-chip"></div>
+           <div class="card-header p-6">
+              <div class="flex justify-content-between align-items-start mb-4">
+                 <img src="logo.png" alt="NEX" class="card-logo" />
+                 <span class="card-type">PREMIUM ACCESS</span>
+              </div>
+              <div class="flex flex-column align-items-center mb-4">
+                 <p-avatar 
+                    icon="pi pi-user" 
+                    size="xlarge" 
+                    shape="circle" 
+                    styleClass="mbux-avatar border-2 border-primary-500 shadow-8 mb-3">
+                 </p-avatar>
+                 <h2 class="text-white text-2xl font-bold m-0 tracking-widest uppercase">
+                    {{ (user$ | async)?.firstName }} {{ (user$ | async)?.lastName }}
+                 </h2>
+                 <span class="text-secondary text-xs tracking-widest">DRIVE AUTH: VALID</span>
+              </div>
+           </div>
+           
+           <div class="card-body p-5 pt-0">
+              <div class="grid text-xs tracking-widest uppercase text-secondary">
+                 <div class="col-6 mb-3">
+                    <label class="block mb-1">Username</label>
+                    <div class="text-white font-bold">{{ (user$ | async)?.username }}</div>
+                 </div>
+                 <div class="col-6 mb-3">
+                    <label class="block mb-1">Rank</label>
+                    <div class="text-white font-bold capitalize">{{ (user$ | async)?.role }}</div>
+                 </div>
+                 <div class="col-12">
+                    <label class="block mb-1">Linked Email</label>
+                    <div class="text-white font-bold">{{ (user$ | async)?.email }}</div>
+                 </div>
+              </div>
+              
+              <div class="flex gap-2 mt-5">
+                 <p-button label="Edit Data" icon="pi pi-pencil" styleClass="p-button-text p-button-sm w-full" (click)="openEdit()"></p-button>
+                 <p-button label="Security" icon="pi pi-shield" styleClass="p-button-text p-button-sm w-full" (click)="passwordDialog = true"></p-button>
+              </div>
+           </div>
         </div>
-        
-        <div class="col-12 md:col-6 mb-3">
-          <div class="info-item p-4 h-full">
-            <label class="block mb-2">Email Address</label>
-            <div class="value">{{ (user$ | async)?.email }}</div>
-          </div>
-        </div>
 
-        <div class="col-12 md:col-6 mb-3">
-          <div class="info-item p-4 h-full">
-            <label class="block mb-2">Account Role</label>
-            <div class="value capitalize">
-              <span class="inline-flex align-items-center gap-2">
-                <i class="pi pi-shield text-primary"></i>
-                {{ (user$ | async)?.role }}
-              </span>
+        <!-- Preferences Section -->
+        <div class="glass-panel mt-4 p-5 fadeinleft animation-duration-1000">
+            <h3 class="text-white uppercase tracking-widest text-sm mb-4">Cabin Customization</h3>
+            <div class="mb-4">
+                <label class="text-secondary text-xs uppercase tracking-widest block mb-3">Ambient Lighting</label>
+                <div class="flex gap-2 flex-wrap">
+                    @for (item of ambientColors; track item.color) {
+                        <div 
+                           class="color-node" 
+                           [style.background]="item.color" 
+                           [class.active]="selectedColor === item.color"
+                           [pTooltip]="item.name"
+                           (click)="setAmbientColor(item.color)">
+                           @if (selectedColor === item.color) {
+                               <i class="pi pi-check text-xs"></i>
+                           }
+                        </div>
+                    }
+                </div>
             </div>
-          </div>
-        </div>
-
-        <div class="col-12 md:col-6 mb-3">
-          <div class="info-item p-4 h-full">
-            <label class="block mb-2">Member Since</label>
-            <div class="value">December 2025</div>
-          </div>
+            <div>
+                <label class="text-secondary text-xs uppercase tracking-widest block mb-2">Digital Key Status</label>
+                <div class="flex align-items-center gap-3 glass-node p-3">
+                    <i class="pi pi-key text-primary"></i>
+                    <span class="text-white text-sm">Synchronized with NEX Mobile</span>
+                    <i class="pi pi-check-circle text-success ml-auto"></i>
+                </div>
+            </div>
         </div>
       </div>
 
-      <div class="flex justify-content-end mt-4">
-        <p-button 
-          label="Edit Profile" 
-          icon="pi pi-pencil" 
-          styleClass="p-button-outlined p-button-secondary">
-        </p-button>
+      <!-- Right Column: Booking History -->
+      <div class="col-12 lg:col-7 xl:col-8">
+        <div class="glass-panel h-full fadeinup animation-duration-800 overflow-hidden">
+            <div class="p-5 border-bottom-1 border-white-alpha-10 flex justify-content-between align-items-center">
+                <h2 class="text-white m-0 text-xl tracking-widest uppercase">Mission Archive</h2>
+                <span class="text-secondary text-xs">TOTAL DEPLOYMENTS: {{ (userBookings$ | async)?.length || 0 }}</span>
+            </div>
+            
+            <p-table [value]="(userBookings$ | async) || []" styleClass="mbux-table-history">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="text-xs uppercase tracking-widest text-secondary font-bold">Vehicle Unit</th>
+                        <th class="text-xs uppercase tracking-widest text-secondary font-bold">Deployment Window</th>
+                        <th class="text-xs uppercase tracking-widest text-secondary font-bold">Status</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-booking>
+                    <tr class="history-row">
+                        <td>
+                            <div class="flex align-items-center gap-3">
+                                <div class="car-thumb glass-panel">
+                                    <img [src]="booking.car?.image" [alt]="booking.car?.brand" />
+                                </div>
+                                <div class="flex flex-column">
+                                    <span class="text-white font-bold">{{ booking.car?.brand }}</span>
+                                    <span class="text-secondary text-xs">{{ booking.car?.model }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-white font-medium text-sm">
+                                {{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d, y' }}
+                            </div>
+                            <span class="text-secondary text-xs uppercase tracking-tighter">Cost: {{ booking.totalPrice | currency:booking.currency }}</span>
+                        </td>
+                        <td>
+                            <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" styleClass="status-glow"></p-tag>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3" class="text-center py-8">
+                            <i class="pi pi-history text-4xl text-secondary-300 opacity-20 mb-3 block"></i>
+                            <span class="text-secondary tracking-widest text-sm uppercase">No deployment history found.</span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Edit Profile Dialog -->
+  <p-dialog 
+     [(visible)]="editDialog" 
+     header="Synchronize Identity" 
+     [modal]="true" 
+     styleClass="mbux-premium-dialog" 
+     [style]="{ width: '450px' }"
+     appendTo="body">
+     <ng-template pTemplate="content">
+        <form [formGroup]="profileForm" class="grid mt-2">
+            <div class="col-12 md:col-6 field">
+                <label class="mbux-field-label">First Name</label>
+                <input type="text" pInputText formControlName="firstName" class="mbux-input w-full" />
+            </div>
+            <div class="col-12 md:col-6 field">
+                <label class="mbux-field-label">Last Name</label>
+                <input type="text" pInputText formControlName="lastName" class="mbux-input w-full" />
+            </div>
+            <div class="col-12 field">
+                <label class="mbux-field-label">Email Node</label>
+                <input type="email" pInputText formControlName="email" class="mbux-input w-full" />
+            </div>
+            <div class="col-12 field">
+                <label class="mbux-field-label">System Username</label>
+                <input type="text" pInputText formControlName="username" class="mbux-input w-full" />
+            </div>
+        </form>
+     </ng-template>
+     <ng-template pTemplate="footer">
+        <div class="mbux-dialog-footer">
+            <p-button label="Abort" (click)="editDialog = false" styleClass="p-button-text"></p-button>
+            <p-button label="Update" (click)="saveProfile()" styleClass="p-button-primary"></p-button>
+        </div>
+     </ng-template>
+  </p-dialog>
+
+  <!-- Password Dialog -->
+  <p-dialog 
+     [(visible)]="passwordDialog" 
+     header="Security Protocol: Password Rotation" 
+     [modal]="true" 
+     styleClass="mbux-premium-dialog" 
+     [style]="{ width: '400px' }"
+     appendTo="body">
+     <ng-template pTemplate="content">
+        <form [formGroup]="passwordForm" class="flex flex-column gap-3 mt-2">
+            <div class="field">
+                <label class="mbux-field-label">Current Master Key</label>
+                <input type="password" pInputText formControlName="currentPassword" class="mbux-input w-full" />
+            </div>
+            <div class="field">
+                <label class="mbux-field-label">New Master Key</label>
+                <input type="password" pInputText formControlName="newPassword" class="mbux-input w-full" />
+            </div>
+            <div class="field">
+                <label class="mbux-field-label">Confirm New Key</label>
+                <input type="password" pInputText formControlName="confirmPassword" class="mbux-input w-full" />
+                <small *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="text-danger mt-1 block">Keys do not match.</small>
+            </div>
+        </form>
+     </ng-template>
+     <ng-template pTemplate="footer">
+        <div class="mbux-dialog-footer">
+            <p-button label="Abort" (click)="passwordDialog = false" styleClass="p-button-text"></p-button>
+            <p-button label="Rotate Key" (click)="updatePassword()" styleClass="p-button-primary"></p-button>
+        </div>
+     </ng-template>
+  </p-dialog>
+
 </div>

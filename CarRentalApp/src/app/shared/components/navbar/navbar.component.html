@@ -24,7 +24,8 @@
       <a routerLink="/services" routerLinkActive="active-link" class="nav-item">Services</a>
       <a routerLink="/contact" routerLinkActive="active-link" class="nav-item">Contact</a>
       @if (isAdmin$ | async) {
-      <a routerLink="/admin" routerLinkActive="active-link" class="nav-item admin-tool">Manage</a>
+      <a routerLink="/admin/fleet" routerLinkActive="active-link" class="nav-item admin-tool">Fleet</a>
+      <a routerLink="/admin/users" routerLinkActive="active-link" class="nav-item admin-tool">Users</a>
       }
     </div>
   </div>

@@ -7,11 +7,13 @@ import { InMemoryDbService } from 'angular-in-memory-web-api';
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
     const users = [
-       { id: 1, name: 'Admin', email: 'admin@carrental.com', role: 'admin', password: 'admin' }, // Plaintext for mock only
-       { id: 2, name: 'User', email: 'user@carrental.com', role: 'user', password: 'user' }
+       { id: 1, firstName: 'Admin', lastName: 'System', username: 'admin', email: 'admin@carrental.com', role: 'admin', password: 'admin' },
+       { id: 2, firstName: 'Julian', lastName: 'NEX', username: 'julian', email: 'user@carrental.com', role: 'user', password: 'user' },
+       { id: 3, firstName: 'Sarah', lastName: 'Connor', username: 'sconnor', email: 'sarah@skynet.com', role: 'user', password: 'user' },
+       { id: 4, firstName: 'Rick', lastName: 'Deckard', username: 'deckard', email: 'rick@blade.run', role: 'user', password: 'user' }
     ];
 
-    // Initial Mock Data for Cars - Will be expanded
+    // Initial Mock Data for Cars
     const cars = [
        {
          id: 101,
@@ -37,19 +39,50 @@ export class InMemoryDataService implements InMemoryDbService {
        },
        {
          id: 103,
-         brand: 'Mercedes',
-         model: 'S-Class',
+         brand: 'Mercedes-Benz',
+         model: 'EQS SUV',
          pricePerDay: 300,
          currency: 'USD',
          category: 'Luxury',
          image: 'images/mercedes.png',
          available: true,
-         features: ['Massage Seats', 'Ambient Lighting', 'Chauffeur Package']
+         features: ['Hyperscreen', 'Rear-Axle Steering', '7-Seat Luxury']
        }
     ];
 
-    // Reservations table
-    const reservations: any[] = [];
+    // Reservations table - Sample history
+    const reservations: any[] = [
+      {
+        id: 1001,
+        userId: 2,
+        carId: 101,
+        startDate: '2025-12-01',
+        endDate: '2025-12-05',
+        totalPrice: 1000,
+        currency: 'USD',
+        status: 'Completed'
+      },
+      {
+        id: 1002,
+        userId: 2,
+        carId: 103,
+        startDate: '2025-12-25',
+        endDate: '2025-12-30',
+        totalPrice: 1500,
+        currency: 'USD',
+        status: 'Confirmed'
+      },
+      {
+        id: 1003,
+        userId: 3,
+        carId: 102,
+        startDate: '2026-01-10',
+        endDate: '2026-01-15',
+        totalPrice: 900,
+        currency: 'USD',
+        status: 'Confirmed'
+      }
+    ];
 
     return { users, cars, reservations };
   }

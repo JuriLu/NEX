@@ -405,3 +405,150 @@ input:-webkit-autofill:active {
     transform: translateY(0) scale(1);
   }
 }
+
+/* ==========================================================================
+   ADMIN REGISTRY & DIALOG OVERRIDES (MBUX PREMIUM)
+   ========================================================================== */
+
+/* Force deep dark backgrounds on dialogs with mbux-premium-dialog class */
+.p-dialog-mask {
+    backdrop-filter: blur(12px) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.p-dialog.mbux-premium-dialog,
+div[role="dialog"].mbux-premium-dialog {
+    background: linear-gradient(145deg, #0a0a0f 0%, #150824 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.4) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(139, 92, 246, 0.1) !important;
+    color: white !important;
+
+    .p-dialog-header {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+        padding: 2rem !important;
+        color: white !important;
+
+        .p-dialog-title {
+            color: white !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.15em !important;
+            text-transform: uppercase !important;
+            font-size: 1.4rem !important;
+        }
+
+        .p-dialog-header-icon {
+            color: rgba(255, 255, 255, 0.5) !important;
+            &:hover {
+                background: rgba(239, 68, 68, 0.1) !important;
+                color: #ff4d4d !important;
+            }
+        }
+    }
+
+    .p-dialog-content {
+        background: transparent !important;
+        padding: 2.5rem !important;
+        color: white !important;
+    }
+
+    .p-dialog-footer {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border-top: 1px solid rgba(139, 92, 246, 0.2) !important;
+        padding: 2rem !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+        gap: 2.5rem !important;
+    }
+}
+
+/* Aggressive Input & Table overrides for Admin section */
+.mbux-dialog-form {
+    /* Target all possible input containers and wrappers */
+    .p-inputtext,
+    .mbux-input,
+    .p-password,
+    .p-password input,
+    .p-select,
+    .p-autocomplete,
+    .p-inputnumber,
+    .p-inputnumber-input {
+        width: 100% !important; /* ABSOLUTE FULL WIDTH */
+        background: #0d0d12 !important;
+        border: 2px solid rgba(255, 255, 255, 0.15) !important;
+        color: white !important;
+        padding: 1rem !important;
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+
+        &:hover, &:focus {
+            border-color: #8b5cf6 !important;
+        }
+    }
+
+    /* Exceptions for nested internal elements */
+    .p-password input {
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+
+    .mbux-field-label {
+        color: rgba(255, 255, 255, 0.8) !important;
+        display: block;
+        margin-bottom: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    /* Validation Icon Spacing Fix */
+    .validation-warning {
+        display: flex !important;
+        align-items: center !important;
+        
+        i {
+            margin-right: 12px !important; 
+            font-size: 1.1rem;
+        }
+    }
+}
+
+/* RED HOVER FOR CANCEL BUTTONS - SUPER AGGRESSIVE OVERRIDE */
+body .p-button.mbux-btn-cancel:not(.p-disabled):hover,
+body .mbux-btn-cancel .p-button:not(.p-disabled):hover,
+.p-button.mbux-btn-cancel:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #ffbaba !important;
+    border: 2px solid #ef4444 !important;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Base state for Cancel to ensure it's not primary-colored */
+body .p-button.mbux-btn-cancel:not(.p-disabled),
+body .mbux-btn-cancel .p-button:not(.p-disabled) {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: none !important;
+}
+
+.mbux-table.p-datatable {
+    background: transparent !important;
+    
+    .p-datatable-thead > tr > th {
+        background: #0a0a0f !important;
+        color: #94a3b8 !important;
+        border-bottom: 2px solid #8b5cf6 !important;
+    }
+
+    .p-datatable-tbody > tr {
+        background: rgba(255, 255, 255, 0.02) !important;
+        color: white !important;
+
+        &:hover {
+            background: rgba(139, 92, 246, 0.1) !important;
+        }
+    }
+}
