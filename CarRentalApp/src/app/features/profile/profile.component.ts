@@ -72,6 +72,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.initForms();
     this.loadBookingHistory();
+    this.loadAmbientColor();
   }
 
   initForms() {
@@ -191,9 +192,21 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  loadAmbientColor() {
+    const savedColor = localStorage.getItem('nex_ambient_color');
+    if (savedColor) {
+      this.selectedColor = savedColor;
+    }
+  }
+
   setAmbientColor(color: string) {
     this.selectedColor = color;
-    this.messageService.add({severity:'info', summary:'Ambience Adjusted', detail:`Cabin lighting set to ${this.ambientColors.find(c => c.color === color)?.name}.`});
+    localStorage.setItem('nex_ambient_color', color);
+    this.messageService.add({
+      severity: 'info', 
+      summary: 'Ambience Adjusted', 
+      detail: `Cabin lighting set to ${this.ambientColors.find(c => c.color === color)?.name}.`
+    });
   }
 
   getBookingSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
