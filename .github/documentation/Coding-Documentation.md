@@ -9,15 +9,29 @@ This document outlines the software architecture, state management, and data flo
 The application is built using **Angular 19+** following a modular, feature-based architecture.
 
 ### Directory Structure
+
 - **`src/app/core/`**: Singletons and global utilities.
-    - `models/`: Interface definitions for Cars, Users, and Bookings.
-    - `services/`: Data access layers (CarService, AuthService).
-    - `store/`: NgRx state management (Actions, Reducers, Selectors, Effects).
-    - `guards/`: Route protection (AdminGuard, AuthGuard).
+  - `models/`: Interface definitions for Cars, Users, and Bookings.
+  - `services/`: Data access layers (CarService, AuthService).
+  - `store/`: NgRx state management (Actions, Reducers, Selectors, Effects).
+  - `guards/`: Route protection (AdminGuard, AuthGuard).
 - **`src/app/features/`**: Independent domain modules.
-    - Each feature contains its own components and local styles.
+  - Each feature contains its own components and local styles.
 - **`src/app/shared/`**: Reusable UI components (Navbar, Footer, Search).
 - **`src/styles.scss`**: Global design system and MBUX theme tokens.
+
+### Feature Modules Details
+
+- **User Management (`/admin/user-management`)**:
+  - **Components**: `UserManagementComponent` handles the admin dashboard view.
+  - **Logic**: Combines `NavUser` data with booking history. Defines `Reservation` types locally (to be refactored to global models).
+  - **Features**: Custom delete confirmation dialog (`p-confirmDialog`), glass-morphic status tags.
+- **Profile System (`/profile`)**:
+  - **Components**: `ProfileComponent` manages user settings and identity.
+  - **Logic**: Persists ambient lighting preferences to `localStorage`.
+- **Authentication (`/core/auth`)**:
+  - **Components**: `AuthComponent` handles login/registration.
+  - **Logic**: Includes "Innovative" form validation (glow effects on invalid state) and auto-login post-registration.
 
 ---
 
@@ -26,24 +40,29 @@ The application is built using **Angular 19+** following a modular, feature-base
 The application utilizes **NgRx** for centralized state tracking, ensuring a "single source of truth."
 
 ### 1. Auth State (`auth.reducer.ts`)
+
 Tracks the current user session and permissions.
+
 - **State Schema**:
-    - `user`: Authenticated user object.
-    - `isLoggedIn`: Boolean flag.
-    - `isAdmin`: Derived from user roles.
-    - `loading/error`: Async operation tracking.
+  - `user`: Authenticated user object.
+  - `isLoggedIn`: Boolean flag.
+  - `isAdmin`: Derived from user roles.
+  - `loading/error`: Async operation tracking.
 
 ### 2. Booking State (`booking.reducer.ts`)
+
 Manages the fleet lifecycle and user reservations.
+
 - **State Schema**:
-    - `reservations`: Active and past deployments.
-    - `loading/error`: Tracking for mission confirmations.
+  - `reservations`: Active and past deployments.
+  - `loading/error`: Tracking for mission confirmations.
 
 ---
 
 ## 🔄 Data Flow Schema
 
 ### Mission Booking Flow
+
 1.  **Selection**: User chooses an asset in the `CatalogComponent`.
 2.  **Configuration**: `BookingComponent` loads asset details from `CarService`.
 3.  **Validation**: Form states are validated against `minDate` and availability.
@@ -54,6 +73,7 @@ Manages the fleet lifecycle and user reservations.
 ---
 
 ## 🎨 Design System & CSS
+
 The project uses **PrimeNG** as the base component library, but has been heavily customized via `styles.scss`.
 
 - **CSS Variables**: All theme colors are tokenized via `--bg-dark`, `--primary-color`, etc.
@@ -63,8 +83,10 @@ The project uses **PrimeNG** as the base component library, but has been heavily
 ---
 
 ## 🛠️ Security & Sanitization
+
 - **SecurityUtils**: A dedicated utility in `core/utils/` used for sanitizing objects and stripping potential XSS payloads from forms (especially in Admin Ops Center).
 - **Guards**: `AdminGuard` protects sensitive routes by selecting the `isAdmin` state from the store before permitting navigation.
 
 ---
-*Technical Documentation updated: 2025-12-22*
+
+_Technical Documentation updated: 2025-12-29_

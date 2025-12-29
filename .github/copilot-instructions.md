@@ -1,6 +1,11 @@
-# Develop Guidelines
+#General Guidelines
 
-## Coding Guidelines
+- Every time that a change is made, related to coding or design UI/UX, update the documentation files in the .github/documentation folder.
+
+## Develop Guidelines
+
+### Coding Guidelines
+
 - Apply **DRY, KISS, YAGNI, SOLID** principles.
 - Follow consistent **naming conventions** across the entire codebase (see project-specific rules in the custom-template file).
 - Keep code modular, loosely coupled, and easily testable.
@@ -10,6 +15,7 @@
 - Since we are using angular project, use the guideline from instructions/angular-instructions.md file
 
 ## API Development
+
 - Default → **RESTful APIs** (use GraphQL only if explicitly required).
 - Document APIs with **OpenAPI/Swagger**.
 - Each endpoint must include:
@@ -20,6 +26,7 @@
 - Ensure automated API testing (Postman collections or equivalent).
 
 ## Testing
+
 - Unit tests are mandatory for each module.
 - Follow the **AAA pattern** (Arrange, Act, Assert).
 - Tests must be isolated and independent, using mocks/stubs for external dependencies.
@@ -32,6 +39,7 @@
 - Integrate reports into **SonarQube** for quality analysis.
 
 ## Documentation Policies
+
 - **Mandatory Documentation**: Every change must be recorded to maintain project integrity.
 - **Coding Changes**: All logic, state management (NgRx), or architectural changes must be documented in `.github/documentation/Coding-Documentation.md`.
 - **UI/UX Changes**: All design, aesthetic, animation, and branding modifications must be documented in `.github/documentation/UI-UX-Documentation.md`.
@@ -39,8 +47,8 @@
 
 ## Revision History
 
-| Version | Date       | Author | Description                     |
-|---------|------------|--------|---------------------------------|
-| 1.0     | 2025-10-03 | Initial| First draft                     |
+| Version | Date       | Author  | Description |
+| ------- | ---------- | ------- | ----------- |
+| 1.0     | 2025-10-03 | Initial | First draft |
 
 ---
