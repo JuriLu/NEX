@@ -26,6 +26,20 @@
 }
 ```
 
+## Component Guidelines
+
+### Component Decomposition
+
+- **Smaller Components**: Split large page components into smaller, specialized sub-components (e.g., Dialogs, Forms, List items).
+- **Colocation**: Place these page-specific sub-components in a `components` subfolder within the page's feature folder. Do not put them in `shared` unless they are truly global.
+  - _Example_: `src/app/features/admin/car-management/components/car-upsert-dialog/`
+
+### Data-Driven Tables
+
+- **Headers**: Define table columns in the component class (TypeScript) as an array of objects.
+- **Rendering**: Use `@for` to iterate over these column definitions in the template to render table headers.
+- **Validation**: Ensure strong typing for column definitions.
+
 ## Shared Components
 
 ### Nex Dialog

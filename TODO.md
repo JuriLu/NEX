@@ -8,6 +8,10 @@
   - "The admin can see all users, and the the bookings that the user has currently active, has made before and the upcoming, if he has any.
   - Admin can have possibility to add new user and delete new user.
 
+  - [ ] **Rounded spinning menu for cars**:
+
+  - I have a spinning menu for cars, in another project (https://github.com/JuriLu/AS), and I want to use it here.
+
 - [ ] **Payment Integration Mockup**:
 
   - Implementation of a localized "Checkout" experience within the Mission Configurator.
