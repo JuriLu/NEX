@@ -212,12 +212,13 @@
     appendTo="body"
   >
     <div class="p-2">
-        <p-table [value]="selectedUserBookings" styleClass="mbux-table-minimal">
+        <p-table [value]="selectedUserBookings" styleClass="mbux-table">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Vehicle</th>
                     <th>Window</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-booking>
@@ -225,13 +226,22 @@
                     <td>{{ booking.car?.brand }} {{ booking.car?.model }}</td>
                     <td>{{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d, y' }}</td>
                     <td>
-                        <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)"></p-tag>
+                        <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" styleClass="status-glow"></p-tag>
+                    </td>
+                    <td>
+                        <p-button
+                            icon="pi pi-trash"
+                            [text]="true"
+                            styleClass="action-delete"
+                            (click)="deleteReservation(booking.id)"
+                            pTooltip="Cancel Deployment"
+                        ></p-button>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="3" class="text-center p-4 text-secondary italic">No recorded missions for this member.</td>
+                    <td colspan="4" class="text-center p-4 text-secondary italic">No recorded missions for this member.</td>
                 </tr>
             </ng-template>
         </p-table>

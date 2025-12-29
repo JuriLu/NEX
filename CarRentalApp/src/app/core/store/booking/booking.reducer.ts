@@ -37,5 +37,16 @@ export const bookingReducer = createReducer(
     ...state,
     loading: false,
     error
+  })),
+  on(BookingActions.deleteReservation, (state) => ({ ...state, loading: true, error: null })),
+  on(BookingActions.deleteReservationSuccess, (state, { id }) => ({
+    ...state,
+    reservations: state.reservations.filter(r => r.id !== id),
+    loading: false
+  })),
+  on(BookingActions.deleteReservationFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
   }))
 );

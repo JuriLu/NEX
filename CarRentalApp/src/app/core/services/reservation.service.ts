@@ -25,4 +25,8 @@ export class ReservationService {
   updateReservationStatus(id: number, status: Reservation['status']): Observable<any> {
     return this.http.patch(`${this.reservationsUrl}/${id}`, { status });
   }
+
+  deleteReservation(id: number): Observable<any> {
+    return this.http.delete(`${this.reservationsUrl}/${id}`);
+  }
 }

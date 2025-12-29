@@ -90,7 +90,7 @@
                 <span class="text-secondary text-xs">TOTAL DEPLOYMENTS: {{ (userBookings$ | async)?.length || 0 }}</span>
             </div>
             
-            <p-table [value]="(userBookings$ | async) || []" styleClass="mbux-table-history">
+            <p-table [value]="(userBookings$ | async) || []" styleClass="mbux-table">
                 <ng-template pTemplate="header">
                     <tr>
                         <th class="text-xs uppercase tracking-widest text-secondary font-bold">Vehicle Unit</th>

@@ -27,7 +27,19 @@ export class BookingEffects {
       mergeMap(({ reservation }) =>
         this.reservationService.createReservation(reservation).pipe(
           map((newReservation) => BookingActions.createReservationSuccess({ reservation: newReservation })),
-          catchError((error) => of(BookingActions.createReservationFailure({ error: error.message })))
+      catchError((error) => of(BookingActions.createReservationFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+  deleteReservation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BookingActions.deleteReservation),
+      mergeMap(({ id }) =>
+        this.reservationService.deleteReservation(id).pipe(
+          map(() => BookingActions.deleteReservationSuccess({ id })),
+          catchError((error) => of(BookingActions.deleteReservationFailure({ error: error.message })))
         )
       )
     )

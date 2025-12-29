@@ -23,3 +23,16 @@ export const createReservationFailure = createAction(
   '[Booking] Create Reservation Failure',
   props<{ error: string }>()
 );
+
+export const deleteReservation = createAction(
+  '[Booking] Delete Reservation',
+  props<{ id: number }>()
+);
+export const deleteReservationSuccess = createAction(
+  '[Booking] Delete Reservation Success',
+  props<{ id: number }>()
+);
+export const deleteReservationFailure = createAction(
+  '[Booking] Delete Reservation Failure',
+  props<{ error: string }>()
+);

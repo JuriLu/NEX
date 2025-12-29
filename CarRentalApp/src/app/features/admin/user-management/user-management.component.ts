@@ -6,6 +6,8 @@ import { UserService } from '../../../core/services/user.service';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { CarService } from '../../../core/services/car.service';
 import { SecurityUtils } from '../../../core/utils/security.utils';
+import { Store } from '@ngrx/store';
+import * as BookingActions from '../../../core/store/booking/booking.actions';
 
 // PrimeNG
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -58,6 +60,7 @@ export class UserManagementComponent implements OnInit {
   private fb = inject(FormBuilder);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
+  private store = inject(Store);
 
   users: User[] = [];
   userDialog = false;
@@ -192,5 +195,25 @@ export class UserManagementComponent implements OnInit {
       case 'Completed': return 'secondary';
       default: return 'info';
     }
+  }
+
+  deleteReservation(id: number) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to cancel this deployment?',
+      header: 'Confirm Cancellation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.store.dispatch(BookingActions.deleteReservation({ id }));
+        // Remove from local array immediately for UI update
+        this.selectedUserBookings = this.selectedUserBookings.filter(b => b.id !== id);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deployment Cancelled',
+          detail: 'Reservation has been successfully removed.'
+        });
+      }
+    });
   }
 }
