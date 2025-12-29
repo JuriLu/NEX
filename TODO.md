@@ -2,11 +2,21 @@
 
 ## 🚀 Future Enhancements
 
+- [ ] **IMPORTANT UPDATE- Implement Backend**:
+
+  -In the same folder NEX, next to CarRentalApp, Implement backend for the project, using NestJS.
+
 - [x] **Admin User Management **:
 
   - In the admin role it should add a new section to manage users.
   - "The admin can see all users, and the the bookings that the user has currently active, has made before and the upcoming, if he has any.
   - Admin can have possibility to add new user and delete new user.
+
+    - [ ] **Unit Test with Vitest**:
+
+  - Gather information on how to implement unit test with Vitest.
+  - Update copilot-instructions.md file, to write unit test for every element of the project [Component, Service, Guard, Resolver, Pipe, Interceptor, Directive].
+  - Write unit test for every element of the project [Component, Service, Guard, Resolver, Pipe, Interceptor, Directive], with success and 95%-100% coverage.
 
   - [ ] **Rounded spinning menu for cars**:
 
