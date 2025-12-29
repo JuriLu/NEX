@@ -1,3 +1,10 @@
+export enum ReservationStatus {
+  PENDING = 'Pending',
+  CONFIRMED = 'Confirmed',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled'
+}
+
 export interface Reservation {
   id: number;
   userId: number;
@@ -6,5 +13,5 @@ export interface Reservation {
   endDate: string;
   totalPrice: number;
   currency: string;
-  status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
+  status: ReservationStatus | 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
 }

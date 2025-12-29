@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Reservation } from '../models/reservation.model';
+import { Reservation, ReservationStatus } from '../models/reservation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +15,15 @@ export class ReservationService {
   }
 
   getUserReservations(userId: number): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${this.reservationsUrl}/?userId=${userId}`);
+    const params = new HttpParams().set('userId', userId.toString());
+    return this.http.get<Reservation[]>(this.reservationsUrl, { params });
   }
 
   createReservation(reservation: Omit<Reservation, 'id'>): Observable<Reservation> {
     return this.http.post<Reservation>(this.reservationsUrl, reservation);
   }
 
-  updateReservationStatus(id: number, status: Reservation['status']): Observable<any> {
+  updateReservationStatus(id: number, status: ReservationStatus): Observable<any> {
     return this.http.patch(`${this.reservationsUrl}/${id}`, { status });
   }
 

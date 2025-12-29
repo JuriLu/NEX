@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Car } from '../../../core/models/car.model';
+import { Car, CarCategory, Currency } from '../../../core/models/car.model';
+import { SelectOption } from '../../../core/models/common.model';
 import { CarService } from '../../../core/services/car.service';
 import { SecurityUtils } from '../../../core/utils/security.utils';
 
@@ -84,18 +85,18 @@ export class CarManagementComponent implements OnInit {
   selectedImageFile: File | null = null;
   imagePreview: string | null = null;
 
-  categories = [
-    { label: 'Electric', value: 'Electric' },
-    { label: 'Sport', value: 'Sport' },
-    { label: 'Luxury', value: 'Luxury' },
-    { label: 'SUV', value: 'SUV' },
-    { label: 'Convertible', value: 'Convertible' },
+  categories: SelectOption[] = [
+    { label: 'Electric', value: CarCategory.ELECTRIC },
+    { label: 'Sport', value: CarCategory.SPORT },
+    { label: 'Luxury', value: CarCategory.LUXURY },
+    { label: 'SUV', value: CarCategory.SUV },
+    { label: 'Convertible', value: CarCategory.CONVERTIBLE },
   ];
 
-  currencies = [
-    { label: 'USD ($)', value: 'USD' },
-    { label: 'EUR (€)', value: 'EUR' },
-    { label: 'GBP (£)', value: 'GBP' },
+  currencies: SelectOption[] = [
+    { label: 'USD ($)', value: Currency.USD },
+    { label: 'EUR (€)', value: Currency.EUR },
+    { label: 'GBP (£)', value: Currency.GBP },
   ];
 
   ngOnInit() {
@@ -152,15 +153,7 @@ export class CarManagementComponent implements OnInit {
               life: 3000,
             });
           },
-          error: (err) => {
-            console.error('Delete Car Error:', err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Could not delete car',
-              life: 3000,
-            });
-          },
+          error: (err) => this.handleError('Error', 'Could not delete car', err),
         });
       },
     });
@@ -182,56 +175,45 @@ export class CarManagementComponent implements OnInit {
   saveCar() {
     this.submitted = true;
 
-    if (this.carForm.valid) {
-      const carData = SecurityUtils.sanitizeObject(this.carForm.value);
-
-      if (this.editingCar) {
-        this.carService.updateCar({ ...this.editingCar, ...carData }).subscribe({
-          next: () => {
-            this.loadCars();
-            this.hideDialog();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Successful',
-              detail: 'Car Updated',
-              life: 3000,
-            });
-          },
-          error: (err) => {
-            console.error('Update Car Error:', err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Could not update car',
-              life: 3000,
-            });
-          },
-        });
-      } else {
-        // In real app, features would be a form array. For mock, just empty array.
-        this.carService.addCar({ ...carData, features: [] }).subscribe({
-          next: () => {
-            this.loadCars();
-            this.hideDialog();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Successful',
-              detail: 'Car Created',
-              life: 3000,
-            });
-          },
-          error: (err) => {
-            console.error('Add Car Error:', err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Could not add car',
-              life: 3000,
-            });
-          },
-        });
-      }
+    if (this.carForm.invalid) {
+      return;
     }
+
+    const carData = SecurityUtils.sanitizeObject(this.carForm.value);
+    
+    // Determine action and observable
+    const isEditing = !!this.editingCar;
+    const request$ = isEditing
+      ? this.carService.updateCar({ ...this.editingCar, ...carData })
+      : this.carService.addCar({ ...carData, features: [] });
+      
+    const action = isEditing ? 'Updated' : 'Created';
+
+    request$.subscribe({
+      next: () => this.handleSuccess(`Car ${action}`),
+      error: (err) => this.handleError('Error', `Could not ${isEditing ? 'update' : 'add'} car`, err)
+    });
+  }
+
+  private handleSuccess(detail: string) {
+    this.loadCars();
+    this.hideDialog();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Successful',
+      detail: detail,
+      life: 3000,
+    });
+  }
+
+  private handleError(summary: string, detail: string, error?: any) {
+    console.error(detail, error);
+    this.messageService.add({
+      severity: 'error',
+      summary: summary,
+      detail: detail,
+      life: 3000,
+    });
   }
 
   hideDialog() {

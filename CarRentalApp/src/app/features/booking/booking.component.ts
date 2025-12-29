@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { Car } from '../../core/models/car.model';
+import { ReservationStatus } from '../../core/models/reservation.model';
 import { CarService } from '../../core/services/car.service';
 import { selectUser } from '../../core/store/auth/auth.selectors';
 import { createReservation, loadReservations } from '../../core/store/booking/booking.actions';
@@ -93,7 +94,7 @@ export class BookingComponent implements OnInit {
   private setupDisabledDates(carId: number) {
     this.store.select(selectAllReservations).subscribe((reservations) => {
       const carReservations = reservations.filter(
-        (r) => r.carId === carId && (r.status === 'Confirmed' || r.status === 'Pending')
+        (r) => r.carId === carId && (r.status === ReservationStatus.CONFIRMED || r.status === ReservationStatus.PENDING)
       );
 
       const dates: Date[] = [];
@@ -136,7 +137,7 @@ export class BookingComponent implements OnInit {
               endDate: end ? end.toISOString() : start.toISOString(),
               totalPrice: this.totalPrice,
               currency: car.currency || 'USD',
-              status: 'Confirmed' as const,
+              status: ReservationStatus.CONFIRMED,
             };
 
             this.store.dispatch(createReservation({ reservation }));

@@ -97,37 +97,41 @@ export class RegisterComponent {
       const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
       
       this.authService.register(sanitizedData).subscribe({
-        next: (user) => {
-          // 1. Show Glowy Success Toast
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Welcome to NEX',
-            detail: `Initiating Launch Sequence for pilot: <b>${user.firstName} ${user.lastName}</b>`,
-            life: 5000,
-            styleClass: 'mbux-toast-success' // We can style this class if needed 
-          });
-
-          // 2. Auto-Login: Dispatch to Store to update Global State
-          // This ensures AuthGuard and Header know we are logged in.
-          this.store.dispatch(loginSuccess({ user }));
-
-          setTimeout(() => {
-             this.loading = false;
-             this.router.navigate(['/catalog']); // Redirect to main app
-          }, 1500);
-        },
-        error: (err) => {
-          console.error('Registration failed', err);
-          this.loading = false;
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Registration Failed',
-            detail: 'Could not create identity.',
-          });
-        }
+        next: (user) => this.handleRegistrationSuccess(user),
+        error: (err) => this.handleRegistrationError(err)
       });
     }
   }
+
+  private handleRegistrationSuccess(user: any) {
+    // 1. Show Glowy Success Toast
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Welcome to NEX',
+      detail: `Initiating Launch Sequence for pilot: <b>${user.firstName} ${user.lastName}</b>`,
+      life: 5000,
+      styleClass: 'mbux-toast-success'
+    });
+
+    // 2. Auto-Login: Dispatch to Store to update Global State
+    this.store.dispatch(loginSuccess({ user }));
+
+    setTimeout(() => {
+        this.loading = false;
+        this.router.navigate(['/catalog']); // Redirect to main app
+    }, 1500);
+  }
+
+  private handleRegistrationError(err: any) {
+    console.error('Registration failed', err);
+    this.loading = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Registration Failed',
+      detail: 'Could not create identity.',
+    });
+  }
+
 
   // Custom Validator: Password Match
   passwordMatchValidator(g: FormGroup) {

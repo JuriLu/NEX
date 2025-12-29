@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User } from '../../../core/models/user.model';
+import { User, UserRole } from '../../../core/models/user.model';
+import { SelectOption } from '../../../core/models/common.model';
+import { ReservationStatus } from '../../../core/models/reservation.model';
 import { UserService } from '../../../core/services/user.service';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { CarService } from '../../../core/services/car.service';
@@ -71,9 +73,9 @@ export class UserManagementComponent implements OnInit {
   selectedUserBookings: any[] = [];
   selectedUser: User | null = null;
 
-  roles = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'User', value: 'user' },
+  roles: SelectOption[] = [
+    { label: 'Admin', value: UserRole.ADMIN },
+    { label: 'User', value: UserRole.USER },
   ];
 
   ngOnInit() {
@@ -124,15 +126,7 @@ export class UserManagementComponent implements OnInit {
               life: 3000,
             });
           },
-          error: (err) => {
-            console.error('Delete User Error:', err);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Could not delete user',
-              life: 3000,
-            });
-          },
+          error: (err) => this.handleError('Error', 'Could not delete user', err),
         });
       },
     });
@@ -155,31 +149,38 @@ export class UserManagementComponent implements OnInit {
   saveUser() {
     this.submitted = true;
 
-    if (this.userForm.valid) {
-      const userData = SecurityUtils.sanitizeObject(this.userForm.value);
-
-      this.userService.addUser(userData).subscribe({
-        next: () => {
-          this.loadUsers();
-          this.hideDialog();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'User Created',
-            life: 3000,
-          });
-        },
-        error: (err) => {
-          console.error('Add User Error:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Could not add user',
-            life: 3000,
-          });
-        },
-      });
+    if (this.userForm.invalid) {
+      return;
     }
+
+    const userData = SecurityUtils.sanitizeObject(this.userForm.value);
+
+    // In a real app we might have updateUser too, assuming addUser handles both or distinct
+    this.userService.addUser(userData).subscribe({
+      next: () => this.handleSuccess('User Created'),
+      error: (err) => this.handleError('Error', 'Could not add user', err),
+    });
+  }
+
+  private handleSuccess(detail: string) {
+    this.loadUsers();
+    this.hideDialog();
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Successful',
+      detail: detail,
+      life: 3000,
+    });
+  }
+
+  private handleError(summary: string, detail: string, error?: any) {
+    console.error(detail, error);
+    this.messageService.add({
+      severity: 'error',
+      summary: summary,
+      detail: detail,
+      life: 3000,
+    });
   }
 
   hideDialog() {
@@ -189,10 +190,10 @@ export class UserManagementComponent implements OnInit {
 
   getBookingSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
     switch (status) {
-      case 'Confirmed': return 'success';
-      case 'Pending': return 'info';
-      case 'Cancelled': return 'danger';
-      case 'Completed': return 'secondary';
+      case ReservationStatus.CONFIRMED: return 'success';
+      case ReservationStatus.PENDING: return 'info';
+      case ReservationStatus.CANCELLED: return 'danger';
+      case ReservationStatus.COMPLETED: return 'secondary';
       default: return 'info';
     }
   }
