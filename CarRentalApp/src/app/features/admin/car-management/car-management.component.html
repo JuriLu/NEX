@@ -26,7 +26,7 @@
         [value]="cars"
         [rows]="10"
         [paginator]="true"
-        responsiveLayout="scroll"
+        [paginator]="true"
         styleClass="mbux-table"
       >
         <ng-template pTemplate="header">
@@ -56,7 +56,7 @@
               <p-tag
                 [value]="car.available ? 'Active' : 'Offline'"
                 [severity]="car.available ? 'success' : 'danger'"
-                styleClass="status-glow"
+                [ngClass]="{'status-glow': true}"
               ></p-tag>
             </td>
             <td>
@@ -82,69 +82,23 @@
   </div>
 
   <!-- MBUX Premium Dialog -->
-  <p-dialog
+  <app-nex-dialog
     [(visible)]="carDialog"
     [header]="editingCar ? 'Edit Vehicle' : 'Add New Vehicle'"
-    [modal]="true"
-    styleClass="mbux-premium-dialog"
-    [style]="{ width: '550px' }"
-    appendTo="body"
+    width="550px"
+    (onHide)="hideDialog()"
   >
-    <ng-template pTemplate="content">
+    <div body>
       <form [formGroup]="carForm" class="mbux-dialog-form">
-        <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">Brand</label>
-          <div class="input-wrapper">
-            <input
-              type="text"
-              pInputText
-              formControlName="brand"
-              class="mbux-input"
-              placeholder="e.g., Mercedes-Benz"
-            />
-            @if (carForm.get('brand')?.hasError('required') && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)) {
-              <div class="validation-warning mt-2">
-                <i class="pi pi-exclamation-circle"></i>
-                <span>Brand is required.</span>
-              </div>
-            }
-            @if (carForm.get('brand')?.invalid && !carForm.get('brand')?.hasError('required') && (carForm.get('brand')?.dirty || carForm.get('brand')?.touched)) {
-              <div class="validation-warning innovative mt-2">
-                <i class="pi pi-exclamation-circle"></i>
-                <span>Invalid format (letters only).</span>
-              </div>
-            }
-          </div>
-        </div>
+        <app-nex-form-field label="Brand" [control]="carForm.get('brand')" inputId="brand">
+            <input type="text" pInputText formControlName="brand" class="mbux-input" placeholder="e.g., Mercedes-Benz" id="brand"/>
+        </app-nex-form-field>
 
-        <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">Model</label>
-          <div class="input-wrapper">
-            <input
-              type="text"
-              pInputText
-              formControlName="model"
-              class="mbux-input"
-              placeholder="e.g., S-Class"
-            />
-            @if (carForm.get('model')?.hasError('required') && (carForm.get('model')?.dirty || carForm.get('model')?.touched)) {
-              <div class="validation-warning mt-2">
-                <i class="pi pi-exclamation-circle"></i>
-                <span>Model is required.</span>
-              </div>
-            }
-            @if (carForm.get('model')?.invalid && !carForm.get('model')?.hasError('required') && (carForm.get('model')?.dirty || carForm.get('model')?.touched)) {
-              <div class="validation-warning innovative mt-2">
-                <i class="pi pi-exclamation-circle"></i>
-                <span>Invalid format (alphanumeric).</span>
-              </div>
-            }
-          </div>
-        </div>
+        <app-nex-form-field label="Model" [control]="carForm.get('model')" inputId="model">
+            <input type="text" pInputText formControlName="model" class="mbux-input" placeholder="e.g., S-Class" id="model"/>
+        </app-nex-form-field>
         
-        <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">Class</label>
-          <div class="input-wrapper">
+        <app-nex-form-field label="Class" [control]="carForm.get('category')" inputId="category">
             <p-select
               [options]="categories"
               formControlName="category"
@@ -152,31 +106,20 @@
               optionValue="value"
               styleClass="mbux-select w-full"
               placeholder="Select class"
+              inputId="category"
             ></p-select>
-            @if (carForm.get('category')?.invalid && (carForm.get('category')?.dirty || carForm.get('category')?.touched)) {
-              <div class="validation-warning" [class.innovative]="carForm.get('category')?.errors && !carForm.get('category')?.hasError('required')">
-                <i class="pi pi-exclamation-circle"></i>
-                <span>Category is required.</span>
-              </div>
-            }
-          </div>
-        </div>
+        </app-nex-form-field>
 
-        <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">State</label>
-          <div class="input-wrapper">
+        <app-nex-form-field label="State" [control]="carForm.get('available')">
             <div class="mbux-availability-toggle">
-              <span class="availability-status" [class.active]="carForm.get('available')?.value">
+              <span class="availability-status" [ngClass]="{'active': carForm.get('available')?.value}">
                 {{ carForm.get('available')?.value ? 'Available' : 'Unavailable' }}
               </span>
               <p-toggleswitch formControlName="available"></p-toggleswitch>
             </div>
-          </div>
-        </div>
+        </app-nex-form-field>
 
-        <div class="field mb-5 mbux-inline-field">
-          <label class="mbux-field-label">Pricing</label>
-          <div class="input-wrapper">
+        <app-nex-form-field label="Pricing" [control]="carForm.get('pricePerDay')">
               <div class="flex gap-3 w-full">
                 <div class="flex-grow-1">
                     <p-inputNumber
@@ -197,20 +140,7 @@
                     ></p-select>
                 </div>
               </div>
-            @if (carForm.get('pricePerDay')?.hasError('required') && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)) {
-              <div class="validation-warning mt-2">
-                  <i class="pi pi-exclamation-circle"></i>
-                  <span>Price is required.</span>
-              </div>
-            }
-            @if (carForm.get('pricePerDay')?.invalid && !carForm.get('pricePerDay')?.hasError('required') && (carForm.get('pricePerDay')?.dirty || carForm.get('pricePerDay')?.touched)) {
-              <div class="validation-warning innovative mt-2">
-                  <i class="pi pi-exclamation-circle"></i>
-                  <span>Must be greater than 0.</span>
-              </div>
-            }
-          </div>
-        </div>
+        </app-nex-form-field>
 
         <!-- Centered Image Section -->
         <div class="field mbux-image-section">
@@ -236,8 +166,7 @@
                     1920x1080px (HQ) recommended.
                   </small>
                 </div>
-              }
-              @if (imagePreview) {
+              }@else{
                 <div class="preview-container relative w-full h-full">
                   <img [src]="imagePreview" class="asset-square-preview" />
                   <button
@@ -252,9 +181,9 @@
           </div>
         </div>
       </form>
-    </ng-template>
+    </div>
 
-    <ng-template pTemplate="footer">
+    <div footer>
       <div class="mbux-dialog-footer">
         <p-button
           label="Cancel"
@@ -269,8 +198,8 @@
           styleClass="mbux-btn-save ml-4"
         ></p-button>
       </div>
-    </ng-template>
-  </p-dialog>
+    </div>
+  </app-nex-dialog>
 
   <p-confirmdialog appendTo="body" styleClass="mbux-confirm-dialog"></p-confirmdialog>
 </div>

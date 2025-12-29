@@ -118,7 +118,7 @@
                             <span class="mbux-cost-shine">Cost: {{ booking.totalPrice | currency:booking.currency }}</span>
                         </td>
                         <td>
-                            <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" styleClass="status-glow"></p-tag>
+                            <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" [ngClass]="{'status-glow': true}"></p-tag>
                         </td>
                     </tr>
                 </ng-template>
@@ -137,158 +137,72 @@
   </div>
 
   <!-- Edit Profile Dialog -->
-  <p-dialog 
+  <app-nex-dialog 
      [(visible)]="editDialog" 
      header="Edit Profile" 
-     [modal]="true" 
-     styleClass="mbux-premium-dialog" 
-     [style]="{ width: '600px' }"
-     appendTo="body">
-     <ng-template pTemplate="content">
+     width="600px"
+     (onHide)="editDialog = false">
+     
+     <div body>
         <form [formGroup]="profileForm" class="grid mt-2">
             <div class="col-12 md:col-6 field flex flex-column">
-                <label class="mbux-field-label">First Name</label>
-                <input type="text" pInputText formControlName="firstName" class="mbux-input w-full" />
-                @if (profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
-                    <div class="validation-warning mt-2">
-                        <i class="pi pi-exclamation-triangle"></i>
-                        <span>FirstName Required</span>
-                    </div>
-                }
-                @if (profileForm.get('firstName')?.invalid && !profileForm.get('firstName')?.hasError('required') && profileForm.get('firstName')?.touched) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-exclamation-triangle"></i>
-                        <div class="flex flex-column">
-                            @if (profileForm.get('firstName')?.errors?.['minlength']) { <span>Identity requires 3+ segments.</span> }
-                            @if (profileForm.get('firstName')?.errors?.['pattern']) { <span>Invalid characters.</span> }
-                        </div>
-                    </div>
-                }
+                <app-nex-form-field label="First Name" [control]="profileForm.get('firstName')">
+                    <input type="text" pInputText formControlName="firstName" class="mbux-input w-full" />
+                </app-nex-form-field>
             </div>
             <div class="col-12 md:col-6 field flex flex-column">
-                <label class="mbux-field-label">Last Name</label>
-                <input type="text" pInputText formControlName="lastName" class="mbux-input w-full" />
-                @if (profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
-                    <div class="validation-warning mt-2">
-                        <i class="pi pi-exclamation-triangle"></i>
-                        <span>Last Name required.</span>
-                    </div>
-                }
-                @if (profileForm.get('lastName')?.invalid && !profileForm.get('lastName')?.hasError('required') && profileForm.get('lastName')?.touched) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-exclamation-triangle"></i>
-                        <div class="flex flex-column">
-                            @if (profileForm.get('lastName')?.errors?.['minlength']) { <span>Min. 3+ chars.</span> }
-                            @if (profileForm.get('lastName')?.errors?.['pattern']) { <span>Invalid characters.</span> }
-                        </div>
-                    </div>
-                }
+                <app-nex-form-field label="Last Name" [control]="profileForm.get('lastName')">
+                    <input type="text" pInputText formControlName="lastName" class="mbux-input w-full" />
+                </app-nex-form-field>
             </div>
             <div class="col-12 field flex flex-column">
-                <label class="mbux-field-label">Email</label>
-                <input type="email" pInputText formControlName="email" class="mbux-input w-full" />
-                @if (profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
-                    <div class="validation-warning mt-2">
-                        <i class="pi pi-envelope"></i>
-                        <span>Email Required.</span>
-                    </div>
-                }
-                @if (profileForm.get('email')?.invalid && !profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-envelope"></i>
-                        <span>Invalid email.</span>
-                    </div>
-                }
+                <app-nex-form-field label="Email" [control]="profileForm.get('email')">
+                    <input type="email" pInputText formControlName="email" class="mbux-input w-full" />
+                </app-nex-form-field>
             </div>
             <div class="col-12 field flex flex-column">
-                <label class="mbux-field-label">System Username</label>
-                <input type="text" pInputText formControlName="username" class="mbux-input w-full" />
-                @if (profileForm.get('username')?.hasError('required') && profileForm.get('username')?.touched) {
-                    <div class="validation-warning mt-2">
-                        <i class="pi pi-user"></i>
-                        <span>Username required.</span>
-                    </div>
-                }
-                @if (profileForm.get('username')?.invalid && !profileForm.get('username')?.hasError('required') && profileForm.get('username')?.touched) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-user"></i>
-                        <div class="flex flex-column">
-                            @if (profileForm.get('username')?.errors?.['minlength']) { <span>Min. 3+ chars.</span> }
-                            @if (profileForm.get('username')?.errors?.['pattern']) { <span>Invalid characters.</span> }
-                        </div>
-                    </div>
-                }
+                <app-nex-form-field label="System Username" [control]="profileForm.get('username')">
+                    <input type="text" pInputText formControlName="username" class="mbux-input w-full" />
+                </app-nex-form-field>
             </div>
         </form>
-     </ng-template>
-     <ng-template pTemplate="footer">
+     </div>
+     <div footer>
         <div class="mbux-dialog-footer">
             <p-button label="Abort" (click)="editDialog = false" styleClass="p-button-text"></p-button>
             <p-button label="Update" (click)="saveProfile()" styleClass="p-button-primary"></p-button>
         </div>
-     </ng-template>
-  </p-dialog>
+     </div>
+  </app-nex-dialog>
 
   <!-- Password Dialog -->
-  <p-dialog 
+  <app-nex-dialog 
      [(visible)]="passwordDialog" 
      header="Security Protocol" 
-     [modal]="true" 
-     styleClass="mbux-premium-dialog" 
-     [style]="{ width: '500px' }"
-     appendTo="body">
-     <ng-template pTemplate="content">
+     width="500px"
+     (onHide)="passwordDialog = false">
+     
+     <div body>
         <form [formGroup]="passwordForm" class="flex flex-column gap-3 mt-2">
-            <div class="field flex flex-column">
-                <label class="mbux-field-label">Current Master Key</label>
+            <app-nex-form-field label="Current Master Key" [control]="passwordForm.get('currentPassword')">
                 <input type="password" pInputText formControlName="currentPassword" class="mbux-input w-full" autocomplete="new-password" />
-                @if (passwordForm.get('currentPassword')?.touched && (passwordForm.get('currentPassword')?.invalid || passwordForm.get('currentPassword')?.hasError('incorrect'))) {
-                    <div class="validation-warning mt-2">
-                        <i class="pi pi-lock"></i>
-                        <div class="flex flex-column">
-                            @if (passwordForm.get('currentPassword')?.errors?.['required']) { <span>Primary authorization required.</span> }
-                            @if (passwordForm.get('currentPassword')?.hasError('incorrect')) { <span class="text-error">Incorrect Password. Protocol rejected.</span> }
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="field flex flex-column">
-                <label class="mbux-field-label">New Master Key</label>
+            </app-nex-form-field>
+
+            <app-nex-form-field label="New Master Key" [control]="passwordForm.get('newPassword')">
                 <input type="password" pInputText formControlName="newPassword" class="mbux-input w-full" autocomplete="new-password" />
-                @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-shield"></i>
-                        <div class="flex flex-column">
-                            @if (passwordForm.get('newPassword')?.errors?.['required']) { <span>Password required.</span> }
-                            @if (passwordForm.get('newPassword')?.errors?.['minlength']) { <span>Min: 6+ segments.</span> }
-                            @if (passwordForm.get('newPassword')?.errors?.['uppercase']) { <span>Uppercase required.</span> }
-                            @if (passwordForm.get('newPassword')?.errors?.['number']) { <span>Num. char required.</span> }
-                            @if (passwordForm.get('newPassword')?.errors?.['special']) { <span>Symbolic char required.</span> }
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="field flex flex-column">
-                <label class="mbux-field-label">Confirm New Key</label>
+            </app-nex-form-field>
+
+            <app-nex-form-field label="Confirm New Key" [control]="passwordForm.get('confirmPassword')">
                 <input type="password" pInputText formControlName="confirmPassword" class="mbux-input w-full" autocomplete="new-password" />
-                @if ((passwordForm.get('confirmPassword')?.touched || passwordForm.hasError('mismatch')) && (passwordForm.get('confirmPassword')?.invalid || passwordForm.hasError('mismatch'))) {
-                    <div class="validation-warning innovative mt-2">
-                        <i class="pi pi-sync"></i>
-                        <div class="flex flex-column">
-                            @if (passwordForm.hasError('mismatch')) { <span>Security mismatch: Passwords do not match.</span> }
-                            @if (passwordForm.get('confirmPassword')?.errors?.['required']) { <span>Password confirmation required.</span> }
-                        </div>
-                    </div>
-                }
-            </div>
+            </app-nex-form-field>
         </form>
-     </ng-template>
-     <ng-template pTemplate="footer">
+     </div>
+     <div footer>
         <div class="mbux-dialog-footer">
             <p-button label="Abort" (click)="passwordDialog = false" styleClass="p-button-text"></p-button>
             <p-button label="Change Key" (click)="updatePassword()" styleClass="p-button-primary"></p-button>
         </div>
-     </ng-template>
-  </p-dialog>
+     </div>
+  </app-nex-dialog>
 
 </div>

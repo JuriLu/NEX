@@ -23,6 +23,8 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
+import { NexDialogComponent } from '../../shared/components/nex-dialog/nex-dialog.component';
+import { NexFormFieldComponent } from '../../shared/components/nex-form-field/nex-form-field.component';
 
 @Component({
   selector: 'app-profile',
@@ -37,7 +39,9 @@ import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
     ToastModule,
     TagModule,
     TableModule,
-    TooltipModule
+    TooltipModule,
+    NexDialogComponent,
+    NexFormFieldComponent
   ],
   providers: [MessageService],
   templateUrl: './profile.component.html',

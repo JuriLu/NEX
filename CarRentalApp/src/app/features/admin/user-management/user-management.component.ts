@@ -24,6 +24,8 @@ import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
 
 import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
+import { NexDialogComponent } from '../../../shared/components/nex-dialog/nex-dialog.component';
+import { NexFormFieldComponent } from '../../../shared/components/nex-form-field/nex-form-field.component';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -41,6 +43,8 @@ import { forkJoin } from 'rxjs';
     TagModule,
     SelectModule,
     PasswordModule,
+    NexDialogComponent,
+    NexFormFieldComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './user-management.component.html',

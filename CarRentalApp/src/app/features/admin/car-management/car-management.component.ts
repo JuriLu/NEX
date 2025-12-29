@@ -21,6 +21,8 @@ import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
+import { NexDialogComponent } from '../../../shared/components/nex-dialog/nex-dialog.component';
+import { NexFormFieldComponent } from '../../../shared/components/nex-form-field/nex-form-field.component';
 
 @Component({
   selector: 'app-car-management',
@@ -39,6 +41,8 @@ import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
     SelectModule,
     FileUploadModule,
     TagModule,
+    NexDialogComponent,
+    NexFormFieldComponent
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './car-management.component.html',

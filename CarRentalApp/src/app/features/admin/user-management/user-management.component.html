@@ -26,7 +26,7 @@
         [value]="users"
         [rows]="10"
         [paginator]="true"
-        responsiveLayout="scroll"
+        [paginator]="true"
         styleClass="mbux-table"
       >
         <ng-template pTemplate="header">
@@ -56,7 +56,9 @@
               <p-tag
                 [value]="user.role"
                 [severity]="user.role === 'admin' ? 'info' : 'secondary'"
-                styleClass="status-glow"
+                [value]="user.role"
+                [severity]="user.role === 'admin' ? 'info' : 'secondary'"
+                [ngClass]="{'status-glow': true}"
               ></p-tag>
             </td>
             <td>
@@ -86,85 +88,36 @@
   </div>
 
   <!-- Registration Dialog -->
-  <p-dialog
+  <app-nex-dialog
     [(visible)]="userDialog"
     header="Member Registration"
-    [modal]="true"
-    styleClass="mbux-premium-dialog"
-    [style]="{ width: '500px' }"
-    appendTo="body"
+    width="500px"
+    (onHide)="hideDialog()"
   >
-    <ng-template pTemplate="content">
+    <div body>
       <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="mbux-dialog-form flex flex-column gap-4">
         <div class="grid">
             <div class="col-12 md:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="mbux-field-label">First Name</label>
-                    <input type="text" pInputText formControlName="firstName" class="mbux-input" placeholder="John" />
-                    @if (userForm.get('firstName')?.hasError('required') && (submitted || userForm.get('firstName')?.touched)) {
-                        <div [class]="styles.validationWarning" class="mt-1">
-                            <i class="pi pi-info-circle"></i>
-                            <span>Required.</span>
-                        </div>
-                    }
-                    @if (userForm.get('firstName')?.invalid && !userForm.get('firstName')?.hasError('required') && (submitted || userForm.get('firstName')?.touched)) {
-                        <div [class]="styles.validationWarning" class="innovative mt-1">
-                            <i class="pi pi-info-circle"></i>
-                            <span>Letters only.</span>
-                        </div>
-                    }
-                </div>
+                <app-nex-form-field label="First Name" [control]="userForm.get('firstName')">
+                    <input type="text" pInputText formControlName="firstName" class="mbux-input w-full" placeholder="John" />
+                </app-nex-form-field>
             </div>
             <div class="col-12 md:col-6">
-                <div class="flex flex-column gap-2">
-                    <label class="mbux-field-label">Last Name</label>
-                    <input type="text" pInputText formControlName="lastName" class="mbux-input" placeholder="Doe" />
-                    @if (userForm.get('lastName')?.hasError('required') && (submitted || userForm.get('lastName')?.touched)) {
-                        <div [class]="styles.validationWarning" class="mt-1">
-                            <i class="pi pi-info-circle"></i>
-                            <span>Required.</span>
-                        </div>
-                    }
-                    @if (userForm.get('lastName')?.invalid && !userForm.get('lastName')?.hasError('required') && (submitted || userForm.get('lastName')?.touched)) {
-                        <div [class]="styles.validationWarning" class="innovative mt-1">
-                            <i class="pi pi-info-circle"></i>
-                            <span>Letters only.</span>
-                        </div>
-                    }
-                </div>
+                <app-nex-form-field label="Last Name" [control]="userForm.get('lastName')">
+                    <input type="text" pInputText formControlName="lastName" class="mbux-input w-full" placeholder="Doe" />
+                </app-nex-form-field>
             </div>
         </div>
 
-        <div class="flex flex-column gap-2">
-          <label class="mbux-field-label">Username</label>
+        <app-nex-form-field label="Username" [control]="userForm.get('username')">
           <input type="text" pInputText formControlName="username" class="mbux-input" placeholder="johndoe" />
-          @if (userForm.get('username')?.hasError('required') && (submitted || userForm.get('username')?.touched)) {
-            <div [class]="styles.validationWarning" class="mt-1">
-                <i class="pi pi-info-circle"></i>
-                <span>Username required.</span>
-            </div>
-          }
-          @if (userForm.get('username')?.invalid && !userForm.get('username')?.hasError('required') && (submitted || userForm.get('username')?.touched)) {
-            <div [class]="styles.validationWarning" class="innovative mt-1">
-                <i class="pi pi-info-circle"></i>
-                <span>Alphanumeric only.</span>
-            </div>
-          }
-        </div>
+        </app-nex-form-field>
 
-        <div class="flex flex-column gap-2">
-          <label class="mbux-field-label">Email</label>
+        <app-nex-form-field label="Email" [control]="userForm.get('email')">
           <input type="email" pInputText formControlName="email" class="mbux-input" placeholder="john@example.com" />
-          @if ((submitted || userForm.get('email')?.touched) && userForm.get('email')?.invalid) {
-          <div [class]="styles.validationWarning" class="mt-1">
-            <i class="pi pi-info-circle"></i>
-            <span>Valid email required.</span>
-          </div>
-          }
-        </div>
+        </app-nex-form-field>
 
-        <div class="flex flex-column gap-2">
-          <label class="mbux-field-label">Security Protocol (Password)</label>
+        <app-nex-form-field label="Security Protocol (Password)" [control]="userForm.get('password')">
           <p-password 
             formControlName="password" 
             [toggleMask]="true" 
@@ -173,45 +126,31 @@
             inputStyleClass="mbux-input"
             placeholder="••••••••"
           ></p-password>
-          @if ((submitted || userForm.get('password')?.touched) && userForm.get('password')?.invalid) {
-          <div [class]="styles.validationWarning" class="innovative mt-1">
-            <i class="pi pi-shield"></i>
-            <div class="flex flex-column">
-              @if (userForm.get('password')?.hasError('required')) { <span>Password required.</span> }
-              @if (userForm.get('password')?.hasError('minlength')) { <span>Minimum 6 characters.</span> }
-              @if (userForm.get('password')?.hasError('uppercase')) { <span>Integration: Uppercase character required.</span> }
-              @if (userForm.get('password')?.hasError('number')) { <span>Segment: Numerical character required.</span> }
-              @if (userForm.get('password')?.hasError('special')) { <span>Entropy: Symbolic character required.</span> }
-            </div>
-          </div>
-          }
-        </div>
+        </app-nex-form-field>
 
         <div class="flex flex-column gap-2">
           <label class="mbux-field-label">Access Level</label>
           <p-select [options]="roles" formControlName="role" styleClass="mbux-select w-full" optionLabel="label" optionValue="value" appendTo="body"></p-select>
         </div>
       </form>
-    </ng-template>
+    </div>
 
-    <ng-template pTemplate="footer">
+    <div footer>
       <div class="mbux-dialog-footer">
         <p-button label="Cancel" icon="pi pi-times" (click)="hideDialog()" styleClass="mbux-btn-cancel"></p-button>
         <p-button label="Authorize Member" icon="pi pi-check" (click)='saveUser()' styleClass="mbux-btn-save ml-2"></p-button>
       </div>
-    </ng-template>
-  </p-dialog>
+    </div>
+  </app-nex-dialog>
 
   <!-- Missions Dialog -->
-  <p-dialog
+  <app-nex-dialog
     [(visible)]="bookingsDialog"
     [header]="'Deployment History: ' + selectedUser?.firstName"
-    [modal]="true"
-    styleClass="mbux-premium-dialog"
-    [style]="{ width: '700px' }"
-    appendTo="body"
+    width="700px"
+    (onHide)="bookingsDialog = false"
   >
-    <div class="p-2">
+    <div body class="p-2">
         <p-table [value]="selectedUserBookings" styleClass="mbux-table">
             <ng-template pTemplate="header">
                 <tr>
@@ -226,7 +165,7 @@
                     <td>{{ booking.car?.brand }} {{ booking.car?.model }}</td>
                     <td>{{ booking.startDate | date:'MMM d' }} - {{ booking.endDate | date:'MMM d, y' }}</td>
                     <td>
-                        <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" styleClass="status-glow"></p-tag>
+                        <p-tag [value]="booking.status" [severity]="getBookingSeverity(booking.status)" [ngClass]="{'status-glow': true}"></p-tag>
                     </td>
                     <td>
                         <p-button
@@ -246,7 +185,7 @@
             </ng-template>
         </p-table>
     </div>
-  </p-dialog>
+  </app-nex-dialog>
 
   <p-confirmdialog appendTo="body" styleClass="mbux-confirm-dialog"></p-confirmdialog>
 </div>
