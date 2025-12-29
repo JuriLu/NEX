@@ -587,3 +587,45 @@ body .mbux-btn-cancel .p-button:not(.p-disabled) {
         }
     }
 }
+/* ==========================================================================
+   DATEPICKER RESERVED DATES STYLING (GLOBAL)
+   ========================================================================== */
+
+/* Target disabled dates in PrimeNG datepicker (appended to body) */
+.p-datepicker {
+  .p-datepicker-calendar {
+    td.p-disabled,
+    td[data-p-disabled="true"] {
+      opacity: 1 !important;
+      
+      span,
+      .p-datepicker-day {
+        background: rgba(239, 68, 68, 0.25) !important;
+        color: #fca5a5 !important;
+        border: 1px solid rgba(239, 68, 68, 0.6) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        cursor: not-allowed !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4) !important;
+
+        &::before {
+          content: '' !important;
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          background: linear-gradient(45deg, transparent 40%, rgba(239, 68, 68, 0.3) 50%, transparent 60%) !important;
+          animation: reservedDateGlow 3s infinite linear !important;
+          pointer-events: none !important;
+          z-index: 1 !important;
+        }
+      }
+    }
+  }
+}
+
+@keyframes reservedDateGlow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}

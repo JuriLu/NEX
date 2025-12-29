@@ -7,7 +7,8 @@ import { Observable, take } from 'rxjs';
 import { Car } from '../../core/models/car.model';
 import { CarService } from '../../core/services/car.service';
 import { selectUser } from '../../core/store/auth/auth.selectors';
-import { createReservation } from '../../core/store/booking/booking.actions';
+import { createReservation, loadReservations } from '../../core/store/booking/booking.actions';
+import { selectAllReservations } from '../../core/store/booking/booking.selectors';
 
 // PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -61,6 +62,7 @@ export class BookingComponent implements OnInit {
   car$!: Observable<Car>;
   bookingForm!: FormGroup;
   minDate = new Date();
+  disabledDates: Date[] = [];
   totalPrice = 0;
 
   ngOnInit() {
@@ -70,6 +72,9 @@ export class BookingComponent implements OnInit {
     this.bookingForm = this.fb.group({
       dates: [null, [Validators.required]],
     });
+
+    this.store.dispatch(loadReservations());
+    this.setupDisabledDates(carId);
 
     this.bookingForm.get('dates')?.valueChanges.subscribe((value) => {
       if (value && value[0] && value[1]) {
@@ -82,6 +87,30 @@ export class BookingComponent implements OnInit {
     this.car$.pipe(take(1)).subscribe((car) => {
       const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
       this.totalPrice = days * car.pricePerDay;
+    });
+  }
+
+  private setupDisabledDates(carId: number) {
+    this.store.select(selectAllReservations).subscribe((reservations) => {
+      const carReservations = reservations.filter(
+        (r) => r.carId === carId && (r.status === 'Confirmed' || r.status === 'Pending')
+      );
+
+      const dates: Date[] = [];
+      carReservations.forEach((res) => {
+        let current = new Date(res.startDate);
+        const end = new Date(res.endDate);
+
+        // Normalize to midnight for comparison
+        current.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+
+        while (current <= end) {
+          dates.push(new Date(current));
+          current.setDate(current.getDate() + 1);
+        }
+      });
+      this.disabledDates = dates;
     });
   }
 

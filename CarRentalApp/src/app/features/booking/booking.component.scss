@@ -90,6 +90,39 @@
         box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
       }
     }
+
+    // Target disabled dates with multiple selectors for maximum specificity
+    .p-datepicker-calendar,
+    .p-datepicker table {
+      td.p-disabled,
+      td[data-p-disabled="true"] {
+        opacity: 1 !important;
+        
+        span,
+        .p-datepicker-day {
+          background: rgba(239, 68, 68, 0.2) !important;
+          color: #fca5a5 !important;
+          border: 1px solid rgba(239, 68, 68, 0.5) !important;
+          position: relative !important;
+          overflow: hidden !important;
+          cursor: not-allowed !important;
+          box-shadow: 0 0 10px rgba(239, 68, 68, 0.3) !important;
+
+          &::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: linear-gradient(45deg, transparent 40%, rgba(239, 68, 68, 0.2) 50%, transparent 60%) !important;
+            animation: reservedGlow 3s infinite linear !important;
+            pointer-events: none !important;
+            z-index: 1 !important;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -103,6 +136,11 @@
   50% {
     transform: translateY(-15px) rotate(-1deg);
   }
+}
+
+@keyframes reservedGlow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
 }
 
 @media (max-width: 991px) {

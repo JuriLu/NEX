@@ -19,6 +19,7 @@
                   <p-tag
                     [value]="car.available ? 'ReadyGo' : 'On a Mission'"
                     [severity]="getSeverity(car)"
+                    [class.ready-go-glow]="car.available"
                     class="absolute"
                     [style.left.px]="15"
                     [style.top.px]="15"

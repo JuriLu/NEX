@@ -42,6 +42,28 @@
   p-tag {
     z-index: 10;
     position: relative; /* Ensure z-index applies */
+
+    &.ready-go-glow {
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.3);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      animation: readyGoPulse 2s infinite ease-in-out;
+      backdrop-filter: blur(8px);
+    }
+  }
+}
+
+@keyframes readyGoPulse {
+  0% {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.8), 0 0 50px rgba(34, 197, 94, 0.4);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.3);
+    transform: scale(1);
   }
 }
 
