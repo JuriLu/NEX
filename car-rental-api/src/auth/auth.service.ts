@@ -40,4 +40,14 @@ export class AuthService {
     const { password, ...result } = newUser;
     return result;
   }
+
+  async isUsernameAvailable(username: string): Promise<boolean> {
+    const normalizedUsername = username?.trim();
+    if (!normalizedUsername) {
+      return false;
+    }
+
+    const existingUser = await this.usersService.findByUsername(normalizedUsername);
+    return !existingUser;
+  }
 }

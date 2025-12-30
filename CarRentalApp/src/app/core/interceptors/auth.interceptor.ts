@@ -1,14 +1,29 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+
+const AUTH_USER_KEY = 'auth_user';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const store = inject(Store);
-  // For now, if we have a user, attach a mock token.
-  // In real app, we follow the token stream or get it from local storage.
+  let token: string | null = null;
 
-  // Note: For cleaner Mock flow, we might just pass through if no user.
-  // Mock backend doesn't validate tokens unless we configured it to.
+  if (typeof window !== 'undefined') {
+    const storedUser = window.localStorage.getItem(AUTH_USER_KEY);
+    if (storedUser) {
+      try {
+        token = JSON.parse(storedUser)?.token ?? null;
+      } catch (error) {
+        console.error('Failed to parse stored auth user', error);
+        window.localStorage.removeItem(AUTH_USER_KEY);
+      }
+    }
+  }
+
+  if (token && !req.headers.has('Authorization')) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 
   return next(req);
 };

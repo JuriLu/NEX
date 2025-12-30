@@ -34,7 +34,6 @@
     "@ngrx/store": "^21.0.0",
     "@ngrx/store-devtools": "^21.0.0",
     "@primeng/themes": "^21.0.2",
-    "angular-in-memory-web-api": "^0.21.0",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^21.0.2",

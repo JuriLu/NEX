@@ -8,6 +8,9 @@
 
   -2nd step: Continue to implement all the APIs that FE project needs to consume. Start from Auth, then with booking, catalog, ect ect and basically for every service that consumes BE api that so far has been mocked. I also needs a database, i would prefer a SQL database, and also the implementation of the code is going to based on that, make also the db connection. Choose what db is best for this case and if you need me to do any action for the db connection please ask me. (BTW so far i have only Bruno app installed). Also note that for the project, add a gitignore file because i see 10k files to commit.
 
+  -Improvement: Related to Database and backend development, I think i want to make some changes. First of all i think i may want to use mongodb as a database, so it would make it easier for me for the deployment phase if i intend to do one. So for now I am installin mongodb-compass in my machine.
+  
+
 - [x] **Admin User Management **:
 
   - In the admin role it should add a new section to manage users.

@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request as ExpressRequest } from 'express';
@@ -24,5 +32,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   async register(@Body() createUserDto: CreateUserDto) {
     return await this.authService.register(createUserDto);
+  }
+
+  @Get('check-username/:username')
+  @ApiOperation({ summary: 'Check if a username is available' })
+  async checkUsername(@Param('username') username: string) {
+    return {
+      isAvailable: await this.authService.isUsernameAvailable(username),
+    };
   }
 }

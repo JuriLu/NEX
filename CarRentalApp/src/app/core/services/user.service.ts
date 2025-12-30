@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'api/users';
+  private readonly apiUrl = `${environment.apiUrl}/users`;
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
@@ -19,7 +20,10 @@ export class UserService {
   }
 
   updateUser(user: Partial<User>): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${user.id}`, user);
+    if (!user.id) {
+      throw new Error('User id is required for update operations.');
+    }
+    return this.http.patch<User>(`${this.apiUrl}/${user.id}`, user);
   }
 
   deleteUser(id: number): Observable<void> {
