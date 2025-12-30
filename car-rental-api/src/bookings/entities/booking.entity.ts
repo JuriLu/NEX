@@ -1,13 +1,14 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Car } from '../../cars/entities/car.entity';
 import { User } from '../../users/entities/user.entity';
-
-export enum BookingStatus {
-  PENDING = 'Pending',
-  CONFIRMED = 'Confirmed',
-  COMPLETED = 'Completed',
-  CANCELLED = 'Cancelled',
-}
+import { BookingStatus } from '../enums/booking-status.enum';
 
 @Entity()
 export class Booking {
