@@ -3,6 +3,8 @@
 - Every time that a change is made, related to coding or design UI/UX, update the documentation files in the .github/documentation folder.
 
 ## Develop Guidelines
+For Angular development, follow the guidelines in the instructions/angular.instructions.md file.
+For NestJS development, follow the guidelines in the instructions/nestjs.instructions.md file.
 
 ### Coding Guidelines
 

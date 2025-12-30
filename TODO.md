@@ -2,9 +2,11 @@
 
 ## 🚀 Future Enhancements
 
-- [ ] **IMPORTANT UPDATE- Implement Backend**:
+- [x] **IMPORTANT UPDATE- Implement Backend**:
 
-  -In the same folder NEX, next to CarRentalApp, Implement backend for the project, using NestJS.
+  -1st step: In the same folder NEX, next to CarRentalApp, Implement backend for the project, using NestJS. As explained in the instructions i don't have knowledge in NestJs, but you can still ask questions to make this the best NestJS application for this project. Choose a good name for the BE project.
+
+  -2nd step: Continue to implement all the APIs that FE project needs to consume. Start from Auth, then with booking, catalog, ect ect and basically for every service that consumes BE api that so far has been mocked. I also needs a database, i would prefer a SQL database, and also the implementation of the code is going to based on that, make also the db connection. Choose what db is best for this case and if you need me to do any action for the db connection please ask me. (BTW so far i have only Bruno app installed). Also note that for the project, add a gitignore file because i see 10k files to commit.
 
 - [x] **Admin User Management **:
 
