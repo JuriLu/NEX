@@ -1,36 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
-import { Car } from './entities/car.entity';
+import { Car, CarDocument } from './entities/car.entity';
 
 @Injectable()
 export class CarsService {
   constructor(
-    @InjectRepository(Car)
-    private carsRepository: Repository<Car>,
+    @InjectModel(Car.name)
+    private readonly carModel: Model<CarDocument>,
   ) {}
 
-  create(createCarDto: CreateCarDto) {
-    const car = this.carsRepository.create(createCarDto);
-    return this.carsRepository.save(car);
+  private async getNextId(): Promise<number> {
+    const latestCar = await this.carModel
+      .findOne()
+      .sort({ id: -1 })
+      .select({ id: 1 })
+      .lean<{ id: number }>()
+      .exec();
+
+    return latestCar?.id ? latestCar.id + 1 : 1;
   }
 
-  findAll() {
-    return this.carsRepository.find();
+  async create(createCarDto: CreateCarDto): Promise<CarDocument> {
+    const id = await this.getNextId();
+    return this.carModel.create({ ...createCarDto, id });
   }
 
-  findOne(id: number) {
-    return this.carsRepository.findOneBy({ id });
+  findAll(): Promise<CarDocument[]> {
+    return this.carModel.find().exec();
   }
 
-  async update(id: number, updateCarDto: UpdateCarDto) {
-    await this.carsRepository.update(id, updateCarDto);
-    return this.findOne(id);
+  findOne(id: number): Promise<CarDocument | null> {
+    return this.carModel.findOne({ id }).exec();
   }
 
-  async remove(id: number) {
-    await this.carsRepository.delete(id);
+  update(id: number, updateCarDto: UpdateCarDto): Promise<CarDocument | null> {
+    return this.carModel
+      .findOneAndUpdate({ id }, updateCarDto, { new: true })
+      .exec();
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.carModel.deleteOne({ id }).exec();
   }
 }

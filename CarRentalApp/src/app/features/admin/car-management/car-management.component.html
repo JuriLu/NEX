@@ -97,7 +97,7 @@
         <app-nex-form-field label="Model" [control]="carForm.get('model')" inputId="model">
             <input type="text" pInputText formControlName="model" class="mbux-input" placeholder="e.g., S-Class" id="model"/>
         </app-nex-form-field>
-        
+
         <app-nex-form-field label="Class" [control]="carForm.get('category')" inputId="category">
             <p-select
               [options]="categories"
@@ -152,14 +152,23 @@
                   <div class="mbux-upload-icon mb-3">
                     <i class="pi pi-camera" style="font-size: 2.5rem; color: rgba(139, 92, 246, 0.5);"></i>
                   </div>
-                  <div class="mbux-upload-btn">
-                    <p-fileupload
-                      mode="basic"
-                      chooseLabel="Select Vehicle Image"
+                  <div class="mbux-upload-btn flex flex-column align-items-center gap-3">
+                    <input
+                      #imageInput
+                      type="file"
                       accept="image/*"
-                      (onSelect)="onImageSelect($event)"
-                      [auto]="true"
-                    ></p-fileupload>
+                      class="hidden"
+                      (change)="onImageSelect($event)"
+                    />
+                    <button
+                      type="button"
+                      pButton
+                      icon="pi pi-upload"
+                      label="Select Vehicle Image"
+                      class="p-button-rounded mbux-select-image"
+                      (click)="imageInput.click()"
+                    ></button>
+                    <span class="text-secondary font-medium">{{ selectedImageLabel }}</span>
                   </div>
                   <small class="block mt-3 text-secondary text-center px-4">
                     <i class="pi pi-info-circle mr-1"></i>
@@ -173,7 +182,7 @@
                     pButton
                     icon="pi pi-times"
                     class="p-button-rounded p-button-danger p-button-text absolute top-0 right-0 m-2"
-                    (click)="imagePreview = null; carForm.patchValue({ image: null })"
+                    (click)="clearImage()"
                   ></button>
                 </div>
               }

@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "firstName": "Admin",
+    "lastName": "System",
+    "username": "admin",
+    "email": "admin@carrental.com",
+    "password": "$2b$10$KIB8Gg1Fa8UHlsjk5Yi7FOiuiw0oH6tA.EQg553mjQbrm08Lgec/e",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "firstName": "Julian",
+    "lastName": "NEX",
+    "username": "julian",
+    "email": "user@carrental.com",
+    "password": "$2b$10$vG/Sek.3hrZSdzgnmJ.pJO.Iv7sgAUSLipnglIXhsJZdAE1IJ2J2e",
+    "role": "user"
+  },
+  {
+    "id": 3,
+    "firstName": "Sarah",
+    "lastName": "Connor",
+    "username": "sconnor",
+    "email": "sarah@skynet.com",
+    "password": "$2b$10$vG/Sek.3hrZSdzgnmJ.pJO.Iv7sgAUSLipnglIXhsJZdAE1IJ2J2e",
+    "role": "user"
+  },
+  {
+    "id": 4,
+    "firstName": "Rick",
+    "lastName": "Deckard",
+    "username": "deckard",
+    "email": "rick@blade.run",
+    "password": "$2b$10$vG/Sek.3hrZSdzgnmJ.pJO.Iv7sgAUSLipnglIXhsJZdAE1IJ2J2e",
+    "role": "user"
+  }
+]

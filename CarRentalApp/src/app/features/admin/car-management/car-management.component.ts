@@ -11,7 +11,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -20,9 +19,9 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
-import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
 import { NexDialogComponent } from '../../../shared/components/nex-dialog/nex-dialog.component';
 import { NexFormFieldComponent } from '../../../shared/components/nex-form-field/nex-form-field.component';
+import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
 
 @Component({
   selector: 'app-car-management',
@@ -39,7 +38,6 @@ import { NexFormFieldComponent } from '../../../shared/components/nex-form-field
     ToastModule,
     ToggleSwitchModule,
     SelectModule,
-    FileUploadModule,
     TagModule,
     NexDialogComponent,
     NexFormFieldComponent
@@ -88,6 +86,7 @@ export class CarManagementComponent implements OnInit {
   editingCar: Car | null = null;
   selectedImageFile: File | null = null;
   imagePreview: string | null = null;
+  selectedImageLabel = 'No file chosen';
 
   categories: SelectOption[] = [
     { label: 'Electric', value: CarCategory.ELECTRIC },
@@ -130,6 +129,7 @@ export class CarManagementComponent implements OnInit {
     this.submitted = false;
     this.selectedImageFile = null;
     this.imagePreview = null;
+    this.selectedImageLabel = 'No file chosen';
     this.carDialog = true;
   }
 
@@ -138,6 +138,7 @@ export class CarManagementComponent implements OnInit {
     this.carForm.patchValue(car);
     this.selectedImageFile = null;
     this.imagePreview = car.image;
+    this.selectedImageLabel = car.image ? 'Current asset image' : 'No file chosen';
     this.carDialog = true;
   }
 
@@ -163,17 +164,30 @@ export class CarManagementComponent implements OnInit {
     });
   }
 
-  onImageSelect(event: any) {
-    const file = event.files[0];
-    if (file) {
-      this.selectedImageFile = file;
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagePreview = e.target.result;
-        this.carForm.patchValue({ image: e.target.result });
-      };
-      reader.readAsDataURL(file);
+  onImageSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+    if (!file) {
+      return;
     }
+
+    this.selectedImageFile = file;
+    this.selectedImageLabel = file.name;
+
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      const result = target?.result as string | null;
+      this.imagePreview = result;
+      this.carForm.patchValue({ image: result });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  clearImage() {
+    this.selectedImageFile = null;
+    this.imagePreview = null;
+    this.selectedImageLabel = 'No file chosen';
+    this.carForm.patchValue({ image: null });
   }
 
   saveCar() {
@@ -184,13 +198,13 @@ export class CarManagementComponent implements OnInit {
     }
 
     const carData = SecurityUtils.sanitizeObject(this.carForm.value);
-    
+
     // Determine action and observable
     const isEditing = !!this.editingCar;
     const request$ = isEditing
       ? this.carService.updateCar({ ...this.editingCar, ...carData })
       : this.carService.addCar({ ...carData, features: [] });
-      
+
     const action = isEditing ? 'Updated' : 'Created';
 
     request$.subscribe({

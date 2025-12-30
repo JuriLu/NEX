@@ -1,0 +1,47 @@
+[
+  {
+    "id": 101,
+    "brand": "Tesla",
+    "model": "Model S Plaid",
+    "pricePerDay": 250,
+    "currency": "USD",
+    "category": "Electric",
+    "image": "images/tesla.png",
+    "available": true,
+    "features": [
+      "Autopilot",
+      "0-60 in 1.99s",
+      "Range 396mi"
+    ]
+  },
+  {
+    "id": 102,
+    "brand": "BMW",
+    "model": "M4 Competition",
+    "pricePerDay": 180,
+    "currency": "USD",
+    "category": "Sport",
+    "image": "images/bmw.png",
+    "available": true,
+    "features": [
+      "503 HP",
+      "Carbon Bucket Seats",
+      "Drift Mode"
+    ]
+  },
+  {
+    "id": 103,
+    "brand": "Mercedes-Benz",
+    "model": "EQS SUV",
+    "pricePerDay": 300,
+    "currency": "USD",
+    "category": "Luxury",
+    "image": "images/mercedes.png",
+    "available": true,
+    "features": [
+      "Hyperscreen",
+      "Rear-Axle Steering",
+      "7-Seat Luxury"
+    ]
+  }
+]

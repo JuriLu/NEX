@@ -1,46 +1,57 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export enum UserRole {
   ADMIN = 'admin',
   USER = 'user',
 }
 
-@Entity()
+export type UserDocument = HydratedDocument<User>;
+export type SafeUser = Omit<User, 'password'>;
+
+@Schema({ timestamps: true })
 export class User {
-  @PrimaryGeneratedColumn()
+  @Prop({ type: Number, unique: true, required: true, index: true })
   id: number;
 
-  @Column()
+  @Prop({ required: true })
   firstName: string;
 
-  @Column()
+  @Prop({ required: true })
   lastName: string;
 
-  @Column({ unique: true })
+  @Prop({ unique: true, required: true, trim: true })
   username: string;
 
-  @Column({ unique: true })
+  @Prop({ unique: true, required: true, lowercase: true, trim: true })
   email: string;
 
-  @Column()
+  @Prop({ required: true })
   password: string;
 
-  @Column({
-    type: 'simple-enum',
-    enum: UserRole,
-    default: UserRole.USER,
-  })
+  @Prop({ type: String, enum: UserRole, default: UserRole.USER })
   role: UserRole;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
+
+const transformUser = (_doc: unknown, ret: any) => {
+  delete ret._id;
+
+  delete ret.__v;
+
+  delete ret.password;
+  return ret;
+};
+
+UserSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformUser,
+});
+
+UserSchema.set('toObject', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformUser,
+});

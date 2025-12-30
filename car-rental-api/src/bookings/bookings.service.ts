@@ -1,36 +1,67 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { Booking } from './entities/booking.entity';
+import { Booking, BookingDocument } from './entities/booking.entity';
 
 @Injectable()
 export class BookingsService {
   constructor(
-    @InjectRepository(Booking)
-    private bookingsRepository: Repository<Booking>,
+    @InjectModel(Booking.name)
+    private readonly bookingModel: Model<BookingDocument>,
   ) {}
 
-  create(createBookingDto: CreateBookingDto) {
-    const booking = this.bookingsRepository.create(createBookingDto);
-    return this.bookingsRepository.save(booking);
+  private async getNextId(): Promise<number> {
+    const latestBooking = await this.bookingModel
+      .findOne()
+      .sort({ id: -1 })
+      .select({ id: 1 })
+      .lean<{ id: number }>()
+      .exec();
+
+    return latestBooking?.id ? latestBooking.id + 1 : 1;
   }
 
-  findAll() {
-    return this.bookingsRepository.find();
+  async create(createBookingDto: CreateBookingDto): Promise<BookingDocument> {
+    const id = await this.getNextId();
+    const payload = {
+      ...createBookingDto,
+      id,
+      startDate: new Date(createBookingDto.startDate),
+      endDate: new Date(createBookingDto.endDate),
+    };
+    return this.bookingModel.create(payload);
   }
 
-  findOne(id: number) {
-    return this.bookingsRepository.findOneBy({ id });
+  findAll(): Promise<BookingDocument[]> {
+    return this.bookingModel.find().exec();
   }
 
-  async update(id: number, updateBookingDto: UpdateBookingDto) {
-    await this.bookingsRepository.update(id, updateBookingDto);
-    return this.findOne(id);
+  findOne(id: number): Promise<BookingDocument | null> {
+    return this.bookingModel.findOne({ id }).exec();
   }
 
-  async remove(id: number) {
-    await this.bookingsRepository.delete(id);
+  update(
+    id: number,
+    updateBookingDto: UpdateBookingDto,
+  ): Promise<BookingDocument | null> {
+    const payload = {
+      ...updateBookingDto,
+      ...(updateBookingDto.startDate && {
+        startDate: new Date(updateBookingDto.startDate),
+      }),
+      ...(updateBookingDto.endDate && {
+        endDate: new Date(updateBookingDto.endDate),
+      }),
+    };
+
+    return this.bookingModel
+      .findOneAndUpdate({ id }, payload, { new: true })
+      .exec();
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.bookingModel.deleteOne({ id }).exec();
   }
 }

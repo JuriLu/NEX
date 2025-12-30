@@ -1,44 +1,97 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
+import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User, UserDocument } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user);
+  private async getNextId(): Promise<number> {
+    const latestUser = await this.userModel
+      .findOne()
+      .sort({ id: -1 })
+      .select({ id: 1 })
+      .lean<{ id: number }>()
+      .exec();
+
+    return latestUser?.id ? latestUser.id + 1 : 1;
   }
 
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+    const id = await this.getNextId();
+    const payload = {
+      ...createUserDto,
+      id,
+      email: createUserDto.email.trim().toLowerCase(),
+      username: createUserDto.username.trim(),
+    };
+    return this.userModel.create(payload);
   }
 
-  async findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  async findAll(): Promise<UserDocument[]> {
+    return this.userModel.find().exec();
   }
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ email });
+  async findOne(id: number): Promise<UserDocument | null> {
+    return this.userModel.findOne({ id }).exec();
   }
 
-  async findByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ username });
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ email: email.trim().toLowerCase() }).exec();
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
-    await this.usersRepository.update(id, updateUserDto);
-    return this.findOne(id);
+  async findByUsername(username: string): Promise<UserDocument | null> {
+    return this.userModel.findOne({ username: username.trim() }).exec();
+  }
+
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument | null> {
+    const payload: UpdateUserDto = { ...updateUserDto };
+    if (payload.email) {
+      payload.email = payload.email.trim().toLowerCase();
+    }
+    if (payload.username) {
+      payload.username = payload.username.trim();
+    }
+
+    return this.userModel
+      .findOneAndUpdate({ id }, payload, { new: true })
+      .exec();
+  }
+
+  async updatePassword(
+    id: number,
+    { currentPassword, newPassword }: UpdatePasswordDto,
+  ): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ id }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    return user.save();
   }
 
   async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.userModel.deleteOne({ id }).exec();
   }
 }

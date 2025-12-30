@@ -4,38 +4,38 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, take } from 'rxjs';
 import { User } from '../../core/models/user.model';
-import { selectUser } from '../../core/store/auth/auth.selectors';
-import * as AuthActions from '../../core/store/auth/auth.actions';
-import { UserService } from '../../core/services/user.service';
 import { CarService } from '../../core/services/car.service';
 import { ReservationService } from '../../core/services/reservation.service';
+import { UserService } from '../../core/services/user.service';
+import * as AuthActions from '../../core/store/auth/auth.actions';
+import { selectUser } from '../../core/store/auth/auth.selectors';
 import { SecurityUtils } from '../../core/utils/security.utils';
 
 // PrimeNG
+import { MessageService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
 import { NexDialogComponent } from '../../shared/components/nex-dialog/nex-dialog.component';
 import { NexFormFieldComponent } from '../../shared/components/nex-form-field/nex-form-field.component';
+import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
-    CommonModule, 
-    ButtonModule, 
-    AvatarModule, 
-    ReactiveFormsModule, 
-    DialogModule, 
-    InputTextModule, 
+    CommonModule,
+    ButtonModule,
+    AvatarModule,
+    ReactiveFormsModule,
+    DialogModule,
+    InputTextModule,
     ToastModule,
     TagModule,
     TableModule,
@@ -58,7 +58,7 @@ export class ProfileComponent implements OnInit {
 
   user$: Observable<User | null> = this.store.select(selectUser);
   userBookings$!: Observable<any[]>;
-  
+
   editDialog = false;
   passwordDialog = false;
   profileForm!: FormGroup;
@@ -90,7 +90,7 @@ export class ProfileComponent implements OnInit {
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [
-        Validators.required, 
+        Validators.required,
         Validators.minLength(6),
         (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
         (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit {
   }
 
   passwordMatchValidator(g: FormGroup) {
-    return g.get('newPassword')?.value === g.get('confirmPassword')?.value 
+    return g.get('newPassword')?.value === g.get('confirmPassword')?.value
       ? null : { mismatch: true };
   }
 
@@ -110,7 +110,7 @@ export class ProfileComponent implements OnInit {
       if (user) {
         const reservations$ = this.reservationService.getUserReservations(user.id);
         const cars$ = this.carService.getCars();
-        
+
         this.userBookings$ = combineLatest([reservations$, cars$]).pipe(
           map(([reservations, cars]) => {
             return reservations.map(res => ({
@@ -144,8 +144,8 @@ export class ProfileComponent implements OnInit {
                const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
                this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
                this.messageService.add({
-                 severity: 'success', 
-                 summary: 'Profile Updated', 
+                 severity: 'success',
+                 summary: 'Profile Updated',
                  detail: 'Personal identity synchronized successfully.'
                });
                this.editDialog = false;
@@ -163,26 +163,20 @@ export class ProfileComponent implements OnInit {
 
       this.user$.pipe(take(1)).subscribe(user => {
         if (user) {
-          // fetch full user data from service to get the actual password (which is stripped in the store for security)
-          this.userService.getUsers().pipe(take(1)).subscribe((users: User[]) => {
-            const fullUser = users.find((u: User) => u.id === user.id);
-            
-            if (fullUser && fullUser.password === currentInput) {
-              const updatedUser = { ...fullUser, password: newKey };
-              const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
-              
-              this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
-              
+          this.userService.updatePassword(user.id, {
+            currentPassword: currentInput,
+            newPassword: newKey,
+          }).pipe(take(1)).subscribe({
+            next: () => {
               this.messageService.add({
-                severity:'success', 
-                summary:'Security Enhanced', 
-                detail:'Master key successfully rotated.'
+                severity: 'success',
+                summary: 'Security Enhanced',
+                detail: 'Master key successfully rotated.'
               });
-              
               this.passwordDialog = false;
               this.passwordForm.reset();
-            } else {
-              // Set manual error for visual feedback
+            },
+            error: () => {
               this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
               this.messageService.add({
                 severity: 'error',
@@ -207,8 +201,8 @@ export class ProfileComponent implements OnInit {
     this.selectedColor = color;
     localStorage.setItem('nex_ambient_color', color);
     this.messageService.add({
-      severity: 'info', 
-      summary: 'Ambience Adjusted', 
+      severity: 'info',
+      summary: 'Ambience Adjusted',
       detail: `Cabin lighting set to ${this.ambientColors.find(c => c.color === color)?.name}.`
     });
   }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { User } from '../users/entities/user.entity';
+import { SafeUser, User, UserDocument } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -12,17 +12,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<User | null> {
+  async validateUser(email: string, pass: string): Promise<SafeUser | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result as User;
+      return this.sanitizeUser(user);
     }
     return null;
   }
 
-  async login(user: User) {
+  async login(
+    user: SafeUser,
+  ): Promise<{ access_token: string; user: SafeUser }> {
     const payload = { username: user.username, sub: user.id, role: user.role };
     return {
       access_token: await this.jwtService.signAsync(payload),
@@ -30,15 +30,17 @@ export class AuthService {
     };
   }
 
-  async register(userDto: CreateUserDto) {
+  async register(userDto: CreateUserDto): Promise<SafeUser> {
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
     const newUser = await this.usersService.create({
       ...userDto,
       password: hashedPassword,
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = newUser;
-    return result;
+    const safeUser = this.sanitizeUser(newUser);
+    if (!safeUser) {
+      throw new Error('Unable to sanitize newly created user');
+    }
+    return safeUser;
   }
 
   async isUsernameAvailable(username: string): Promise<boolean> {
@@ -47,7 +49,23 @@ export class AuthService {
       return false;
     }
 
-    const existingUser = await this.usersService.findByUsername(normalizedUsername);
+    const existingUser =
+      await this.usersService.findByUsername(normalizedUsername);
     return !existingUser;
+  }
+
+  private sanitizeUser(user: UserDocument | User | null): SafeUser | null {
+    if (!user) {
+      return null;
+    }
+
+    const plainUser =
+      typeof (user as UserDocument).toObject === 'function'
+        ? ((user as UserDocument).toObject() as User)
+        : ({ ...user } as User);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...safeUser } = plainUser;
+    return safeUser as SafeUser;
   }
 }

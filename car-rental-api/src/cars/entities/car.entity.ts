@@ -1,10 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export enum CarCategory {
   ELECTRIC = 'Electric',
@@ -15,41 +10,55 @@ export enum CarCategory {
   CONVERTIBLE = 'Convertible',
 }
 
-@Entity()
+export type CarDocument = HydratedDocument<Car>;
+
+@Schema({ timestamps: true })
 export class Car {
-  @PrimaryGeneratedColumn()
+  @Prop({ type: Number, unique: true, required: true, index: true })
   id: number;
 
-  @Column()
+  @Prop({ required: true })
   brand: string;
 
-  @Column()
+  @Prop({ required: true })
   model: string;
 
-  @Column('decimal')
+  @Prop({ required: true })
   pricePerDay: number;
 
-  @Column({ default: 'USD' })
+  @Prop({ default: 'USD' })
   currency: string;
 
-  @Column({
-    type: 'simple-enum',
-    enum: CarCategory,
-  })
+  @Prop({ type: String, enum: CarCategory, required: true })
   category: CarCategory;
 
-  @Column()
+  @Prop({ required: true })
   image: string;
 
-  @Column({ default: true })
+  @Prop({ default: true })
   available: boolean;
 
-  @Column('simple-array')
+  @Prop({ type: [String], default: [] })
   features: string[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
+
+export const CarSchema = SchemaFactory.createForClass(Car);
+
+const transformDocument = (_doc: unknown, ret: any) => {
+  delete ret._id;
+
+  delete ret.__v;
+  return ret;
+};
+
+CarSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformDocument,
+});
+
+CarSchema.set('toObject', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformDocument,
+});

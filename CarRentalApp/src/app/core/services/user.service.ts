@@ -26,6 +26,13 @@ export class UserService {
     return this.http.patch<User>(`${this.apiUrl}/${user.id}`, user);
   }
 
+  updatePassword(
+    id: number,
+    payload: { currentPassword: string; newPassword: string },
+  ): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}/password`, payload);
+  }
+
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

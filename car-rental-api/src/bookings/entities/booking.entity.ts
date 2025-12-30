@@ -1,54 +1,53 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Car } from '../../cars/entities/car.entity';
-import { User } from '../../users/entities/user.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 import { BookingStatus } from '../enums/booking-status.enum';
 
-@Entity()
+export type BookingDocument = HydratedDocument<Booking>;
+
+@Schema({ timestamps: true })
 export class Booking {
-  @PrimaryGeneratedColumn()
+  @Prop({ type: Number, unique: true, required: true, index: true })
   id: number;
 
-  @Column()
+  @Prop({ type: Number, required: true })
   userId: number;
 
-  @Column()
+  @Prop({ type: Number, required: true })
   carId: number;
 
-  @ManyToOne(() => User)
-  user: User;
-
-  @ManyToOne(() => Car)
-  car: Car;
-
-  @Column()
+  @Prop({ type: Date, required: true })
   startDate: Date;
 
-  @Column()
+  @Prop({ type: Date, required: true })
   endDate: Date;
 
-  @Column('decimal')
+  @Prop({ type: Number, required: true })
   totalPrice: number;
 
-  @Column({ default: 'USD' })
+  @Prop({ default: 'USD' })
   currency: string;
 
-  @Column({
-    type: 'simple-enum',
-    enum: BookingStatus,
-    default: BookingStatus.PENDING,
-  })
+  @Prop({ type: String, enum: BookingStatus, default: BookingStatus.PENDING })
   status: BookingStatus;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }
+
+export const BookingSchema = SchemaFactory.createForClass(Booking);
+
+const transformBooking = (_doc: unknown, ret: any) => {
+  delete ret._id;
+
+  delete ret.__v;
+  return ret;
+};
+
+BookingSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformBooking,
+});
+
+BookingSchema.set('toObject', {
+  virtuals: true,
+  versionKey: false,
+  transform: transformBooking,
+});
