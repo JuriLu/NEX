@@ -6,12 +6,12 @@ export default defineConfig({
     {
       name: 'angular-resource-stub',
       transform(code, id) {
-        if (id.endsWith('.ts')) {
-          // Replace templateUrl and styleUrl with template and styles to avoid resource loading issues in JIT
+        if (id.endsWith('.ts') && (code.includes('templateUrl') || code.includes('styleUrl'))) {
           let newCode = code.replace(/templateUrl\s*:\s*['"]([^'"]+)['"]/g, 'template: ""');
           newCode = newCode.replace(/styleUrl\s*:\s*['"]([^'"]+)['"]/g, 'styles: []');
           return { code: newCode, map: null };
         }
+        return null;
       },
     },
   ],
@@ -33,6 +33,7 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
+      include: ['src/app/**/*.ts'],
       exclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/environments/**', 'src/main.ts'],
       reporter: ['text', 'html'],
     },

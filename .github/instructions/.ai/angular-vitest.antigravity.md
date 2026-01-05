@@ -14,6 +14,11 @@
 
 When the user asks to "create a test for this file", "write tests for this component", "generate unit tests", or similar test-related requests, follow these guidelines for creating comprehensive unit tests using Vitest and @analogjs/vitest-angular.
 
+## IMPORTANT NOTES
+
+- Don't generate coverage_output files as they are not needed and not readable. If its neccessary for you to provide a better
+  testing result, save them in a different location, and delete after you are done with writing test, but only if its neccessary.
+
 ---
 
 ## Angular Unit Testing --- Vitest (Authoritative)
