@@ -31,5 +31,10 @@ export default defineConfig({
         inline: [/@angular/, /@ngrx/],
       },
     },
+    coverage: {
+      provider: 'v8',
+      exclude: ['src/**/*.spec.ts', 'src/test-setup.ts', 'src/environments/**', 'src/main.ts'],
+      reporter: ['text', 'html'],
+    },
   },
 });
