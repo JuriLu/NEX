@@ -66,6 +66,78 @@ import { User } from '../../../../core/models/user.model';
       </div>
     </div>
   `,
+  styles: [
+    `
+      .identity-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--ambient-color, #7b4dff), transparent 60%) 0%,
+          rgba(30, 30, 45, 0.9) 100%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          right: -50%;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(
+            circle,
+            color-mix(in srgb, var(--ambient-color, #7b4dff), transparent 80%) 0%,
+            transparent 70%
+          );
+          pointer-events: none;
+        }
+
+        .card-logo {
+          height: 52px;
+          border-radius: 12px;
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.15) rotate(-3deg);
+            filter: drop-shadow(0 0 20px rgba(123, 77, 255, 0.6));
+          }
+        }
+
+        .card-type {
+          font-size: 10px;
+          letter-spacing: 3px;
+          color: var(--mbux-cyan);
+          font-weight: 900;
+        }
+
+        .card-chip {
+          width: 45px;
+          height: 35px;
+          background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+          border-radius: 8px;
+          opacity: 0.95;
+          margin-top: 5px;
+          position: relative;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.2);
+          }
+        }
+      }
+    `,
+  ],
 })
 export class ProfileInfoComponent {
   @Input() user: User | null = null;

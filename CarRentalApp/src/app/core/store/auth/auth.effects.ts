@@ -19,11 +19,22 @@ export class AuthEffects {
       ofType(AuthActions.updateUser),
       mergeMap(({ user }) =>
         this.userService.updateUser(user).pipe(
-          map((updatedUser) => AuthActions.updateUserSuccess({ user: updatedUser || user })),
+          map((updatedUser) => {
+            // Backend might not return the token on update, so we must preserve it
+            // from the original user object to avoid logging the user out.
+            const finalUser = { ...updatedUser };
+            if (!finalUser.token && user.token) {
+              finalUser.token = user.token;
+            }
+            return AuthActions.updateUserSuccess({ user: finalUser });
+          }),
           tap(({ user: finalUser }) => {
             // Update local storage so session persists
             localStorage.setItem('auth_user', JSON.stringify(finalUser));
-          })
+          }),
+          catchError((error) =>
+            of(AuthActions.loginFailure({ error: error.message || 'Update failed' }))
+          ) // Reuse loginFailure or create separate action
         )
       )
     )

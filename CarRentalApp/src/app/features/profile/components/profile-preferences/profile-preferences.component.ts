@@ -45,28 +45,31 @@ import { TooltipModule } from 'primeng/tooltip';
   styles: [
     `
       .color-node {
-        width: 2rem;
-        height: 2rem;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
         &:hover {
-          transform: scale(1.1);
+          transform: scale(1.2);
         }
 
         &.active {
-          border: 2px solid white;
+          border-color: white;
+          box-shadow: 0 0 15px currentColor;
           transform: scale(1.1);
         }
       }
 
       .glass-node {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
       }
     `,
   ],

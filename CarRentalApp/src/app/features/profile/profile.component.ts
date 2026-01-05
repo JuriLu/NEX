@@ -175,24 +175,22 @@ export class ProfileComponent implements OnInit {
     if (this.profileForm.valid) {
       this.user$.pipe(take(1)).subscribe((user) => {
         if (user) {
-          // fetch full user data to ensure the password is NOT lost during the update (since it's missing from the store)
-          this.userService
-            .getUsers()
-            .pipe(take(1))
-            .subscribe((users: User[]) => {
-              const fullUser = users.find((u: User) => u.id === user.id);
-              if (fullUser) {
-                const updatedUser = { ...fullUser, ...this.profileForm.value };
-                const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
-                this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Profile Updated',
-                  detail: 'Personal identity synchronized successfully.',
-                });
-                this.editDialog = false;
-              }
-            });
+          // We use the ID from the store user and merge with form values.
+          // Since the service uses PATCH, we don't need the full object (password etc.)
+          const updatedUser: User = {
+            ...user,
+            ...this.profileForm.value,
+          };
+
+          const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
+          this.store.dispatch(AuthActions.updateUser({ user: sanitizedData }));
+
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Profile Updated',
+            detail: 'Personal identity synchronized successfully.',
+          });
+          this.editDialog = false;
         }
       });
     }
