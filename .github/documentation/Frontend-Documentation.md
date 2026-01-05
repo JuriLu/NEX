@@ -114,4 +114,16 @@ The application uses **Vitest 4.0.16** as its primary testing engine, integrated
 
 ---
 
+## Significant bugs found and fixed.
+
+Issue: It seems that when the user updated the email, every network is unauthorized.
+
+Answer: I fixed the issue.
+
+Problem: When you updated your profile (like your email), the backend returned the updated user information but did not include the authentication token in the response. The application then saved this "token-less" user object to storage. The authentication interceptor, which relies on reading the token from this stored object, subsequently found no token to send, causing all future requests to fail with "Unauthorized" (401).
+
+Fix: I updated the logic in
+AuthEffects
+to preserving the existing authentication token. Now, when saving the updated user profile, the application checks if the backend response includes a token. If it doesn't, it automatically merges the existing valid token into the user object before saving it. This ensures your session remains active and valid after every profile update.
+
 _Technical Documentation updated: 2026-01-05_
