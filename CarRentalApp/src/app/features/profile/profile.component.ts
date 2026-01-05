@@ -21,35 +21,27 @@ import { SecurityUtils } from '../../core/utils/security.utils';
 
 // PrimeNG
 import { MessageService } from 'primeng/api';
-import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
-import { TooltipModule } from 'primeng/tooltip';
 
-import { NexDialogComponent } from '../../shared/components/nex-dialog/nex-dialog.component';
-import { NexFormFieldComponent } from '../../shared/components/nex-form-field/nex-form-field.component';
 import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
+import { ProfileBookingsComponent } from './components/profile-bookings/profile-bookings.component';
+import { ProfileEditDialogComponent } from './components/profile-edit-dialog/profile-edit-dialog.component';
+import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
+import { ProfilePasswordDialogComponent } from './components/profile-password-dialog/profile-password-dialog.component';
+import { ProfilePreferencesComponent } from './components/profile-preferences/profile-preferences.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
     CommonModule,
-    ButtonModule,
-    AvatarModule,
     ReactiveFormsModule,
-    DialogModule,
-    InputTextModule,
     ToastModule,
-    TagModule,
-    TableModule,
-    TooltipModule,
-    NexDialogComponent,
-    NexFormFieldComponent,
+    ProfileInfoComponent,
+    ProfilePreferencesComponent,
+    ProfileBookingsComponent,
+    ProfileEditDialogComponent,
+    ProfilePasswordDialogComponent,
   ],
   providers: [MessageService],
   templateUrl: './profile.component.html',
@@ -258,20 +250,5 @@ export class ProfileComponent implements OnInit {
       summary: 'Ambience Adjusted',
       detail: `Cabin lighting set to ${this.ambientColors.find((c) => c.color === color)?.name}.`,
     });
-  }
-
-  getBookingSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
-    switch (status) {
-      case 'Confirmed':
-        return 'success';
-      case 'Pending':
-        return 'info';
-      case 'Cancelled':
-        return 'danger';
-      case 'Completed':
-        return 'secondary';
-      default:
-        return 'info';
-    }
   }
 }
