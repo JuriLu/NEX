@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { catchError, map, of } from 'rxjs';
-import { AuthService } from '../../../core/services/auth.service';
-import { SecurityUtils } from '../../../core/utils/security.utils';
-import { MessageService } from 'primeng/api';
 import { Store } from '@ngrx/store';
+import { MessageService } from 'primeng/api';
+import { catchError, map, of, switchMap, timer } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { loginSuccess } from '../../../core/store/auth/auth.actions';
+import { SecurityUtils } from '../../../core/utils/security.utils';
 
 // PrimeNG
 import { ButtonModule } from 'primeng/button';
@@ -29,7 +35,7 @@ import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
     InputTextModule,
     ButtonModule,
     PasswordModule,
-    ToastModule
+    ToastModule,
   ],
   providers: [MessageService],
   templateUrl: './register.component.html',
@@ -65,40 +71,47 @@ export class RegisterComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService); // Inject AuthService
-  private messageService = inject(MessageService); 
+  private messageService = inject(MessageService);
   private store = inject(Store); // Inject Store
 
   submitted = false;
   loading = false;
 
-  registerForm: FormGroup = this.fb.group({
-    firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
-    lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
-    username: [
-      '', 
-      [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)], 
-      [this.usernameUniqueValidator.bind(this)]
-    ],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [
-      Validators.required, 
-      Validators.minLength(6),
-      (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
-      (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
-      (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
-    ]],
-    confirmPassword: ['', [Validators.required]],
-  }, { validators: this.passwordMatchValidator });
+  registerForm: FormGroup = this.fb.group(
+    {
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
+      username: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)],
+        [this.usernameUniqueValidator.bind(this)],
+      ],
+      email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+          (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+          (control: any) =>
+            /[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true },
+        ],
+      ],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: this.passwordMatchValidator }
+  );
 
   onSubmit() {
     this.submitted = true;
     if (this.registerForm.valid) {
       this.loading = true;
       const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
-      
+
       this.authService.register(sanitizedData).subscribe({
         next: (user) => this.handleRegistrationSuccess(user),
-        error: (err) => this.handleRegistrationError(err)
+        error: (err) => this.handleRegistrationError(err),
       });
     }
   }
@@ -110,15 +123,15 @@ export class RegisterComponent {
       summary: 'Welcome to NEX',
       detail: `Initiating Launch Sequence for pilot: <b>${user.firstName} ${user.lastName}</b>`,
       life: 5000,
-      styleClass: 'mbux-toast-success'
+      styleClass: 'mbux-toast-success',
     });
 
     // 2. Auto-Login: Dispatch to Store to update Global State
     this.store.dispatch(loginSuccess({ user }));
 
     setTimeout(() => {
-        this.loading = false;
-        this.router.navigate(['/catalog']); // Redirect to main app
+      this.loading = false;
+      this.router.navigate(['/catalog']); // Redirect to main app
     }, 1500);
   }
 
@@ -132,17 +145,19 @@ export class RegisterComponent {
     });
   }
 
-
   // Custom Validator: Password Match
   passwordMatchValidator(g: FormGroup) {
-    return g.get('password')?.value === g.get('confirmPassword')?.value
-      ? null : { mismatch: true };
+    return g.get('password')?.value === g.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
   // Async Validator: Username Unique
   usernameUniqueValidator(control: AbstractControl) {
-    return this.authService.checkUsernameUnique(control.value).pipe(
-      map(isUnique => (isUnique ? null : { notUnique: true })),
+    if (!control.value) {
+      return of(null);
+    }
+    return timer(500).pipe(
+      switchMap(() => this.authService.checkUsernameUnique(control.value)),
+      map((isUnique) => (isUnique ? null : { notUnique: true })),
       catchError(() => of(null))
     );
   }

@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { User, UserRole } from '../../../core/models/user.model';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { SelectOption } from '../../../core/models/common.model';
 import { ReservationStatus } from '../../../core/models/reservation.model';
-import { UserService } from '../../../core/services/user.service';
-import { ReservationService } from '../../../core/services/reservation.service';
+import { User, UserRole } from '../../../core/models/user.model';
 import { CarService } from '../../../core/services/car.service';
-import { SecurityUtils } from '../../../core/utils/security.utils';
-import { Store } from '@ngrx/store';
+import { ReservationService } from '../../../core/services/reservation.service';
+import { UserService } from '../../../core/services/user.service';
 import * as BookingActions from '../../../core/store/booking/booking.actions';
+import { SecurityUtils } from '../../../core/utils/security.utils';
 
 // PrimeNG
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -17,16 +25,17 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
-import { PasswordModule } from 'primeng/password';
-import { SelectModule } from 'primeng/select';
 
-import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
+import { forkJoin, Observable, of, timer } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { NexDialogComponent } from '../../../shared/components/nex-dialog/nex-dialog.component';
 import { NexFormFieldComponent } from '../../../shared/components/nex-form-field/nex-form-field.component';
-import { forkJoin } from 'rxjs';
+import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
 
 @Component({
   selector: 'app-user-management',
@@ -44,7 +53,7 @@ import { forkJoin } from 'rxjs';
     SelectModule,
     PasswordModule,
     NexDialogComponent,
-    NexFormFieldComponent
+    NexFormFieldComponent,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './user-management.component.html',
@@ -73,7 +82,7 @@ export class UserManagementComponent implements OnInit {
   bookingsDialog = false;
   userForm!: FormGroup;
   submitted = false;
-  
+
   selectedUserBookings: any[] = [];
   selectedUser: User | null = null;
 
@@ -95,17 +104,37 @@ export class UserManagementComponent implements OnInit {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
-      username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_\-]+$/)]],
+      username: [
+        '',
+        [Validators.required, Validators.pattern(/^[a-zA-Z0-9_\-]+$/)],
+        [this.usernameAvailabilityValidator()],
+      ],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [
-        Validators.required, 
-        Validators.minLength(6),
-        (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
-        (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
-        (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
-      ]],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+          (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+          (control: any) =>
+            /[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true },
+        ],
+      ],
       role: ['user', Validators.required],
     });
+  }
+
+  usernameAvailabilityValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) {
+        return of(null);
+      }
+      return timer(500).pipe(
+        switchMap(() => this.userService.checkUsernameAvailability(control.value)),
+        map((response) => (response.isAvailable ? null : { usernameTaken: true }))
+      );
+    };
   }
 
   openNew() {
@@ -140,11 +169,11 @@ export class UserManagementComponent implements OnInit {
     this.selectedUser = user;
     forkJoin({
       reservations: this.reservationService.getUserReservations(user.id),
-      cars: this.carService.getCars()
+      cars: this.carService.getCars(),
     }).subscribe(({ reservations, cars }) => {
-      this.selectedUserBookings = reservations.map(res => ({
+      this.selectedUserBookings = reservations.map((res) => ({
         ...res,
-        car: cars.find(c => c.id === res.carId)
+        car: cars.find((c) => c.id === res.carId),
       }));
       this.bookingsDialog = true;
     });
@@ -194,11 +223,16 @@ export class UserManagementComponent implements OnInit {
 
   getBookingSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
     switch (status) {
-      case ReservationStatus.CONFIRMED: return 'success';
-      case ReservationStatus.PENDING: return 'info';
-      case ReservationStatus.CANCELLED: return 'danger';
-      case ReservationStatus.COMPLETED: return 'secondary';
-      default: return 'info';
+      case ReservationStatus.CONFIRMED:
+        return 'success';
+      case ReservationStatus.PENDING:
+        return 'info';
+      case ReservationStatus.CANCELLED:
+        return 'danger';
+      case ReservationStatus.COMPLETED:
+        return 'secondary';
+      default:
+        return 'info';
     }
   }
 
@@ -212,13 +246,13 @@ export class UserManagementComponent implements OnInit {
       accept: () => {
         this.store.dispatch(BookingActions.deleteReservation({ id }));
         // Remove from local array immediately for UI update
-        this.selectedUserBookings = this.selectedUserBookings.filter(b => b.id !== id);
+        this.selectedUserBookings = this.selectedUserBookings.filter((b) => b.id !== id);
         this.messageService.add({
           severity: 'success',
           summary: 'Deployment Cancelled',
-          detail: 'Reservation has been successfully removed.'
+          detail: 'Reservation has been successfully removed.',
         });
-      }
+      },
     });
   }
 }

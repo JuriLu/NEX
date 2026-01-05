@@ -31,11 +31,7 @@ export class AuthService {
   }
 
   async register(userDto: CreateUserDto): Promise<SafeUser> {
-    const hashedPassword = await bcrypt.hash(userDto.password, 10);
-    const newUser = await this.usersService.create({
-      ...userDto,
-      password: hashedPassword,
-    });
+    const newUser = await this.usersService.create(userDto);
     const safeUser = this.sanitizeUser(newUser);
     if (!safeUser) {
       throw new Error('Unable to sanitize newly created user');

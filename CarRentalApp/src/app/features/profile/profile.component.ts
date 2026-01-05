@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable, take } from 'rxjs';
+import { combineLatest, map, Observable, of, switchMap, take, timer } from 'rxjs';
 import { User } from '../../core/models/user.model';
 import { CarService } from '../../core/services/car.service';
 import { ReservationService } from '../../core/services/reservation.service';
@@ -41,11 +49,11 @@ import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
     TableModule,
     TooltipModule,
     NexDialogComponent,
-    NexFormFieldComponent
+    NexFormFieldComponent,
   ],
   providers: [MessageService],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss'
+  styleUrl: './profile.component.scss',
 })
 export class ProfileComponent implements OnInit {
   readonly theme = DESIGN_SYSTEM;
@@ -70,7 +78,7 @@ export class ProfileComponent implements OnInit {
     { name: 'Digital Cyan', color: '#00F0FF' },
     { name: 'Hyper Orange', color: '#FF7D00' },
     { name: 'Stealth Grey', color: '#3A4452' },
-    { name: 'Neon Green', color: '#39FF14' }
+    { name: 'Neon Green', color: '#39FF14' },
   ];
 
   ngOnInit() {
@@ -81,42 +89,81 @@ export class ProfileComponent implements OnInit {
 
   initForms() {
     this.profileForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      lastName: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      firstName: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)],
+      ],
+      lastName: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z\s]*$/)],
+      ],
       email: ['', [Validators.required, Validators.email]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9]*$/)]]
+      username: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        [this.usernameAvailabilityValidator()],
+      ],
     });
 
-    this.passwordForm = this.fb.group({
-      currentPassword: ['', Validators.required],
-      newPassword: ['', [
-        Validators.required,
-        Validators.minLength(6),
-        (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
-        (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
-        (control: any) => (/[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true })
-      ]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
+    this.passwordForm = this.fb.group(
+      {
+        currentPassword: ['', Validators.required],
+        newPassword: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            (control: any) => (/[A-Z]/.test(control.value) ? null : { uppercase: true }),
+            (control: any) => (/[0-9]/.test(control.value) ? null : { number: true }),
+            (control: any) =>
+              /[!@#$%^&*(),.?":{}|<>]/.test(control.value) ? null : { special: true },
+          ],
+        ],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordMatchValidator }
+    );
+  }
+
+  usernameAvailabilityValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) {
+        return of(null);
+      }
+      return timer(500).pipe(
+        switchMap(() => this.user$.pipe(take(1))),
+        switchMap((currentUser) => {
+          if (currentUser && currentUser.username === control.value) {
+            return of(null);
+          }
+          return this.userService
+            .checkUsernameAvailability(control.value)
+            .pipe(map((response) => (response.isAvailable ? null : { usernameTaken: true })));
+        })
+      );
+    };
   }
 
   passwordMatchValidator(g: FormGroup) {
     return g.get('newPassword')?.value === g.get('confirmPassword')?.value
-      ? null : { mismatch: true };
+      ? null
+      : { mismatch: true };
   }
 
   loadBookingHistory() {
-    this.user$.subscribe(user => {
+    this.user$.subscribe((user) => {
       if (user) {
         const reservations$ = this.reservationService.getUserReservations(user.id);
         const cars$ = this.carService.getCars();
 
         this.userBookings$ = combineLatest([reservations$, cars$]).pipe(
           map(([reservations, cars]) => {
-            return reservations.map(res => ({
-              ...res,
-              car: cars.find(c => c.id === res.carId)
-            })).sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+            return reservations
+              .map((res) => ({
+                ...res,
+                car: cars.find((c) => c.id === res.carId),
+              }))
+              .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
           })
         );
       }
@@ -124,7 +171,7 @@ export class ProfileComponent implements OnInit {
   }
 
   openEdit() {
-    this.user$.pipe(take(1)).subscribe(user => {
+    this.user$.pipe(take(1)).subscribe((user) => {
       if (user) {
         this.profileForm.patchValue(user);
         this.editDialog = true;
@@ -134,23 +181,26 @@ export class ProfileComponent implements OnInit {
 
   saveProfile() {
     if (this.profileForm.valid) {
-      this.user$.pipe(take(1)).subscribe(user => {
+      this.user$.pipe(take(1)).subscribe((user) => {
         if (user) {
           // fetch full user data to ensure the password is NOT lost during the update (since it's missing from the store)
-          this.userService.getUsers().pipe(take(1)).subscribe((users: User[]) => {
-             const fullUser = users.find((u: User) => u.id === user.id);
-             if (fullUser) {
-               const updatedUser = { ...fullUser, ...this.profileForm.value };
-               const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
-               this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
-               this.messageService.add({
-                 severity: 'success',
-                 summary: 'Profile Updated',
-                 detail: 'Personal identity synchronized successfully.'
-               });
-               this.editDialog = false;
-             }
-          });
+          this.userService
+            .getUsers()
+            .pipe(take(1))
+            .subscribe((users: User[]) => {
+              const fullUser = users.find((u: User) => u.id === user.id);
+              if (fullUser) {
+                const updatedUser = { ...fullUser, ...this.profileForm.value };
+                const sanitizedData = SecurityUtils.sanitizeObject(updatedUser);
+                this.store.dispatch(AuthActions.updateUser({ user: sanitizedData as User }));
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Profile Updated',
+                  detail: 'Personal identity synchronized successfully.',
+                });
+                this.editDialog = false;
+              }
+            });
         }
       });
     }
@@ -161,30 +211,33 @@ export class ProfileComponent implements OnInit {
       const currentInput = this.passwordForm.get('currentPassword')?.value;
       const newKey = this.passwordForm.get('newPassword')?.value;
 
-      this.user$.pipe(take(1)).subscribe(user => {
+      this.user$.pipe(take(1)).subscribe((user) => {
         if (user) {
-          this.userService.updatePassword(user.id, {
-            currentPassword: currentInput,
-            newPassword: newKey,
-          }).pipe(take(1)).subscribe({
-            next: () => {
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Security Enhanced',
-                detail: 'Master key successfully rotated.'
-              });
-              this.passwordDialog = false;
-              this.passwordForm.reset();
-            },
-            error: () => {
-              this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Authentication Failed',
-                detail: 'The current master key provided is invalid.'
-              });
-            }
-          });
+          this.userService
+            .updatePassword(user.id, {
+              currentPassword: currentInput,
+              newPassword: newKey,
+            })
+            .pipe(take(1))
+            .subscribe({
+              next: () => {
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Security Enhanced',
+                  detail: 'Master key successfully rotated.',
+                });
+                this.passwordDialog = false;
+                this.passwordForm.reset();
+              },
+              error: () => {
+                this.passwordForm.get('currentPassword')?.setErrors({ incorrect: true });
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Authentication Failed',
+                  detail: 'The current master key provided is invalid.',
+                });
+              },
+            });
         }
       });
     }
@@ -203,17 +256,22 @@ export class ProfileComponent implements OnInit {
     this.messageService.add({
       severity: 'info',
       summary: 'Ambience Adjusted',
-      detail: `Cabin lighting set to ${this.ambientColors.find(c => c.color === color)?.name}.`
+      detail: `Cabin lighting set to ${this.ambientColors.find((c) => c.color === color)?.name}.`,
     });
   }
 
   getBookingSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' | 'secondary' {
     switch (status) {
-      case 'Confirmed': return 'success';
-      case 'Pending': return 'info';
-      case 'Cancelled': return 'danger';
-      case 'Completed': return 'secondary';
-      default: return 'info';
+      case 'Confirmed':
+        return 'success';
+      case 'Pending':
+        return 'info';
+      case 'Cancelled':
+        return 'danger';
+      case 'Completed':
+        return 'secondary';
+      default:
+        return 'info';
     }
   }
 }

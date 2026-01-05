@@ -19,6 +19,12 @@ export class UserService {
     return this.http.post<User>(this.apiUrl, user);
   }
 
+  checkUsernameAvailability(username: string): Observable<{ isAvailable: boolean }> {
+    return this.http.get<{ isAvailable: boolean }>(
+      `${environment.apiUrl}/auth/check-username/${username}`
+    );
+  }
+
   updateUser(user: Partial<User>): Observable<User> {
     if (!user.id) {
       throw new Error('User id is required for update operations.');
@@ -28,7 +34,7 @@ export class UserService {
 
   updatePassword(
     id: number,
-    payload: { currentPassword: string; newPassword: string },
+    payload: { currentPassword: string; newPassword: string }
   ): Observable<User> {
     return this.http.patch<User>(`${this.apiUrl}/${id}/password`, payload);
   }
