@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { User, UserRole } from '../models/user.model';
 import { AuthService } from './auth.service';
 
@@ -42,6 +42,9 @@ describe('AuthService', () => {
       removeItem: (key: string) => delete storage[key],
       clear: () => {},
     });
+
+    // Silence console.error globally for these tests as we test error paths
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -53,28 +56,69 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should login successfully and persist user', () => {
+    it('should login successfully and persist user', async () => {
       httpClientMock.post.mockReturnValue(of(authResponse));
       const setItemSpy = vi.spyOn(localStorage, 'setItem');
 
-      service.login('test@example.com', 'password').subscribe((user) => {
-        expect(user).toEqual({ ...mockUser, token: 'valid-token' });
-        expect(setItemSpy).toHaveBeenCalled();
-      });
+      const user = await firstValueFrom(service.login('test@example.com', 'password'));
+      expect(user).toEqual({ ...mockUser, token: 'valid-token' });
+      expect(setItemSpy).toHaveBeenCalled();
     });
 
-    it('should handle login error', () => {
+    it('should handle login error with specific message', async () => {
       const errorResponse = new HttpErrorResponse({
         error: { message: 'Invalid credentials' },
         status: 401,
       });
       httpClientMock.post.mockReturnValue(throwError(() => errorResponse));
 
-      service.login('test@example.com', 'wrong').subscribe({
-        error: (err) => {
-          expect(err.message).toBe('Invalid credentials');
-        },
+      try {
+        await firstValueFrom(service.login('test@example.com', 'wrong'));
+      } catch (err: any) {
+        expect(err.message).toBe('Invalid credentials');
+      }
+    });
+
+    it('should handle network error (status 0)', async () => {
+      const errorResponse = new HttpErrorResponse({
+        status: 0,
+        statusText: 'Unknown Error',
+        url: 'http://test.com',
       });
+      httpClientMock.post.mockReturnValue(throwError(() => errorResponse));
+
+      try {
+        await firstValueFrom(service.login('test@example.com', 'pass'));
+      } catch (err: any) {
+        expect(err.message).toContain('reach the server');
+      }
+    });
+
+    it('should handle validation errors as array', async () => {
+      const errorResponse = new HttpErrorResponse({
+        error: { message: ['Invalid email', 'Password too short'] },
+        status: 400,
+      });
+      httpClientMock.post.mockReturnValue(throwError(() => errorResponse));
+
+      try {
+        await firstValueFrom(service.login('bad', '123'));
+      } catch (err: any) {
+        expect(err.message).toBe('Invalid email, Password too short');
+      }
+    });
+
+    it('should use fallback message when error body is empty', async () => {
+      const errorResponse = new HttpErrorResponse({
+        status: 500,
+      });
+      httpClientMock.post.mockReturnValue(throwError(() => errorResponse));
+
+      try {
+        await firstValueFrom(service.login('test@test.com', 'pass'));
+      } catch (err: any) {
+        expect(err.message).toBe('Invalid email or password.');
+      }
     });
   });
 
@@ -87,42 +131,74 @@ describe('AuthService', () => {
   });
 
   describe('register', () => {
-    it('should register and login user', () => {
+    it('should register and login user', async () => {
       httpClientMock.post.mockReturnValue(of(mockUser));
-      // Register calls login internally
       const loginSpy = vi
         .spyOn(service, 'login')
         .mockReturnValue(of({ ...mockUser, token: 'token' }));
 
-      service.register({ email: 'test@example.com', password: 'password123' }).subscribe((user) => {
-        expect(loginSpy).toHaveBeenCalled();
-        expect(user.token).toBe('token');
-      });
+      const user = await firstValueFrom(
+        service.register({ email: 'test@example.com', password: 'password123' })
+      );
+      expect(loginSpy).toHaveBeenCalled();
+      expect(user.token).toBe('token');
+    });
+
+    it('should fail if password is missing (buildRegistrationPayload failure)', async () => {
+      try {
+        await firstValueFrom(service.register({ email: 'test@example.com' }));
+      } catch (err: any) {
+        expect(err.message).toBe('Password is required.');
+      }
+    });
+
+    it('should handle registration API error', async () => {
+      httpClientMock.post.mockReturnValue(
+        throwError(
+          () =>
+            new HttpErrorResponse({
+              error: { message: 'Email already exists' },
+              status: 409,
+            })
+        )
+      );
+
+      try {
+        await firstValueFrom(
+          service.register({ email: 'existing@test.com', password: 'password123' })
+        );
+      } catch (err: any) {
+        expect(err.message).toBe('Email already exists');
+      }
     });
   });
 
   describe('checkUsernameUnique', () => {
-    it('should return true if username is available', () => {
+    it('should return true if username is available', async () => {
       httpClientMock.get.mockReturnValue(of({ isAvailable: true }));
 
-      service.checkUsernameUnique('newuser').subscribe((isAvailable) => {
-        expect(isAvailable).toBe(true);
-      });
+      const isAvailable = await firstValueFrom(service.checkUsernameUnique('newuser'));
+      expect(isAvailable).toBe(true);
     });
 
-    it('should return false if username is taken', () => {
+    it('should return false if username is taken', async () => {
       httpClientMock.get.mockReturnValue(of({ isAvailable: false }));
 
-      service.checkUsernameUnique('takenuser').subscribe((isAvailable) => {
-        expect(isAvailable).toBe(false);
-      });
+      const isAvailable = await firstValueFrom(service.checkUsernameUnique('takenuser'));
+      expect(isAvailable).toBe(false);
     });
 
-    it('should return true for empty username without calling API', () => {
-      service.checkUsernameUnique('').subscribe((isAvailable) => {
-        expect(isAvailable).toBe(true);
-        expect(httpClientMock.get).not.toHaveBeenCalled();
-      });
+    it('should return true for empty username without calling API', async () => {
+      const isAvailable = await firstValueFrom(service.checkUsernameUnique(''));
+      expect(isAvailable).toBe(true);
+      expect(httpClientMock.get).not.toHaveBeenCalled();
+    });
+
+    it('should return true on API error (fallback)', async () => {
+      httpClientMock.get.mockReturnValue(throwError(() => new Error('API Error')));
+
+      const isAvailable = await firstValueFrom(service.checkUsernameUnique('user'));
+      expect(isAvailable).toBe(true);
     });
   });
 
@@ -135,6 +211,20 @@ describe('AuthService', () => {
     it('should return user from storage', () => {
       vi.spyOn(localStorage, 'getItem').mockReturnValue(JSON.stringify(mockUser));
       expect(service.getCurrentUser()).toEqual(mockUser);
+    });
+
+    it('should return null and clear storage if JSON is malformed', () => {
+      vi.spyOn(localStorage, 'getItem').mockReturnValue('malformed-json');
+      const removeItemSpy = vi.spyOn(localStorage, 'removeItem');
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const user = service.getCurrentUser();
+
+      expect(user).toBeNull();
+      expect(removeItemSpy).toHaveBeenCalledWith('auth_user');
+      expect(consoleSpy).toHaveBeenCalled();
+
+      consoleSpy.mockRestore();
     });
   });
 });
