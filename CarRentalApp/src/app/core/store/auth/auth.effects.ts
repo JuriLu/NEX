@@ -22,7 +22,7 @@ export class AuthEffects {
           map((updatedUser) => {
             // Backend might not return the token on update, so we must preserve it
             // from the original user object to avoid logging the user out.
-            const finalUser = { ...updatedUser };
+              const finalUser = updatedUser ? { ...user, ...updatedUser } : { ...user };
             if (!finalUser.token && user.token) {
               finalUser.token = user.token;
             }

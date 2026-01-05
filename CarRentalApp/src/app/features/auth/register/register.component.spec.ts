@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { MessageService } from 'primeng/api';
-import { of } from 'rxjs';
+import { firstValueFrom, of, throwError } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { RegisterComponent } from './register.component';
 
@@ -124,5 +124,59 @@ describe('RegisterComponent', () => {
     vi.advanceTimersByTime(1500);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/catalog']);
     vi.useRealTimers();
+  });
+  it('should handle registration error', () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = { message: 'Failed' };
+
+    // @ts-ignore
+    component.handleRegistrationError(error);
+
+    expect(consoleSpy).toHaveBeenCalledWith('Registration failed', error);
+    expect(component.loading).toBe(false);
+    expect(messageServiceMock.add).toHaveBeenCalledWith(
+      expect.objectContaining({ severity: 'error', summary: 'Registration Failed' })
+    );
+    consoleSpy.mockRestore();
+  });
+
+  it('should call handleRegistrationError on service failure', () => {
+    const error = { message: 'Network error' };
+    authServiceMock.register.mockReturnValue(throwError(() => error));
+    const errorSpy = vi.spyOn(component as any, 'handleRegistrationError');
+
+    component.registerForm.patchValue({
+      firstName: 'John',
+      lastName: 'Doe',
+      username: 'johndoe',
+      email: 'john@doe.com',
+      password: 'Password123!',
+      confirmPassword: 'Password123!',
+    });
+    component.registerForm.get('username')?.clearAsyncValidators();
+    component.registerForm.get('username')?.updateValueAndValidity();
+
+    component.onSubmit();
+
+    expect(errorSpy).toHaveBeenCalledWith(error);
+  });
+
+  it('should return null if username control has no value in unique validator', async () => {
+    const control = { value: '' } as any;
+    const result = component.usernameUniqueValidator(control);
+    const val = await firstValueFrom(result as any);
+    expect(val).toBeNull();
+  });
+
+  it('should handle error in usernameUniqueValidator and return null', async () => {
+    authServiceMock.checkUsernameUnique.mockReturnValue(throwError(() => new Error('API Error')));
+    const usernameControl = component.registerForm.get('username');
+    usernameControl?.setValue('someuser');
+
+    // Wait for timer(500)
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    fixture.detectChanges();
+
+    expect(usernameControl?.errors).toBeNull();
   });
 });
