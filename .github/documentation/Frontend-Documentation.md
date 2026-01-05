@@ -6,7 +6,7 @@ This document outlines the software architecture, state management, and data flo
 
 ## 🏗️ Architecture Overview
 
-The application is built using **Angular 19+** following a modular, feature-based architecture.
+The application is built using **Angular 21+** following a modular, feature-based architecture.
 
 ### Directory Structure
 
@@ -17,15 +17,18 @@ The application is built using **Angular 19+** following a modular, feature-base
   - `guards/`: Route protection (AdminGuard, AuthGuard).
 - **`src/app/features/`**: Independent domain modules.
   - Each feature contains its own components and local styles.
-- **`src/app/shared/`**: Reusable UI components (Navbar, Footer, Search).
+- **`src/app/shared/`**: Reusable UI components (Navbar, Footer, Search, DatePicker, NEX-Form-Field).
 - **`src/styles.scss`**: Global design system and MBUX theme tokens.
 
 ### Feature Modules Details
 
 - **User Management (`/admin/user-management`)**:
   - **Components**: `UserManagementComponent` handles the admin dashboard view.
-  - **Logic**: Combines `NavUser` data with booking history. Defines `Reservation` types locally (to be refactored to global models).
+  - **Logic**: Combines `NavUser` data with booking history. Manages user status tracking and mission lifecycle.
   - **Features**: Custom delete confirmation dialog (`p-confirmDialog`), glass-morphic status tags, **Async Username Availability Check** (with 500ms debounce).
+- **Car Management (`/admin/car-management`)**:
+  - **Components**: `CarManagementComponent` for fleet operations.
+  - **Features**: Asset image management, real-time availability toggles, and technical spec editing via MBUX-styled dialogs.
 - **Profile System (`/profile`)**:
   - **Components**: `ProfileComponent` manages user settings and identity.
   - **Logic**: Persists ambient lighting preferences to `localStorage`. Implements **smart username validation** (ignores current username, debounces updates).
@@ -82,11 +85,33 @@ The project uses **PrimeNG** as the base component library, but has been heavily
 
 ---
 
+## 🧪 Testing & Quality Assurance
+
+The application uses **Vitest 4.0.16** as its primary testing engine, integrated with **JSDOM** to simulate the browser environment.
+
+### 1. Test Architecture
+
+- **Framework**: Vitest (replaces Karma/Jasmine for speed and modern ESM support).
+- **Environment**: Custom Angular JIT stubber (`angular-resource-stub`) allows testing components without full `ngcc` or complex Analogjs overhead.
+- **Reporting**: Integrated **Coverage-v8** reporting and **Vitest UI** (`npm run test:ui`) for graphical test management.
+
+### 2. Coverage Metrics (Current State)
+
+- **Core Services**: 100% coverage for `UserService`, `CarService`, and `ReservationService`.
+- **Authentication**: >95% coverage for `AuthService`, including robust error extraction and edge-case handling.
+- **State Management**: Full suite of unit tests for Reducers, Selectors, and Effects.
+- **Interceptors & Guards**: Verified token injection logic and route protection boundaries.
+
+---
+
 ## 🛠️ Security & Sanitization
 
-- **SecurityUtils**: A dedicated utility in `core/utils/` used for sanitizing objects and stripping potential XSS payloads from forms (especially in Admin Ops Center).
+- **SecurityUtils**: A comprehensive utility in `core/utils/` used for multi-layer sanitization.
+  - **HTML Escaping**: Automatically escapes unsafe characters (`& < > " ' / \` =`) to prevent rendering-based injections.
+  - **XSS Stripping**: Removes malicious patterns like `javascript:` URIs (quote-aware), `<script>` tags, and unsafe `base64` data while permitting valid image payloads.
+  - **Recursive Cleaning**: `sanitizeObject` deeply cleans nested form data while intelligently skipping sensitive cryptographic fields (passwords, tokens).
 - **Guards**: `AdminGuard` protects sensitive routes by selecting the `isAdmin` state from the store before permitting navigation.
 
 ---
 
-_Technical Documentation updated: 2025-12-29_
+_Technical Documentation updated: 2026-01-05_

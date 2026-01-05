@@ -53,7 +53,7 @@ The core objective was to move away from a "standard rental app" toward a high-e
 ### 6. Ops Center (Admin Suite)
 
 - **Fleet Operations**: Modernized the car management interface into a technical "Ops Center."
-- **Asset Optimization**: Styled CRUD dialogs to match the cockpit aesthetic, featuring tech-styled inputs, deployment toggles, and asset image uploaders.
+- **Asset Optimization**: Styled CRUD dialogs to match the cockpit aesthetic. Based on user ergonomics, we reverted to a more spacious, high-contrast dialog layout (Revision `e56a287`) to improve visibility of asset technical specs during rapid editing cycles.
 
 ### 7. Secure Access (Authentication)
 
@@ -79,10 +79,10 @@ The core objective was to move away from a "standard rental app" toward a high-e
 
 We have established a solid foundation. The next phase of development includes:
 
-1.  **💠 Payment Integration Mockup**: Building a specialized "Checkout" sequence inside the Configurator.
-2.  **📊 Live Analytics**: Adding real-time telemetry and usage charts to the Admin Ops Center.
-3.  **📱 Mobile Optimization**: Further refining the responsive layout for handheld devices.
+1.  **📊 Live Analytics**: Adding real-time telemetry and usage charts to the Admin Ops Center.
+2.  **📱 Mobile Optimization**: Further refining the responsive layout for handheld devices.
+3.  **🧪 QA Automation**: Transitioned to a Vitest-powered testing suite to ensure visual and logic consistency across all system updates.
 
 ---
 
-_Documentation updated: 2025-12-29_
+_Documentation updated: 2026-01-05_
