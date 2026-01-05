@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -92,16 +92,15 @@ import { SecurityUtils } from '../../core/utils/security.utils';
   `,
 })
 export class ContactComponent {
-  contactForm: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder) {
-    this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      message: ['', Validators.required],
-    });
-  }
+  private fb = inject(FormBuilder);
+
+  contactForm: FormGroup = this.fb.group({
+    name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
+    email: ['', [Validators.required, Validators.email]],
+    message: ['', Validators.required],
+  });
 
   onSubmit() {
     this.submitted = true;
