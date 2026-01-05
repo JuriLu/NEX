@@ -24,7 +24,7 @@ interface RegistrationPayload {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -36,13 +36,17 @@ export class AuthService {
     try {
       payload = this.buildRegistrationPayload(user);
     } catch (error) {
-      return throwError(() => error instanceof Error ? error : new Error('Invalid registration data.'));
+      return throwError(() =>
+        error instanceof Error ? error : new Error('Invalid registration data.')
+      );
     }
 
     return this.http.post<User>(`${this.authUrl}/register`, payload).pipe(
       switchMap(() => this.login(payload.email, payload.password)),
       catchError((error) =>
-        throwError(() => new Error(this.extractErrorMessage(error, 'Unable to register. Please try again.')))
+        throwError(
+          () => new Error(this.extractErrorMessage(error, 'Unable to register. Please try again.'))
+        )
       )
     );
   }
@@ -54,7 +58,9 @@ export class AuthService {
     }
 
     return this.http
-      .get<UsernameAvailabilityResponse>(`${this.authUrl}/check-username/${encodeURIComponent(trimmedUsername)}`)
+      .get<UsernameAvailabilityResponse>(
+        `${this.authUrl}/check-username/${encodeURIComponent(trimmedUsername)}`
+      )
       .pipe(
         map((response) => response.isAvailable),
         catchError(() => of(true))
@@ -62,15 +68,13 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    return this.http
-      .post<AuthResponse>(`${this.authUrl}/login`, { email, password })
-      .pipe(
-        map(({ access_token, user }) => this.normalizeAuthenticatedUser(user, access_token)),
-        tap((user) => this.persistUser(user)),
-        catchError((error) =>
-          throwError(() => new Error(this.extractErrorMessage(error, 'Invalid email or password.')))
-        )
-      );
+    return this.http.post<AuthResponse>(`${this.authUrl}/login`, { email, password }).pipe(
+      map(({ access_token, user }) => this.normalizeAuthenticatedUser(user, access_token)),
+      tap((user) => this.persistUser(user)),
+      catchError((error) =>
+        throwError(() => new Error(this.extractErrorMessage(error, 'Invalid email or password.')))
+      )
+    );
   }
 
   logout(): void {
@@ -144,7 +148,7 @@ export class AuthService {
       return 'Unable to reach the server. Please try again later.';
     }
 
-    const message = error.error?.message ?? error.message;
+    const message = error.error?.message;
     if (Array.isArray(message)) {
       return message.join(', ');
     }
