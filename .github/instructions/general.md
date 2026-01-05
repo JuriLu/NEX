@@ -3,8 +3,9 @@
 - Every time that a change is made, related to coding or design UI/UX, update the documentation files in the .github/documentation folder.
 
 ## Develop Guidelines
-For Angular development, follow the guidelines in the instructions/angular.instructions.md file.
-For NestJS development, follow the guidelines in the instructions/nestjs.instructions.md file.
+
+For Angular development, follow the guidelines in the [Angular Instructions](angular.md) file.
+For NestJS development, follow the guidelines in the [NestJS Instructions](nestjs.md) file.
 
 ### Coding Guidelines
 
@@ -14,7 +15,7 @@ For NestJS development, follow the guidelines in the instructions/nestjs.instruc
 - Avoid anti-patterns (spaghetti code, god object, lava flow) unless absolutely unavoidable.
 - Write comments only for the **why**, not the **what**.
 - Handle errors and exceptions with clear messages and safe logging.
-- Since we are using angular project, use the guideline from instructions/angular-instructions.md file
+- Since we are using angular project, use the guideline from [Angular Instructions](angular.md) file
 
 ## API Development
 
@@ -43,7 +44,7 @@ For NestJS development, follow the guidelines in the instructions/nestjs.instruc
 ## Documentation Policies
 
 - **Mandatory Documentation**: Every change must be recorded to maintain project integrity.
-- **Coding Changes**: All logic, state management (NgRx), or architectural changes must be documented in `.github/documentation/Coding-Documentation.md`.
+- **Coding Changes**: All logic, state management (NgRx), or architectural changes must be documented in `.github/documentation/Frontend-Documentation.md`.
 - **UI/UX Changes**: All design, aesthetic, animation, and branding modifications must be documented in `.github/documentation/UI-UX-Documentation.md`.
 - **Refinement**: Ensure both documents are synchronized with the codebase after every implementation step.
 

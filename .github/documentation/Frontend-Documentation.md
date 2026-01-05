@@ -1,4 +1,4 @@
-# 💻 NEX: ReadyGo - Technical & Coding Documentation
+# 💻 NEX: ReadyGo - Frontend Documentation
 
 This document outlines the software architecture, state management, and data flow of the **NEX: ReadyGo** application.
 
@@ -25,13 +25,13 @@ The application is built using **Angular 19+** following a modular, feature-base
 - **User Management (`/admin/user-management`)**:
   - **Components**: `UserManagementComponent` handles the admin dashboard view.
   - **Logic**: Combines `NavUser` data with booking history. Defines `Reservation` types locally (to be refactored to global models).
-  - **Features**: Custom delete confirmation dialog (`p-confirmDialog`), glass-morphic status tags.
+  - **Features**: Custom delete confirmation dialog (`p-confirmDialog`), glass-morphic status tags, **Async Username Availability Check** (with 500ms debounce).
 - **Profile System (`/profile`)**:
   - **Components**: `ProfileComponent` manages user settings and identity.
-  - **Logic**: Persists ambient lighting preferences to `localStorage`.
+  - **Logic**: Persists ambient lighting preferences to `localStorage`. Implements **smart username validation** (ignores current username, debounces updates).
 - **Authentication (`/core/auth`)**:
   - **Components**: `AuthComponent` handles login/registration.
-  - **Logic**: Includes "Innovative" form validation (glow effects on invalid state) and auto-login post-registration.
+  - **Logic**: Includes "Innovative" form validation (glow effects on invalid state), **Async Availability Checks**, and auto-login post-registration.
 
 ---
 
