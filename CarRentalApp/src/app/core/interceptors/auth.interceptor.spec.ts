@@ -70,4 +70,13 @@ describe('AuthInterceptor', () => {
 
     consoleSpy.mockRestore();
   });
+
+  it('should handle JSON with missing token property', () => {
+    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify({ name: 'no-token' }));
+
+    httpClient.get('/test').subscribe();
+
+    const req = httpMock.expectOne('/test');
+    expect(req.request.headers.has('Authorization')).toBe(false);
+  });
 });

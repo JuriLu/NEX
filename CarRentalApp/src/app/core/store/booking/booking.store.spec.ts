@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Reservation, ReservationStatus } from '../../models/reservation.model';
 import { ReservationService } from '../../services/reservation.service';
 import * as BookingActions from './booking.actions';
@@ -58,6 +58,21 @@ describe('Booking Store', () => {
       expect(state.loading).toBe(false);
     });
 
+    it('should set loading to true on createReservation action', () => {
+      const { id, ...newRes } = mockReservation;
+      const action = BookingActions.createReservation({ reservation: newRes });
+      const state = bookingReducer(initialState, action);
+      expect(state.loading).toBe(true);
+    });
+
+    it('should set error on createReservationFailure action', () => {
+      const error = 'Create failed';
+      const action = BookingActions.createReservationFailure({ error });
+      const state = bookingReducer({ ...initialState, loading: true }, action);
+      expect(state.error).toBe(error);
+      expect(state.loading).toBe(false);
+    });
+
     it('should remove reservation on deleteReservationSuccess action', () => {
       const stateWithReservations: BookingState = {
         ...initialState,
@@ -66,6 +81,20 @@ describe('Booking Store', () => {
       const action = BookingActions.deleteReservationSuccess({ id: mockReservation.id });
       const state = bookingReducer(stateWithReservations, action);
       expect(state.reservations).not.toContain(mockReservation);
+      expect(state.loading).toBe(false);
+    });
+
+    it('should set loading to true on deleteReservation action', () => {
+      const action = BookingActions.deleteReservation({ id: 1 });
+      const state = bookingReducer(initialState, action);
+      expect(state.loading).toBe(true);
+    });
+
+    it('should set error on deleteReservationFailure action', () => {
+      const error = 'Delete failed';
+      const action = BookingActions.deleteReservationFailure({ error });
+      const state = bookingReducer({ ...initialState, loading: true }, action);
+      expect(state.error).toBe(error);
       expect(state.loading).toBe(false);
     });
   });
@@ -135,6 +164,19 @@ describe('Booking Store', () => {
       });
     });
 
+    it('should dispatch loadReservationsFailure on failed load', () => {
+      const action = BookingActions.loadReservations();
+      const error = 'Error';
+      const failureAction = BookingActions.loadReservationsFailure({ error });
+
+      actions$ = of(action);
+      reservationService.getReservations.mockReturnValue(throwError(() => ({ message: error })));
+
+      effects.loadReservations$.subscribe((result) => {
+        expect(result).toEqual(failureAction);
+      });
+    });
+
     it('should dispatch createReservationSuccess on successful create', () => {
       const { id, ...newRes } = mockReservation;
       const action = BookingActions.createReservation({ reservation: newRes });
@@ -150,6 +192,20 @@ describe('Booking Store', () => {
       });
     });
 
+    it('should dispatch createReservationFailure on failed create', () => {
+      const { id, ...newRes } = mockReservation;
+      const action = BookingActions.createReservation({ reservation: newRes });
+      const error = 'Error';
+      const failureAction = BookingActions.createReservationFailure({ error });
+
+      actions$ = of(action);
+      reservationService.createReservation.mockReturnValue(throwError(() => ({ message: error })));
+
+      effects.createReservation$.subscribe((result) => {
+        expect(result).toEqual(failureAction);
+      });
+    });
+
     it('should dispatch deleteReservationSuccess on successful delete', () => {
       const action = BookingActions.deleteReservation({ id: 1 });
       const successAction = BookingActions.deleteReservationSuccess({ id: 1 });
@@ -159,6 +215,19 @@ describe('Booking Store', () => {
 
       effects.deleteReservation$.subscribe((result) => {
         expect(result).toEqual(successAction);
+      });
+    });
+
+    it('should dispatch deleteReservationFailure on failed delete', () => {
+      const action = BookingActions.deleteReservation({ id: 1 });
+      const error = 'Error';
+      const failureAction = BookingActions.deleteReservationFailure({ error });
+
+      actions$ = of(action);
+      reservationService.deleteReservation.mockReturnValue(throwError(() => ({ message: error })));
+
+      effects.deleteReservation$.subscribe((result) => {
+        expect(result).toEqual(failureAction);
       });
     });
   });

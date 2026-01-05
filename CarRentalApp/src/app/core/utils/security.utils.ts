@@ -19,8 +19,10 @@ export class SecurityUtils {
     let sanitized = input
       .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, '') // <script> tags
       .replace(/on\w+\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gim, '') // any on* event handlers
-      .replace(/javascript\s*:[^\s>]+/gim, '') // javascript: URIs
-      .replace(/data\s*:[^\s>]+;base64[^\s>]+/gim, (match) => match.startsWith('data:image/') ? match : '') // base64 except images
+      .replace(/javascript\s*:[^"'\s>]+/gim, '') // javascript: URIs
+      .replace(/data\s*:[^\s>]+;base64[^\s>]+/gim, (match) =>
+        match.startsWith('data:image/') ? match : ''
+      ) // base64 except images
       .replace(/<iframe\b[^>]*>([\s\S]*?)<\/iframe>/gim, '') // iframes
       .replace(/<object\b[^>]*>([\s\S]*?)<\/object>/gim, ''); // objects
 
@@ -33,10 +35,10 @@ export class SecurityUtils {
       "'": '&#39;',
       '/': '&#x2F;',
       '`': '&#x60;',
-      '=': '&#x3D;'
+      '=': '&#x3D;',
     };
 
-    return sanitized.replace(/[&<>"'`=]/g, (s) => entityMap[s]);
+    return sanitized.replace(/[&<>"'`=\/]/g, (s) => entityMap[s]);
   }
 
   /**

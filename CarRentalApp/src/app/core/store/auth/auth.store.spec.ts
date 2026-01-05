@@ -57,6 +57,20 @@ describe('Auth Store', () => {
       const state = authReducer(loggedInState, action);
       expect(state.user).toBeNull();
     });
+
+    it('should set loading to true on updateUser action', () => {
+      const action = AuthActions.updateUser({ user: mockUser });
+      const state = authReducer(initialState, action);
+      expect(state.loading).toBe(true);
+    });
+
+    it('should update user and set loading to false on updateUserSuccess action', () => {
+      const updatedUser = { ...mockUser, firstName: 'Updated' };
+      const action = AuthActions.updateUserSuccess({ user: updatedUser });
+      const state = authReducer({ ...initialState, loading: true }, action);
+      expect(state.user).toEqual(updatedUser);
+      expect(state.loading).toBe(false);
+    });
   });
 
   describe('Auth Selectors', () => {
@@ -174,12 +188,60 @@ describe('Auth Store', () => {
       });
     });
 
+    it('should dispatch NOOP on init if no user is found', () => {
+      const initAction = AuthActions.init();
+
+      actions$ = of(initAction);
+      authService.getCurrentUser.mockReturnValue(null);
+
+      effects.init$.subscribe((action) => {
+        expect(action.type).toBe('NOOP');
+      });
+    });
+
+    it('should dispatch updateUserSuccess and update localStorage on updateUser success', () => {
+      const updatedUser = { ...mockUser, firstName: 'Updated' };
+      const action = AuthActions.updateUser({ user: updatedUser });
+      const successAction = AuthActions.updateUserSuccess({ user: updatedUser });
+
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+      actions$ = of(action);
+      userService.updateUser.mockReturnValue(of(updatedUser));
+
+      effects.updateUser$.subscribe((result) => {
+        expect(result).toEqual(successAction);
+        expect(setItemSpy).toHaveBeenCalledWith('auth_user', JSON.stringify(updatedUser));
+      });
+    });
+
+    it('should use original user if updateUser returns null', () => {
+      const action = AuthActions.updateUser({ user: mockUser });
+      const successAction = AuthActions.updateUserSuccess({ user: mockUser });
+
+      actions$ = of(action);
+      userService.updateUser.mockReturnValue(of(null));
+
+      effects.updateUser$.subscribe((result) => {
+        expect(result).toEqual(successAction);
+      });
+    });
+
     it('should navigate on loginSuccess', () => {
       const action = AuthActions.loginSuccess({ user: mockUser });
       actions$ = of(action);
 
       effects.loginSuccess$.subscribe();
       expect(router.navigate).toHaveBeenCalledWith(['/catalog']);
+    });
+
+    it('should navigate to returnUrl if present on loginSuccess', () => {
+      const action = AuthActions.loginSuccess({ user: mockUser });
+      actions$ = of(action);
+      router.parseUrl.mockReturnValue({ queryParams: { returnUrl: '/protected' } });
+
+      effects.loginSuccess$.subscribe();
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/protected');
     });
 
     it('should navigate to admin on loginSuccess for admin', () => {

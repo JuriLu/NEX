@@ -71,6 +71,28 @@ describe('UserService', () => {
     });
   });
 
+  describe('addUser', () => {
+    it('should POST new user', () => {
+      httpClientMock.post.mockReturnValue(of(mockUsers[0]));
+      service.addUser({ firstName: 'New' }).subscribe((user) => {
+        expect(user).toEqual(mockUsers[0]);
+      });
+      expect(httpClientMock.post).toHaveBeenCalledWith(expect.any(String), { firstName: 'New' });
+    });
+  });
+
+  describe('updatePassword', () => {
+    it('should PATCH password endpoint', () => {
+      httpClientMock.patch.mockReturnValue(of(mockUsers[0]));
+      const payload = { currentPassword: 'old', newPassword: 'new' };
+      service.updatePassword(1, payload).subscribe();
+      expect(httpClientMock.patch).toHaveBeenCalledWith(
+        expect.stringContaining('/users/1/password'),
+        payload
+      );
+    });
+  });
+
   describe('checkUsernameAvailability', () => {
     it('should call auth endpoint', () => {
       httpClientMock.get.mockReturnValue(of({ isAvailable: true }));

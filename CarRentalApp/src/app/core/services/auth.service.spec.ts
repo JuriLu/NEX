@@ -120,6 +120,30 @@ describe('AuthService', () => {
         expect(err.message).toBe('Invalid email or password.');
       }
     });
+
+    it('should handle completely missing error object', async () => {
+      httpClientMock.post.mockReturnValue(throwError(() => null));
+
+      try {
+        await firstValueFrom(service.login('test@test.com', 'pass'));
+      } catch (err: any) {
+        expect(err.message).toBe('Invalid email or password.');
+      }
+    });
+
+    it('should handle error.error present but message missing', async () => {
+      const errorResponse = new HttpErrorResponse({
+        error: {},
+        status: 400,
+      });
+      httpClientMock.post.mockReturnValue(throwError(() => errorResponse));
+
+      try {
+        await firstValueFrom(service.login('test@test.com', 'pass'));
+      } catch (err: any) {
+        expect(err.message).toBe('Invalid email or password.');
+      }
+    });
   });
 
   describe('logout', () => {
