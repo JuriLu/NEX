@@ -12,7 +12,9 @@ The application is built using **Angular 21+** following a modular, feature-base
 
 - **`src/app/core/`**: Singletons and global utilities.
   - `models/`: Interface definitions for Cars, Users, and Bookings.
-  - `services/`: Data access layers (CarService, AuthService).
+  - `services/`: Data access layers and global state services.
+    - `CarService`, `AuthService`, `ReservationService`.
+    - `ThemeService`: Signal-based global theme management.
   - `store/`: NgRx state management (Actions, Reducers, Selectors, Effects).
   - `guards/`: Route protection (AdminGuard, AuthGuard).
 - **`src/app/features/`**: Independent domain modules.
@@ -31,7 +33,11 @@ The application is built using **Angular 21+** following a modular, feature-base
   - **Features**: Asset image management, real-time availability toggles, and technical spec editing via MBUX-styled dialogs.
 - **Profile System (`/profile`)**:
   - **Components**: `ProfileComponent` manages user settings and identity.
-  - **Logic**: Persists ambient lighting preferences to `localStorage`. Implements **smart username validation** (ignores current username, debounces updates).
+  - **Logic**: Implements **smart username validation** (debounced updates).
+- **Theme Management (`ThemeService`)**:
+  - **State**: Manages `ambientColor` and `isAmbientOn` using Angular **Signals**.
+  - **Persistence**: automatically syncs state with `localStorage` on every update.
+  - **Propagation**: Root `AppComponent` uses an `effect()` to map signal changes to global `--ambient-color` and `--ambient-glow` CSS variables.
 - **Authentication (`/core/auth`)**:
   - **Components**: `AuthComponent` handles login/registration.
   - **Logic**: Includes "Innovative" form validation (glow effects on invalid state), **Async Availability Checks**, and auto-login post-registration.
@@ -82,6 +88,7 @@ The project uses **PrimeNG** as the base component library, but has been heavily
 - **CSS Variables**: All theme colors are tokenized via `--bg-dark`, `--primary-color`, etc.
 - **SCSS Nesting**: We use SCSS nesting and `::ng-deep` to pierce component encapsulation for external libraries (PrimeNG) while maintaining scope.
 - **Animations**: Global animations are defined in `styles.scss` (e.g., `slideInAndGlow`) and local animations are added via Angular's `@trigger` system.
+- **Advanced Masking**: To enable smooth transitions between gradients, we use `-webkit-mask-image` on ambient layers. This allows us to animate a solid `background-color` (which browsers interpolate easily) while maintaining the visual appearance of a complex gradient highlight.
 
 ---
 
@@ -126,4 +133,4 @@ Fix: I updated the logic in
 AuthEffects
 to preserving the existing authentication token. Now, when saving the updated user profile, the application checks if the backend response includes a token. If it doesn't, it automatically merges the existing valid token into the user object before saving it. This ensures your session remains active and valid after every profile update.
 
-_Technical Documentation updated: 2026-01-05_
+_Technical Documentation updated: 2026-01-06_

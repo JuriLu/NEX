@@ -10,8 +10,9 @@ The core objective was to move away from a "standard rental app" toward a high-e
 
 1.  **The Dark Canvas**: A deep `#050507` background that mimics the premium OLED displays found in modern luxury vehicles.
 2.  **Glassmorphism**: Using semi-transparent panels with high-blur backdrops (`backdrop-filter`) to create depth and a high-tech feel.
-3.  **Ambient Lighting**: Subtle purple and magenta mesh gradients (`--ambient-purple`) that simulate the interior cockpit lighting of a Mercedes-Benz.
-4.  **Tech Typography**: A combination of **Montserrat** for bold, authoritative headings and **Inter/Outfit** for clean, readable technical data.
+3.  **Global Ambient Lighting**: A centralized theme system managed via `ThemeService`, allowing users to toggle a content-wide glow and select custom cabin colors (NEX Violet, Digital Cyan, Sunburst Gold).
+4.  **Liquid Color Morphing**: Replaced static color swaps with a mask-based interpolation system that allows colors to "morph" gracefully across the UI with 0.6s ease-in-out timing.
+5.  **Tech Typography**: A combination of **Montserrat** for bold, authoritative headings and **Inter/Outfit** for clean, readable technical data.
 
 ---
 
@@ -64,8 +65,11 @@ The core objective was to move away from a "standard rental app" toward a high-e
 ### 8. User Profile Ecosystem
 
 - **Driver Profiling**: Created a dedicated profile management section.
-- **Identity Card**: A visual representation of the user, dynamically themed.
-- **Ambient Lighting System**: Implemented a user-controlled color selector (NEX Violet, Digital Cyan, Sunburst Gold) that persists across sessions and alters the "glow" of the interface.
+- **Identity Card**: A visual representation of the user, featuring a high-fidelity **NEX Logo** scaled by 3x (144px) and liquid color morphing.
+- **Global Ambient Lighting System**: A centralized MBUX-style control hub in the profile.
+  - **Persistent State**: Settings are saved to `localStorage` via Angular Signals.
+  - **MBUX Toggle**: A custom-styled physical-switch simulation for toggling ambient mode.
+  - **Synchronized Transitions**: A global 0.6s timing ensures all highlights, borders, and glows morph simultaneously.
 
 ### 9. Admin User Management
 
@@ -85,4 +89,4 @@ We have established a solid foundation. The next phase of development includes:
 
 ---
 
-_Documentation updated: 2026-01-05_
+_Documentation updated: 2026-01-06_
