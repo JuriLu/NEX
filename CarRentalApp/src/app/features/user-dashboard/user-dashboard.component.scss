@@ -18,16 +18,16 @@
   overflow: hidden !important;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--ambient-glow);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px var(--ambient-glow);
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.6s ease-in-out;
   flex-shrink: 0;
   margin-right: 2.5rem; /* MOVED DESCRIPTION TO THE RIGHT */
 
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
     border-color: var(--ambient-color);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 50px var(--ambient-color);
   }
 
   img {

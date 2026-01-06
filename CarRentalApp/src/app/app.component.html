@@ -1,7 +1,7 @@
-<div class="ambient-main-highlight" [class.ambient-active]="theme.isAmbientOn()">
-  <app-navbar></app-navbar>
-  <main style="min-height: 80vh">
-    <router-outlet></router-outlet>
-  </main>
-  <app-footer></app-footer>
-</div>
+<app-navbar></app-navbar>
+
+<main class="flex-grow-1" [class.ambient-active]="theme.isAmbientOn()" style="position: relative">
+  <router-outlet></router-outlet>
+</main>
+
+<app-footer></app-footer>

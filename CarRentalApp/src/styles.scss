@@ -57,8 +57,9 @@ body {
 }
 
 /* Global Content Highlight (Antigravity Style) */
-.ambient-main-highlight {
+main.ambient-active {
   position: relative;
+  min-height: 100vh;
 
   &::before {
     content: '';
@@ -68,20 +69,21 @@ body {
     right: 0;
     bottom: 0;
     pointer-events: none;
-    z-index: 9999;
-    border: 1px solid color-mix(in srgb, var(--ambient-color), transparent 60%);
-    opacity: 0;
+    z-index: 999;
+    border: 1px solid color-mix(in srgb, var(--ambient-color), transparent 85%);
     transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Multi-layered glow for depth */
     box-shadow:
-      inset 0 0 60px var(--ambient-glow),
-      inset 0 0 20px var(--ambient-glow),
+      inset 0 0 80px var(--ambient-glow),
+      inset 0 0 30px var(--ambient-glow),
       0 0 40px var(--ambient-glow);
+    animation: ambient-entry 1.5s ease-out;
+    opacity: 0.25; /* Reduced glow opacity */
   }
+}
 
-  &.ambient-active::before {
-    opacity: 0.8; /* Much more visible but still atmospheric */
-  }
+@keyframes ambient-entry {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 0.25; transform: scale(1); } /* Ensure final opacity matches the desired glow */
 }
 
 /* MBUX Premium Switch */

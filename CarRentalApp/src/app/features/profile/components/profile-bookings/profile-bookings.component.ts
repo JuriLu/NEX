@@ -165,9 +165,16 @@ import { TagModule } from 'primeng/tag';
         overflow: hidden !important;
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid var(--ambient-glow);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 32px var(--ambient-glow);
         position: relative;
         flex-shrink: 0;
+        transition: all 0.6s ease-in-out;
+
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 12px 48px var(--ambient-color);
+          border-color: var(--ambient-color);
+        }
 
         img {
           width: 100%;
