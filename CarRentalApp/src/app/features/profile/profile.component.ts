@@ -57,7 +57,24 @@ export class ProfileComponent implements OnInit {
   private messageService = inject(MessageService);
 
   user$: Observable<User | null> = this.store.select(selectUser);
-  userBookings$!: Observable<any[]>;
+  userBookings$: Observable<any[]> = this.user$.pipe(
+    switchMap((user) => {
+      if (!user) return of([]);
+      const reservations$ = this.reservationService.getUserReservations(user.id);
+      const cars$ = this.carService.getCars();
+
+      return combineLatest([reservations$, cars$]).pipe(
+        map(([reservations, cars]) => {
+          return reservations
+            .map((res) => ({
+              ...res,
+              car: cars.find((c) => c.id === res.carId),
+            }))
+            .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+        })
+      );
+    })
+  );
 
   editDialog = false;
   passwordDialog = false;
@@ -75,7 +92,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.initForms();
-    this.loadBookingHistory();
     this.loadAmbientColor();
   }
 
@@ -140,26 +156,6 @@ export class ProfileComponent implements OnInit {
     return g.get('newPassword')?.value === g.get('confirmPassword')?.value
       ? null
       : { mismatch: true };
-  }
-
-  loadBookingHistory() {
-    this.user$.subscribe((user) => {
-      if (user) {
-        const reservations$ = this.reservationService.getUserReservations(user.id);
-        const cars$ = this.carService.getCars();
-
-        this.userBookings$ = combineLatest([reservations$, cars$]).pipe(
-          map(([reservations, cars]) => {
-            return reservations
-              .map((res) => ({
-                ...res,
-                car: cars.find((c) => c.id === res.carId),
-              }))
-              .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
-          })
-        );
-      }
-    });
   }
 
   openEdit() {

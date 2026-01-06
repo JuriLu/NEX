@@ -27,15 +27,15 @@ import { TagModule } from 'primeng/tag';
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-booking>
-          <tr class="history-row">
+          <tr class="asset-row">
             <td>
-              <div class="flex align-items-center gap-3">
-                <div class="car-thumb glass-panel">
+              <div class="flex align-items-center gap-4">
+                <div class="asset-preview">
                   <img [src]="booking.car?.image" [alt]="booking.car?.brand" />
                 </div>
                 <div class="flex flex-column">
-                  <span class="text-white font-bold">{{ booking.car?.brand }}</span>
-                  <span class="mbux-model-shine">{{ booking.car?.model }}</span>
+                  <span class="car-brand">{{ booking.car?.brand }}</span>
+                  <span class="car-model">{{ booking.car?.model }}</span>
                 </div>
               </div>
             </td>
@@ -51,7 +51,7 @@ import { TagModule } from 'primeng/tag';
               <p-tag
                 [value]="booking.status"
                 [severity]="getBookingSeverity(booking.status)"
-                [ngClass]="{ 'status-glow': true }"
+                styleClass="status-glow"
               ></p-tag>
             </td>
           </tr>
@@ -73,7 +73,18 @@ import { TagModule } from 'primeng/tag';
     `
       :host ::ng-deep {
         .mbux-table {
-          /* PREMIUM STATUS SHINE WITH MBUX SHIMMER */
+          .p-datatable-tbody > tr {
+            background: transparent !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            &:hover {
+              background: rgba(139, 92, 246, 0.05) !important;
+              transform: translateY(-2px);
+            }
+          }
+
+          /* PREMIUM STATUS SHINE */
           .status-glow {
             padding: 0.5rem 1.25rem !important;
             font-weight: 800 !important;
@@ -106,7 +117,6 @@ import { TagModule } from 'primeng/tag';
               color: #4ade80 !important;
               border: 1px solid rgba(34, 197, 94, 0.4) !important;
               box-shadow: 0 0 20px rgba(34, 197, 94, 0.3) !important;
-              text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
             }
 
             &.p-tag-info {
@@ -114,15 +124,19 @@ import { TagModule } from 'primeng/tag';
               color: #60a5fa !important;
               border: 1px solid rgba(59, 130, 246, 0.4) !important;
               box-shadow: 0 0 20px rgba(59, 130, 246, 0.3) !important;
-              text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
             }
 
-            &.p-tag-warn {
-              background: rgba(245, 158, 11, 0.1) !important;
-              color: #fbbf24 !important;
-              border: 1px solid rgba(245, 158, 11, 0.4) !important;
-              box-shadow: 0 0 20px rgba(245, 158, 11, 0.3) !important;
-              text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+            &.p-tag-danger {
+              background: rgba(239, 68, 68, 0.1) !important;
+              color: #f87171 !important;
+              border: 1px solid rgba(239, 68, 68, 0.4) !important;
+              box-shadow: 0 0 20px rgba(239, 68, 68, 0.3) !important;
+            }
+
+            &.p-tag-secondary {
+              background: rgba(148, 163, 184, 0.1) !important;
+              color: #cbd5e1 !important;
+              border: 1px solid rgba(148, 163, 184, 0.4) !important;
             }
           }
         }
@@ -140,42 +154,48 @@ import { TagModule } from 'primeng/tag';
         }
       }
 
-      .car-thumb {
-        width: 135px;
-        height: 90px;
-        border-radius: 16px;
-        overflow: hidden !important;
-        border: 1px solid rgba(139, 92, 246, 0.3);
-        background: rgba(0, 0, 0, 0.4);
-        padding: 0px !important;
+      .asset-preview {
+        width: 160px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0px !important;
+        border-radius: 16px;
+        overflow: hidden !important;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        position: relative;
+        flex-shrink: 0;
 
         img {
           width: 100%;
           height: 100%;
           object-fit: cover !important;
-          border-radius: 14px;
-          filter: brightness(1.1);
+          border-radius: 16px;
+          filter: brightness(1.05);
         }
       }
 
-      .mbux-model-shine {
-        font-size: 0.75rem;
+      .car-brand {
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.02em;
+        margin-bottom: 0.1rem;
+      }
+
+      .car-model {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 0.9rem;
         font-weight: 500;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.5) 0%,
-          #ffffff 50%,
-          rgba(255, 255, 255, 0.5) 100%
-        );
-        background-size: 200% auto;
+        letter-spacing: 0.03em;
+        background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 50%, #ffffff 100%);
         -webkit-background-clip: text;
-        background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: text-shine 3s linear infinite;
-        display: block;
+        background-clip: text;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
       }
 
       .mbux-cost-shine {

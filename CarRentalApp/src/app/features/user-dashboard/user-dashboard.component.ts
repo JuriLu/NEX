@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable, of } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
 import { CarService } from '../../core/services/car.service';
 import { selectUser } from '../../core/store/auth/auth.selectors';
 import { loadReservations } from '../../core/store/booking/booking.actions';
@@ -36,30 +36,12 @@ export class UserDashboardComponent implements OnInit {
 
   readonly styles = USER_DASHBOARD_STYLES;
 
-  private store!: Store;
-  private carService!: CarService;
+  private store = inject(Store);
+  private carService = inject(CarService);
 
   userBookings$!: Observable<any[]>;
 
   ngOnInit() {
-    // lazily inject dependencies so unit tests can provide mocks before calling ngOnInit
-    try {
-      if (!this.store) this.store = inject(Store);
-    } catch (e) {
-      // running outside of Angular DI in class-only tests
-    }
-
-    try {
-      if (!this.carService) this.carService = inject(CarService);
-    } catch (e) {
-      // running outside of Angular DI in class-only tests
-    }
-
-    if (!this.store || !this.carService) {
-      this.userBookings$ = of([]);
-      return;
-    }
-
     this.store.dispatch(loadReservations());
 
     const reservations$ = this.store.select(selectAllReservations);

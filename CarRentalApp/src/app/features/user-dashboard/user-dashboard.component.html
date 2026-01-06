@@ -20,12 +20,7 @@
     </div>
 
     <div [class]="styles.tableContainer">
-      <p-table
-        [value]="(userBookings$ | async) || []"
-        [responsiveLayout]="'stack'"
-        [breakpoint]="'960px'"
-        styleClass="mbux-table"
-      >
+      <p-table [value]="(userBookings$ | async) || []" styleClass="mbux-table">
         <ng-template pTemplate="header">
           <tr>
             <th [class]="styles.tableHeader">Vehicle Unit</th>
@@ -36,17 +31,20 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-booking>
-          <tr [class]="styles.missionRow">
+          <tr class="asset-row">
             <td>
               <div class="flex align-items-center">
-                <div [class]="styles.carUnitImg">
+                <div class="asset-preview">
                   <img [src]="booking.car?.image" [alt]="booking.car?.brand" />
                 </div>
                 <div>
-                  <div class="text-white font-bold text-xl">
-                    {{ booking.car?.brand }} {{ booking.car?.model }}
+                  <div class="car-brand">
+                    {{ booking.car?.brand }}
                   </div>
-                  <div [class]="theme.typography.label">{{ booking.car?.category }}</div>
+                  <div class="car-model">{{ booking.car?.model }}</div>
+                  <div [class]="theme.typography.label" class="mt-1 opacity-60">
+                    {{ booking.car?.category }}
+                  </div>
                 </div>
               </div>
             </td>
@@ -56,7 +54,9 @@
                   {{ booking.startDate | date : 'MMM d' }} —
                   {{ booking.endDate | date : 'MMM d, y' }}
                 </div>
-                <div class="text-secondary text-xs mt-1">Duration: Active</div>
+                <div class="text-secondary text-xs mt-2 uppercase tracking-widest opacity-50">
+                  Active Mission Window
+                </div>
               </div>
             </td>
             <td class="text-center">
