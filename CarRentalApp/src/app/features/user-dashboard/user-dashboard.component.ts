@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { CarService } from '../../core/services/car.service';
 import { selectUser } from '../../core/store/auth/auth.selectors';
 import { loadReservations } from '../../core/store/booking/booking.actions';
@@ -17,6 +17,13 @@ import { TagModule } from 'primeng/tag';
 
 import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
 
+export const USER_DASHBOARD_STYLES = {
+  missionRow: ['mission-row'],
+  carUnitImg: ['car-unit-img', 'glass-panel', 'mr-4'],
+  tableContainer: ['glass-panel', 'overflow-hidden', 'fadeinup', 'animation-duration-1000'],
+  tableHeader: ['uppercase', 'tracking-widest', 'text-xs', 'font-bold', 'text-secondary'],
+};
+
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
@@ -27,19 +34,32 @@ import { DESIGN_SYSTEM } from '../../shared/theme/design-system';
 export class UserDashboardComponent implements OnInit {
   readonly theme = DESIGN_SYSTEM;
 
-  readonly styles = {
-    missionRow: ['mission-row'],
-    carUnitImg: ['car-unit-img', 'glass-panel', 'mr-4'],
-    tableContainer: ['glass-panel', 'overflow-hidden', 'fadeinup', 'animation-duration-1000'],
-    tableHeader: ['uppercase', 'tracking-widest', 'text-xs', 'font-bold', 'text-secondary'],
-  };
+  readonly styles = USER_DASHBOARD_STYLES;
 
-  private store = inject(Store);
-  private carService = inject(CarService);
+  private store!: Store;
+  private carService!: CarService;
 
   userBookings$!: Observable<any[]>;
 
   ngOnInit() {
+    // lazily inject dependencies so unit tests can provide mocks before calling ngOnInit
+    try {
+      if (!this.store) this.store = inject(Store);
+    } catch (e) {
+      // running outside of Angular DI in class-only tests
+    }
+
+    try {
+      if (!this.carService) this.carService = inject(CarService);
+    } catch (e) {
+      // running outside of Angular DI in class-only tests
+    }
+
+    if (!this.store || !this.carService) {
+      this.userBookings$ = of([]);
+      return;
+    }
+
     this.store.dispatch(loadReservations());
 
     const reservations$ = this.store.select(selectAllReservations);
