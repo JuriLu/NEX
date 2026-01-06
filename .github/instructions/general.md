@@ -10,6 +10,7 @@ For NestJS development, follow the guidelines in the [NestJS Instructions](nestj
 ### Coding Guidelines
 
 - Apply **DRY, KISS, YAGNI, SOLID** principles.
+- Use **explicit typing** for all variables, function parameters, and observable operators (e.g., `map((user: User | null) => ...)`). Avoid using `any` and rely as little as possible on implicit inference for complex types.
 - Follow consistent **naming conventions** across the entire codebase (see project-specific rules in the custom-template file).
 - Keep code modular, loosely coupled, and easily testable.
 - Avoid anti-patterns (spaghetti code, god object, lava flow) unless absolutely unavoidable.

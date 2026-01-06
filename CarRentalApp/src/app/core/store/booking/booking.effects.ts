@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import { ReservationService } from '../../services/reservation.service';
 import * as BookingActions from './booking.actions';
+import { Reservation } from '../../models/reservation.model';
 
 @Injectable()
 export class BookingEffects {
@@ -14,7 +15,7 @@ export class BookingEffects {
       ofType(BookingActions.loadReservations),
       mergeMap(() =>
         this.reservationService.getReservations().pipe(
-          map((reservations) => BookingActions.loadReservationsSuccess({ reservations })),
+          map((reservations: Reservation[]) => BookingActions.loadReservationsSuccess({ reservations })),
           catchError((error) => of(BookingActions.loadReservationsFailure({ error: error.message })))
         )
       )
@@ -24,10 +25,10 @@ export class BookingEffects {
   createReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BookingActions.createReservation),
-      mergeMap(({ reservation }) =>
+      mergeMap(({ reservation }: { reservation: Omit<Reservation, "id"> }) =>
         this.reservationService.createReservation(reservation).pipe(
-          map((newReservation) => BookingActions.createReservationSuccess({ reservation: newReservation })),
-      catchError((error) => of(BookingActions.createReservationFailure({ error: error.message })))
+          map((newReservation: Reservation) => BookingActions.createReservationSuccess({ reservation: newReservation })),
+          catchError((error) => of(BookingActions.createReservationFailure({ error: error.message })))
         )
       )
     )
@@ -36,7 +37,7 @@ export class BookingEffects {
   deleteReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BookingActions.deleteReservation),
-      mergeMap(({ id }) =>
+      mergeMap(({ id }: { id: number }) =>
         this.reservationService.deleteReservation(id).pipe(
           map(() => BookingActions.deleteReservationSuccess({ id })),
           catchError((error) => of(BookingActions.deleteReservationFailure({ error: error.message })))

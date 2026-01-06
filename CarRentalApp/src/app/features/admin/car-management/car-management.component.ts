@@ -102,28 +102,28 @@ export class CarManagementComponent implements OnInit {
     { label: 'GBP (£)', value: Currency.GBP },
   ];
 
-  ngOnInit() {
+  ngOnInit():void {
     this.loadCars();
     this.initForm();
   }
 
-  loadCars() {
+  loadCars():void {
     this.carService.getCars().subscribe((cars) => (this.cars = cars));
   }
 
-  initForm() {
+  initForm():void {
     this.carForm = this.fb.group({
       brand: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
       model: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\s-]+$/)]],
       category: [null, Validators.required],
       pricePerDay: [null, [Validators.required, Validators.min(1)]],
-      currency: ['USD', Validators.required],
+      currency: [Currency.EUR, Validators.required],
       image: [''], // Optional
       available: [true],
     });
   }
 
-  openNew() {
+  openNew():void {
     this.editingCar = null;
     this.carForm.reset({ available: true, pricePerDay: 0 });
     this.submitted = false;
@@ -133,7 +133,7 @@ export class CarManagementComponent implements OnInit {
     this.carDialog = true;
   }
 
-  editCar(car: Car) {
+  editCar(car: Car):void {
     this.editingCar = car;
     this.carForm.patchValue(car);
     this.selectedImageFile = null;
@@ -142,15 +142,15 @@ export class CarManagementComponent implements OnInit {
     this.carDialog = true;
   }
 
-  deleteCar(car: Car) {
+  deleteCar(car: Car):void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ${car.brand} ${car.model}?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept: ():void => {
         this.carService.deleteCar(car.id).subscribe({
-          next: () => {
-            this.cars = this.cars.filter((val) => val.id !== car.id);
+          next: ():void => {
+            this.cars = this.cars.filter((val: Car) => val.id !== car.id);
             this.messageService.add({
               severity: 'success',
               summary: 'Successful',
@@ -164,7 +164,7 @@ export class CarManagementComponent implements OnInit {
     });
   }
 
-  onImageSelect(event: Event) {
+  onImageSelect(event: Event):void {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];
     if (!file) {
@@ -183,14 +183,14 @@ export class CarManagementComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  clearImage() {
+  clearImage():void {
     this.selectedImageFile = null;
     this.imagePreview = null;
     this.selectedImageLabel = 'No file chosen';
     this.carForm.patchValue({ image: null });
   }
 
-  saveCar() {
+  saveCar():void {
     this.submitted = true;
 
     if (this.carForm.invalid) {
@@ -213,7 +213,7 @@ export class CarManagementComponent implements OnInit {
     });
   }
 
-  private handleSuccess(detail: string) {
+  private handleSuccess(detail: string):void {
     this.loadCars();
     this.hideDialog();
     this.messageService.add({
@@ -224,7 +224,7 @@ export class CarManagementComponent implements OnInit {
     });
   }
 
-  private handleError(summary: string, detail: string, error?: any) {
+  private handleError(summary: string, detail: string, error?: any):void {
     console.error(detail, error);
     this.messageService.add({
       severity: 'error',
@@ -234,7 +234,7 @@ export class CarManagementComponent implements OnInit {
     });
   }
 
-  hideDialog() {
+  hideDialog():void {
     this.carDialog = false;
     this.submitted = false;
   }

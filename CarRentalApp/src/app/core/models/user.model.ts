@@ -9,7 +9,7 @@ export interface User {
   lastName: string;
   username: string;
   email: string;
-  role: UserRole | 'admin' | 'user'; // Keeping string union for backward compatibility during refactor if needed, but ideally just UserRole
+  role: UserRole
   password?: string; // Optional for safety
   token?: string;
   // Legacy

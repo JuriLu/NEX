@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable } from 'rxjs';
+import { Car } from '../../core/models/car.model';
+import { Reservation } from '../../core/models/reservation.model';
+import { User } from '../../core/models/user.model';
 import { CarService } from '../../core/services/car.service';
 import { selectUser } from '../../core/store/auth/auth.selectors';
 import { loadReservations } from '../../core/store/booking/booking.actions';
@@ -36,29 +39,33 @@ export class UserDashboardComponent implements OnInit {
 
   readonly styles = USER_DASHBOARD_STYLES;
 
-  private store = inject(Store);
-  private carService = inject(CarService);
+  private store: Store = inject(Store);
+  private carService: CarService = inject(CarService);
 
-  userBookings$!: Observable<any[]>;
+  userBookings$!: Observable<(Reservation & { car?: Car })[]>;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.store.dispatch(loadReservations());
 
-    const reservations$ = this.store.select(selectAllReservations);
-    const cars$ = this.carService.getCars();
-    const user$ = this.store.select(selectUser);
+    const reservations$: Observable<Reservation[]> = this.store.select(selectAllReservations);
+    const cars$: Observable<Car[]> = this.carService.getCars();
+    const user$: Observable<User | null> = this.store.select(selectUser);
 
     this.userBookings$ = combineLatest([reservations$, cars$, user$]).pipe(
-      map(([reservations, cars, user]) => {
-        if (!user) return [];
+      map(
+        ([reservations, cars, user]: [Reservation[], Car[], User | null]): (Reservation & {
+          car?: Car;
+        })[] => {
+          if (!user) return [];
 
-        return reservations
-          .filter((res) => res.userId === user.id)
-          .map((res) => ({
-            ...res,
-            car: cars.find((c) => c.id === res.carId),
-          }));
-      })
+          return reservations
+            .filter((res: Reservation) => res.userId === user.id)
+            .map((res: Reservation) => ({
+              ...res,
+              car: cars.find((c: Car) => c.id === res.carId),
+            }));
+        }
+      )
     );
   }
 

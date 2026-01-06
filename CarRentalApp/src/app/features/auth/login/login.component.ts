@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { login } from '../../../core/store/auth/auth.actions';
 import { selectAuthError, selectAuthLoading } from '../../../core/store/auth/auth.selectors';
 
@@ -67,19 +68,19 @@ export class LoginComponent {
     ],
   };
 
-  fb = inject(FormBuilder);
-  store = inject(Store);
-  submitted = false;
+  fb: FormBuilder = inject(FormBuilder);
+  store: Store = inject(Store);
+  submitted: boolean = false;
 
   loginForm: FormGroup = this.fb.group({
     email: ['user@carrental.com', [Validators.required, Validators.email]],
     password: ['user', [Validators.required]], // Pre-filled for demo
   });
 
-  loading$ = this.store.select(selectAuthLoading);
-  error$ = this.store.select(selectAuthError);
+  loading$: Observable<boolean> = this.store.select(selectAuthLoading);
+  error$: Observable<string | null> = this.store.select(selectAuthError);
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;

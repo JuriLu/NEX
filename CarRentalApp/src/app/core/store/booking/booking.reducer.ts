@@ -11,42 +11,63 @@ export interface BookingState {
 export const initialState: BookingState = {
   reservations: [],
   loading: false,
-  error: null
+  error: null,
 };
 
 export const bookingReducer = createReducer(
   initialState,
-  on(BookingActions.loadReservations, (state) => ({ ...state, loading: true, error: null })),
-  on(BookingActions.loadReservationsSuccess, (state, { reservations }) => ({
+  on(BookingActions.loadReservations, (state: BookingState) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(BookingActions.loadReservationsSuccess, (state: BookingState, { reservations }) => ({
     ...state,
     reservations,
-    loading: false
-  })),
-  on(BookingActions.loadReservationsFailure, (state, { error }) => ({
-    ...state,
     loading: false,
-    error
   })),
-  on(BookingActions.createReservation, (state) => ({ ...state, loading: true, error: null })),
-  on(BookingActions.createReservationSuccess, (state, { reservation }) => ({
+  on(
+    BookingActions.loadReservationsFailure,
+    (state: BookingState, { error }: { error: string }) => ({
+      ...state,
+      loading: false,
+      error,
+    })
+  ),
+  on(BookingActions.createReservation, (state: BookingState) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(BookingActions.createReservationSuccess, (state: BookingState, { reservation }: { reservation: Reservation }) => ({
     ...state,
     reservations: [...state.reservations, reservation],
-    loading: false
-  })),
-  on(BookingActions.createReservationFailure, (state, { error }) => ({
-    ...state,
     loading: false,
-    error
   })),
-  on(BookingActions.deleteReservation, (state) => ({ ...state, loading: true, error: null })),
-  on(BookingActions.deleteReservationSuccess, (state, { id }) => ({
+  on(
+    BookingActions.createReservationFailure,
+    (state: BookingState, { error }: { error: string }) => ({
+      ...state,
+      loading: false,
+      error,
+    })
+  ),
+  on(BookingActions.deleteReservation, (state: BookingState) => ({
     ...state,
-    reservations: state.reservations.filter(r => r.id !== id),
-    loading: false
+    loading: true,
+    error: null,
   })),
-  on(BookingActions.deleteReservationFailure, (state, { error }) => ({
+  on(BookingActions.deleteReservationSuccess, (state: BookingState, { id }: { id: number }) => ({
     ...state,
+    reservations: state.reservations.filter((r) => r.id !== id),
     loading: false,
-    error
-  }))
+  })),
+  on(
+    BookingActions.deleteReservationFailure,
+    (state: BookingState, { error }: { error: string }) => ({
+      ...state,
+      loading: false,
+      error,
+    })
+  )
 );

@@ -15,7 +15,7 @@ export class ThemeService {
   constructor() {
     // Sync to localStorage whenever signals change
     effect(() => {
-      const color = this.ambientColor();
+      const color: string = this.ambientColor();
       localStorage.setItem(this.AMBIENT_COLOR_KEY, color);
     });
 
@@ -33,10 +33,10 @@ export class ThemeService {
   }
 
   getAmbientRgba(opacity: number = 0.5): string {
-    const hex = this.ambientColor();
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
+    const hex: string = this.ambientColor();
+    const r: number = parseInt(hex.slice(1, 3), 16);
+    const g: number = parseInt(hex.slice(3, 5), 16);
+    const b: number = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
 }

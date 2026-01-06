@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import { Reservation, ReservationStatus } from '../models/reservation.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReservationService {
   private http = inject(HttpClient);
@@ -14,25 +14,29 @@ export class ReservationService {
   getReservations(): Observable<Reservation[]> {
     return this.http
       .get<Reservation[]>(this.bookingsUrl)
-      .pipe(map((reservations) => reservations.map((reservation) => this.normalizeReservation(reservation))));
+      .pipe(
+        map((reservations: Reservation[]) =>
+          reservations.map((reservation: Reservation) => this.normalizeReservation(reservation))
+        )
+      );
   }
 
   getUserReservations(userId: number): Observable<Reservation[]> {
     return this.getReservations().pipe(
-      map((reservations) => reservations.filter((reservation) => reservation.userId === userId))
+      map((reservations: Reservation[]) => reservations.filter((reservation: Reservation) => reservation.userId === userId))
     );
   }
 
   createReservation(reservation: Omit<Reservation, 'id'>): Observable<Reservation> {
     return this.http
       .post<Reservation>(this.bookingsUrl, reservation)
-      .pipe(map((created) => this.normalizeReservation(created)));
+      .pipe(map((created: Reservation) => this.normalizeReservation(created)));
   }
 
   updateReservationStatus(id: number, status: ReservationStatus): Observable<Reservation> {
     return this.http
       .patch<Reservation>(`${this.bookingsUrl}/${id}`, { status })
-      .pipe(map((updated) => this.normalizeReservation(updated)));
+      .pipe(map((updated: Reservation) => this.normalizeReservation(updated)));
   }
 
   deleteReservation(id: number): Observable<void> {

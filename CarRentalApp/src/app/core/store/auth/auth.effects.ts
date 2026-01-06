@@ -1,34 +1,34 @@
 import { Injectable, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, tap } from 'rxjs';
+import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import * as AuthActions from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  private actions$ = inject(Actions);
-  private authService = inject(AuthService);
-  private userService = inject(UserService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private actions$: Actions = inject(Actions);
+  private authService: AuthService = inject(AuthService);
+  private userService: UserService = inject(UserService);
+  private router: Router = inject(Router);
 
   updateUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.updateUser),
-      mergeMap(({ user }) =>
+      mergeMap(({ user }: { user: User; type: string }) =>
         this.userService.updateUser(user).pipe(
-          map((updatedUser) => {
+          map((updatedUser: User | null) => {
             // Backend might not return the token on update, so we must preserve it
             // from the original user object to avoid logging the user out.
-              const finalUser = updatedUser ? { ...user, ...updatedUser } : { ...user };
+            const finalUser: User = updatedUser ? { ...user, ...updatedUser } : { ...user };
             if (!finalUser.token && user.token) {
               finalUser.token = user.token;
             }
             return AuthActions.updateUserSuccess({ user: finalUser });
           }),
-          tap(({ user: finalUser }) => {
+          tap(({ user: finalUser }: { user: User; type: string }) => {
             // Update local storage so session persists
             localStorage.setItem('auth_user', JSON.stringify(finalUser));
           }),
@@ -44,7 +44,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.init),
       map(() => {
-        const user = this.authService.getCurrentUser();
+        const user: User | null = this.authService.getCurrentUser();
         if (user) {
           return AuthActions.loginSuccess({ user });
         }
@@ -56,9 +56,9 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.login),
-      mergeMap(({ email, password }) =>
+      mergeMap(({ email, password }: { email: string; password: string; type: string }) =>
         this.authService.login(email, password).pipe(
-          map((user) => AuthActions.loginSuccess({ user })),
+          map((user: User) => AuthActions.loginSuccess({ user })),
           catchError((error) => of(AuthActions.loginFailure({ error: error.message })))
         )
       )
@@ -69,7 +69,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        tap(({ user }) => {
+        tap(({ user }: { user: User; type: string }) => {
           const urlTree = this.router.parseUrl(this.router.url);
           const returnUrl = urlTree.queryParams['returnUrl'];
           if (returnUrl) {

@@ -62,16 +62,16 @@ export class AuthService {
         `${this.authUrl}/check-username/${encodeURIComponent(trimmedUsername)}`
       )
       .pipe(
-        map((response) => response.isAvailable),
+        map((response:UsernameAvailabilityResponse) => response.isAvailable),
         catchError(() => of(true))
       );
   }
 
   login(email: string, password: string): Observable<User> {
     return this.http.post<AuthResponse>(`${this.authUrl}/login`, { email, password }).pipe(
-      map(({ access_token, user }) => this.normalizeAuthenticatedUser(user, access_token)),
-      tap((user) => this.persistUser(user)),
-      catchError((error) =>
+      map(({ access_token, user }: AuthResponse) => this.normalizeAuthenticatedUser(user, access_token)),
+      tap((user: User) => this.persistUser(user)),
+      catchError((error: HttpErrorResponse) =>
         throwError(() => new Error(this.extractErrorMessage(error, 'Invalid email or password.')))
       )
     );

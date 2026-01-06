@@ -18,8 +18,8 @@ export interface Car {
   brand: string;
   model: string;
   pricePerDay: number;
-  currency?: Currency | string;
-  category: CarCategory | string;
+  currency?: Currency;
+  category: CarCategory;
   image: string;
   available: boolean;
   features: string[];

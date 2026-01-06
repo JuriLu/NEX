@@ -25,16 +25,16 @@ export const appConfig: ApplicationConfig = {
     provideEffects([AuthEffects, BookingEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false }),
     providePrimeNG({
-        theme: {
-            preset: Lara,
-            options: {
-                darkModeSelector: false,
-                cssLayer: {
-                   name: 'primeng',
-                   order: 'tailwind-base, primeng, tailwind-utilities'
-                }
-            }
-        }
-    })
-  ]
+      theme: {
+        preset: Lara,
+        options: {
+          darkModeSelector: false,
+          cssLayer: {
+            name: 'primeng',
+            order: 'tailwind-base, primeng, tailwind-utilities',
+          },
+        },
+      },
+    }),
+  ],
 };

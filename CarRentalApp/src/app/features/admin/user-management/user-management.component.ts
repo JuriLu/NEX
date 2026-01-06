@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { SelectOption } from '../../../core/models/common.model';
-import { ReservationStatus } from '../../../core/models/reservation.model';
+import { Reservation, ReservationStatus } from '../../../core/models/reservation.model';
 import { User, UserRole } from '../../../core/models/user.model';
 import { CarService } from '../../../core/services/car.service';
 import { ReservationService } from '../../../core/services/reservation.service';
@@ -33,6 +33,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { forkJoin, Observable, of, timer } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Car } from '../../../core/models/car.model';
 import { NexDialogComponent } from '../../../shared/components/nex-dialog/nex-dialog.component';
 import { NexFormFieldComponent } from '../../../shared/components/nex-form-field/nex-form-field.component';
 import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
@@ -69,13 +70,13 @@ export class UserManagementComponent implements OnInit {
     validationWarning: ['validation-warning'],
   };
 
-  private userService = inject(UserService);
-  private reservationService = inject(ReservationService);
-  private carService = inject(CarService);
-  private fb = inject(FormBuilder);
-  private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService);
-  private store = inject(Store);
+  private userService: UserService = inject(UserService);
+  private reservationService: ReservationService = inject(ReservationService);
+  private carService: CarService = inject(CarService);
+  private fb: FormBuilder = inject(FormBuilder);
+  private confirmationService: ConfirmationService = inject(ConfirmationService);
+  private messageService: MessageService = inject(MessageService);
+  private store: Store = inject(Store);
 
   users: User[] = [];
   userDialog = false;
@@ -91,16 +92,16 @@ export class UserManagementComponent implements OnInit {
     { label: 'User', value: UserRole.USER },
   ];
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadUsers();
     this.initForm();
   }
 
-  loadUsers() {
-    this.userService.getUsers().subscribe((users) => (this.users = users));
+  loadUsers(): void {
+    this.userService.getUsers().subscribe((users: User[]) => (this.users = users));
   }
 
-  initForm() {
+  initForm(): void {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
       lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s-]+$/)]],
@@ -132,25 +133,27 @@ export class UserManagementComponent implements OnInit {
       }
       return timer(500).pipe(
         switchMap(() => this.userService.checkUsernameAvailability(control.value)),
-        map((response) => (response.isAvailable ? null : { usernameTaken: true }))
+        map((response: { isAvailable: boolean }) =>
+          response.isAvailable ? null : { usernameTaken: true }
+        )
       );
     };
   }
 
-  openNew() {
+  openNew(): void {
     this.userForm.reset({ role: 'user' });
     this.submitted = false;
     this.userDialog = true;
   }
 
-  deleteUser(user: User) {
+  deleteUser(user: User): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ${user.firstName} ${user.lastName}?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
+      accept: (): void => {
         this.userService.deleteUser(user.id).subscribe({
-          next: () => {
+          next: (): void => {
             this.users = this.users.filter((val) => val.id !== user.id);
             this.messageService.add({
               severity: 'success',
@@ -159,27 +162,27 @@ export class UserManagementComponent implements OnInit {
               life: 3000,
             });
           },
-          error: (err) => this.handleError('Error', 'Could not delete user', err),
+          error: (err): void => this.handleError('Error', 'Could not delete user', err),
         });
       },
     });
   }
 
-  viewBookings(user: User) {
+  viewBookings(user: User): void {
     this.selectedUser = user;
     forkJoin({
       reservations: this.reservationService.getUserReservations(user.id),
       cars: this.carService.getCars(),
     }).subscribe(({ reservations, cars }) => {
-      this.selectedUserBookings = reservations.map((res) => ({
+      this.selectedUserBookings = reservations.map((res: Reservation) => ({
         ...res,
-        car: cars.find((c) => c.id === res.carId),
+        car: cars.find((c: Car) => c.id === res.carId),
       }));
       this.bookingsDialog = true;
     });
   }
 
-  saveUser() {
+  saveUser(): void {
     this.submitted = true;
 
     if (this.userForm.invalid) {
@@ -195,7 +198,7 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  private handleSuccess(detail: string) {
+  private handleSuccess(detail: string): void {
     this.loadUsers();
     this.hideDialog();
     this.messageService.add({
@@ -206,7 +209,7 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  private handleError(summary: string, detail: string, error?: any) {
+  private handleError(summary: string, detail: string, error?: any): void {
     console.error(detail, error);
     this.messageService.add({
       severity: 'error',
@@ -216,7 +219,7 @@ export class UserManagementComponent implements OnInit {
     });
   }
 
-  hideDialog() {
+  hideDialog(): void {
     this.userDialog = false;
     this.submitted = false;
   }

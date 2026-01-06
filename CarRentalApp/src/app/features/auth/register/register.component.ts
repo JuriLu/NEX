@@ -5,12 +5,13 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
-import { catchError, map, of, switchMap, timer } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { loginSuccess } from '../../../core/store/auth/auth.actions';
 import { SecurityUtils } from '../../../core/utils/security.utils';
@@ -23,6 +24,7 @@ import { PasswordModule } from 'primeng/password';
 
 import { ToastModule } from 'primeng/toast';
 import { DESIGN_SYSTEM } from '../../../shared/theme/design-system';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-register',
@@ -103,20 +105,20 @@ export class RegisterComponent {
     { validators: this.passwordMatchValidator }
   );
 
-  onSubmit() {
+  onSubmit():void {
     this.submitted = true;
     if (this.registerForm.valid) {
       this.loading = true;
       const sanitizedData = SecurityUtils.sanitizeObject(this.registerForm.value);
 
       this.authService.register(sanitizedData).subscribe({
-        next: (user) => this.handleRegistrationSuccess(user),
+        next: (user: User) => this.handleRegistrationSuccess(user),
         error: (err) => this.handleRegistrationError(err),
       });
     }
   }
 
-  private handleRegistrationSuccess(user: any) {
+  private handleRegistrationSuccess(user: any):void {
     // 1. Show Glowy Success Toast
     this.messageService.add({
       severity: 'success',
@@ -135,7 +137,7 @@ export class RegisterComponent {
     }, 1500);
   }
 
-  private handleRegistrationError(err: any) {
+  private handleRegistrationError(err: any):void {
     console.error('Registration failed', err);
     this.loading = false;
     this.messageService.add({
@@ -146,18 +148,18 @@ export class RegisterComponent {
   }
 
   // Custom Validator: Password Match
-  passwordMatchValidator(g: FormGroup) {
+  passwordMatchValidator(g: FormGroup): ValidationErrors | null {
     return g.get('password')?.value === g.get('confirmPassword')?.value ? null : { mismatch: true };
   }
 
   // Async Validator: Username Unique
-  usernameUniqueValidator(control: AbstractControl) {
+  usernameUniqueValidator(control: AbstractControl): Observable<ValidationErrors | null> {
     if (!control.value) {
       return of(null);
     }
     return timer(500).pipe(
       switchMap(() => this.authService.checkUsernameUnique(control.value)),
-      map((isUnique) => (isUnique ? null : { notUnique: true })),
+      map((isUnique: boolean) => (isUnique ? null : { notUnique: true })),
       catchError(() => of(null))
     );
   }
