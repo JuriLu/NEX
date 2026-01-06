@@ -1,8 +1,4 @@
-<div
-  class="profile-page py-6 px-4 lg:px-8"
-  [style.--ambient-color]="selectedColor"
-  [style.--primary-color]="selectedColor"
->
+<div class="profile-page py-6 px-4 lg:px-8">
   <p-toast></p-toast>
   <div [class]="theme.layout.container">
     <div class="grid">
@@ -16,12 +12,7 @@
         </app-profile-info>
 
         <!-- Preferences Section -->
-        <app-profile-preferences
-          [ambientColors]="ambientColors"
-          [selectedColor]="selectedColor"
-          (colorChange)="setAmbientColor($event)"
-        >
-        </app-profile-preferences>
+        <app-profile-preferences [ambientColors]="ambientColors"> </app-profile-preferences>
       </div>
 
       <!-- Right Column: Booking History -->

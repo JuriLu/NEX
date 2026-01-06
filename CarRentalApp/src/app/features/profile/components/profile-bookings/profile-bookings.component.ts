@@ -79,7 +79,7 @@ import { TagModule } from 'primeng/tag';
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
             &:hover {
-              background: rgba(139, 92, 246, 0.05) !important;
+              background: var(--ambient-glow) !important;
               transform: translateY(-2px);
             }
           }
@@ -164,7 +164,7 @@ import { TagModule } from 'primeng/tag';
         border-radius: 16px;
         overflow: hidden !important;
         background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(139, 92, 246, 0.2);
+        border: 1px solid var(--ambient-glow);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         position: relative;
         flex-shrink: 0;

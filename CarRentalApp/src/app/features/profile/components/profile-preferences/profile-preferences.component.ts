@@ -1,17 +1,31 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
+import { ThemeService } from '../../../../core/services/theme.service';
 
 @Component({
   selector: 'app-profile-preferences',
   standalone: true,
-  imports: [CommonModule, TooltipModule],
+  imports: [CommonModule, TooltipModule, ToggleSwitchModule, FormsModule],
   template: `
     <div class="glass-panel mt-4 p-5 fadeinleft animation-duration-1000">
-      <h3 class="text-white uppercase tracking-widest text-sm mb-4">Cabin Customization</h3>
-      <div class="mb-4">
+      <div class="flex justify-content-between align-items-center mb-5">
+        <h3 class="text-white uppercase tracking-widest text-sm m-0">Cabin Customization</h3>
+        <div class="flex align-items-center gap-3">
+          <span class="text-secondary text-xs uppercase tracking-widest">Ambient Mode</span>
+          <p-toggleSwitch
+            [(ngModel)]="isAmbientOn"
+            (onChange)="onToggleChange($event)"
+            styleClass="mbux-switch"
+          ></p-toggleSwitch>
+        </div>
+      </div>
+
+      <div class="mb-5">
         <label class="text-secondary text-xs uppercase tracking-widest block mb-3"
-          >Ambient Lighting</label
+          >Accent Architecture</label
         >
         <div class="flex gap-2 flex-wrap">
           @for (item of ambientColors; track item.color) {
@@ -19,17 +33,18 @@ import { TooltipModule } from 'primeng/tooltip';
             class="color-node"
             [style.background]="item.color"
             [style.color]="item.color"
-            [class.active]="selectedColor === item.color"
+            [class.active]="theme.ambientColor() === item.color"
             [pTooltip]="item.name"
             (click)="selectColor(item.color)"
           >
-            @if (selectedColor === item.color) {
+            @if (theme.ambientColor() === item.color) {
             <i class="pi pi-check text-xs"></i>
             }
           </div>
           }
         </div>
       </div>
+
       <div>
         <label class="text-secondary text-xs uppercase tracking-widest block mb-2"
           >Digital Key Status</label
@@ -76,10 +91,21 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class ProfilePreferencesComponent {
   @Input() ambientColors: any[] = [];
-  @Input() selectedColor: string = '';
-  @Output() colorChange = new EventEmitter<string>();
+  protected theme = inject(ThemeService);
+
+  get isAmbientOn(): boolean {
+    return this.theme.isAmbientOn();
+  }
+
+  set isAmbientOn(value: boolean) {
+    this.theme.toggleAmbient(value);
+  }
+
+  onToggleChange(event: any) {
+    this.theme.toggleAmbient(event.checked);
+  }
 
   selectColor(color: string) {
-    this.colorChange.emit(color);
+    this.theme.setAmbientColor(color);
   }
 }
